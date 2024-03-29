@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
+             xmlns:local="clr-namespace:TeaClient.ViewModel"
+             x:Class="TeaClient.LoginPage"
+             BackgroundColor="#e2f2c7">
+    <ContentPage.BindingContext>
+        <local:TenantViewModel></local:TenantViewModel>
+    </ContentPage.BindingContext>
+    <ContentPage.Content>
+        <StackLayout Padding="40" VerticalOptions="Center" HorizontalOptions="FillAndExpand">
+            <Label Text="Welcome to Tea Client Tea Portal"
+                VerticalOptions="CenterAndExpand" 
+                HorizontalOptions="CenterAndExpand" FontAttributes="Bold" />
+            <Image Source="download.jpg" WidthRequest="180" HeightRequest="180"></Image>
+          
+            <Picker ItemDisplayBinding="{Binding TenantName}" x:Name="Tenant" Title="Select Company" ItemsSource="{Binding TenantList}" />
+            <Entry x:Name="txtUserName" Placeholder="Enter Username" TextColor="Black" PlaceholderColor="#3aa602" Keyboard="Numeric"></Entry>
+            <Entry x:Name="txtPassword" Placeholder="Enter password" IsPassword="True" TextColor="Black" PlaceholderColor="#3aa602" ></Entry>
+            <Button VerticalOptions="Center" Text="Login" TextColor="White" 
+                    BackgroundColor="#3aa602"
+                    BorderColor="Gray"
+            BorderWidth="1.5"
+            CornerRadius="50" Clicked="Button_Clicked">
+                
+            </Button>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

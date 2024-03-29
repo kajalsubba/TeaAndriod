@@ -1,0 +1,69 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" xmlns:local="clr-namespace:TeaClient.ViewModel"
+             x:Class="TeaClient.SupplierPage">
+    <ContentPage.BindingContext>
+        <local:FactoryViewModel></local:FactoryViewModel>
+    </ContentPage.BindingContext>
+    <ContentPage.Content>
+        <ScrollView>
+            <StackLayout Padding="10" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand" >
+                <Label Text="Welcome Kajal" FontSize="24" HorizontalOptions="Center" />
+                <!-- Collection Date -->
+                <Label Text="Collection Date:" />
+                <DatePicker x:Name="collectionDate" Format="dd/MM/yyyy" />
+
+                <!-- Client Name -->
+                <!--<Label Text="Client Name:" />
+            <Entry x:Name="clientNameEntry" Placeholder="Enter Client Name" />-->
+
+                <!-- Vehicle No -->
+                <Label Text="Vehicle No:" />
+                <Entry x:Name="VehicleNo" Placeholder="Enter Vehicle Number" />
+
+                <!-- Factory Name -->
+                <Label Text="Factory Name:" />
+                <!--<Entry x:Name="factoryNameEntry" Placeholder="Enter Factory Name" />-->
+                <Picker ItemDisplayBinding="{Binding FactoryName}" x:Name="FactoryName" Title="Select Factory" ItemsSource="{Binding Factorylists}"  SelectedIndexChanged="OnFactotyIndexChanged"/>
+
+
+                <!-- Account Name -->
+                <Label Text="Account Name:" />
+                <!--<Entry x:Name="AccountName" Placeholder="Enter Account Name" />-->
+                <!--<Picker ItemDisplayBinding="{Binding AccountName}" x:Name="AccountName" Title="Select Account" ItemsSource="{Binding Accountlists}" />-->
+                <Picker x:Name="AccountName"     Title="Select Account"   >
+                </Picker>
+                <!-- Fine Leaf -->
+                <Label Text="Fine Leaf:" />
+                <Entry x:Name="FineLeaf" Placeholder="Enter Fine Leaf" Keyboard="Numeric" />
+
+                <!-- Challan Weight -->
+                <Label Text="Challan Weight:" />
+                <Entry x:Name="ChallanWgt" Placeholder="Enter Challan Weight" Keyboard="Numeric" />
+
+                <!-- Rate -->
+                <!--<Label Text="Rate:" />
+            <Entry x:Name="rateEntry" Placeholder="Enter Rate" Keyboard="Numeric" />-->
+
+                <!-- Trip -->
+                <!--<Label Text="Trip:" />
+            <Entry x:Name="tripEntry" Placeholder="Enter Trip" Keyboard="Numeric" />-->
+
+                <!-- Remarks -->
+                <Label Text="Remarks:" />
+            <Editor x:Name="remarksEditor" HeightRequest="100" Placeholder="Enter Remarks"></Editor>
+
+                <!--Image Capture-->
+                <Button Text="Upload Challan" Clicked="OnCaptureClicked"  WidthRequest="100"
+        HeightRequest="60"
+        VerticalOptions="CenterAndExpand"
+        HorizontalOptions="CenterAndExpand" />
+                <Image x:Name="ChallanImage" HeightRequest="300" WidthRequest="300">
+
+                </Image>
+                <!-- Submit Button -->
+                <Button Text="Submit" Clicked="OnSubmitClicked" />
+            </StackLayout>
+        </ScrollView>
+    </ContentPage.Content>
+</ContentPage>
