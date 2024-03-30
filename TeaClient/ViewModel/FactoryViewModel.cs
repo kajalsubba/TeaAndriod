@@ -3,27 +3,29 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Net.Http;
 using System.Text;
+using System.Windows.Input;
 using TeaClient.Model;
 using TeaClient.SessionHelper;
+using Xamarin.Forms;
 
 namespace TeaClient.ViewModel
 {
     public class FactoryViewModel
     {
         public IList<FactoryModel> Factorylists { get; set; }
-       
-        
+
         public FactoryViewModel()
         {
             Factorylists = new ObservableCollection<FactoryModel>();
          
             GetFactory();
-       
+          
         }
-
-        public async void GetFactory()
+     
+    public async void GetFactory()
         {
 
             string url = "http://72.167.37.70:82/Master/GetFactory";

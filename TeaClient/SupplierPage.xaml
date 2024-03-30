@@ -8,7 +8,8 @@
     <ContentPage.Content>
         <ScrollView>
             <StackLayout Padding="10" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand" >
-                <Label Text="Welcome Kajal" FontSize="24" HorizontalOptions="Center" />
+                <Label x:Name="HeaderName" FontSize="24" HorizontalOptions="Center" />
+               
                 <!-- Collection Date -->
                 <Label Text="Collection Date:" />
                 <DatePicker x:Name="collectionDate" Format="dd/MM/yyyy" />
@@ -19,7 +20,26 @@
 
                 <!-- Vehicle No -->
                 <Label Text="Vehicle No:" />
-                <Entry x:Name="VehicleNo" Placeholder="Enter Vehicle Number" />
+                <!--<AbsoluteLayout>-->
+                    <Entry TextChanged="SearchBar_OnTextChanged" BackgroundColor="#f9f9f9" TextColor="#FF464859" FontSize="16" PlaceholderColor="#646b7a" x:Name="VehicleNo" Placeholder="Type here..." AbsoluteLayout.LayoutBounds="0,0,285,38"  AbsoluteLayout.LayoutFlags="None"/>
+                   
+                    <!--<Entry TextChanged="SearchBar_OnTextChanged" x:Name="searchBar" Placeholder="Enter Client Name" />-->
+
+                    <ListView x:Name="VehicleListView" IsVisible="False"   CachingStrategy="RecycleElement" BackgroundColor="White" ItemTapped="ListView_OnItemTapped"  AbsoluteLayout.LayoutFlags="None">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <ViewCell>
+                                    <Frame>
+                                        <StackLayout BackgroundColor="White">
+                                            <Label Text="{Binding .}" FontSize="16" TextColor="#FF464859"/>
+                                        </StackLayout>
+                                    </Frame>
+                                </ViewCell>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                <!--</AbsoluteLayout>-->
+                <!--<Entry x:Name="VehicleNo" Placeholder="Enter Vehicle Number" />-->
 
                 <!-- Factory Name -->
                 <Label Text="Factory Name:" />
@@ -58,11 +78,12 @@
         HeightRequest="60"
         VerticalOptions="CenterAndExpand"
         HorizontalOptions="CenterAndExpand" />
+                <Button Text="Submit" Clicked="OnSubmitClicked" />
                 <Image x:Name="ChallanImage" HeightRequest="300" WidthRequest="300">
 
                 </Image>
                 <!-- Submit Button -->
-                <Button Text="Submit" Clicked="OnSubmitClicked" />
+              
             </StackLayout>
         </ScrollView>
     </ContentPage.Content>

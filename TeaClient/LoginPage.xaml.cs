@@ -47,7 +47,7 @@ namespace TeaClient
                     var data = JsonConvert.DeserializeObject<ClientLoginData>(results);
                     if (data.ClientLoginDetails.Count >0)
                     {
-                        SessionManager.SetSessionValue("loginDetails", data.ClientLoginDetails);
+                        SessionManager.SetSessionValue("loginDetails", data);
                        await Navigation.PushAsync(new DashboardPage());
                     }
                     else
