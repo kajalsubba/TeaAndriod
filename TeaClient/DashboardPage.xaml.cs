@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using TeaClient.SessionHelper;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -24,6 +24,12 @@ namespace TeaClient
         {
 
         }
+        private async void OnLogout_Clicked(object sender, EventArgs e)
+        {
+            SessionManager.ClearSession();
+            await Navigation.PushAsync(new LoginPage());
+        }
+        
 
     }
 }

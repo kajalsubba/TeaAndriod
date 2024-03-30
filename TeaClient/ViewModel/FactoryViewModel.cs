@@ -16,11 +16,12 @@ namespace TeaClient.ViewModel
     public class FactoryViewModel
     {
         public IList<FactoryModel> Factorylists { get; set; }
-
+        ClientLoginData LoginData = new ClientLoginData();
         public FactoryViewModel()
         {
+        
             Factorylists = new ObservableCollection<FactoryModel>();
-         
+            LoginData = SessionManager.GetSessionValue<ClientLoginData>("loginDetails");
             GetFactory();
           
         }
@@ -36,7 +37,7 @@ namespace TeaClient.ViewModel
             var dataToSend = new
             {
                 IsClientView = true,
-                TenantId = 1
+                TenantId =Convert.ToInt32(LoginData.ClientLoginDetails[0].TenantId)
             };
 
             using (HttpClient client = new HttpClient())

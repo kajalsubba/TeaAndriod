@@ -35,9 +35,10 @@ namespace TeaClient
         {
             InitializeComponent();
             Accountlists = new ObservableCollection<FactoryAccountModel>();
+            LoginData = SessionManager.GetSessionValue<ClientLoginData>("loginDetails");
             GetFactoryAccount();
             GetVehicle();
-            LoginData = SessionManager.GetSessionValue<ClientLoginData>("loginDetails");
+          
             HeaderName.Text = "Welcome " + LoginData.ClientLoginDetails[0].ClientName;
         }
         private async void OnSubmitClicked(object sender, EventArgs e)
@@ -289,7 +290,7 @@ namespace TeaClient
             var dataToSend = new
             {
                 IsClientView = true,
-                TenantId = 1
+                TenantId =Convert.ToInt32(LoginData.ClientLoginDetails[0].TenantId)
             };
 
             using (HttpClient client = new HttpClient())
@@ -308,9 +309,7 @@ namespace TeaClient
                     }
 
                 }
-                //AccountName.ItemsSource = (System.Collections.IList)Accountlists;
-                //AccountName.ItemDisplayBinding = new Binding("AccountName");
-
+              
             }
 
 
@@ -327,7 +326,7 @@ namespace TeaClient
             var dataToSend = new
             {
                 IsClientView = true,
-                TenantId = 1
+                TenantId = Convert.ToInt32(LoginData.ClientLoginDetails[0].TenantId)
             };
 
             using (HttpClient client = new HttpClient())
