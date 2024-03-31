@@ -43,7 +43,12 @@ namespace TeaClient
         }
         private async void OnSubmitClicked(object sender, EventArgs e)
         {
-            SaveSupplier();
+            LoadingIndicator.IsRunning = true;
+            LoadingIndicator.IsVisible = true;
+            await SaveSupplier();
+
+            LoadingIndicator.IsRunning = false;
+            LoadingIndicator.IsVisible = false;
         }
         public async void ListOfStore() //List of Countries  
         {
@@ -112,7 +117,7 @@ namespace TeaClient
             AccountName.ItemDisplayBinding = new Binding("AccountName");
 
         }
-        public async void SaveSupplier()
+        public async Task SaveSupplier()
         {
            // await UploadChallan(0);
             string vehicle = VehicleNo.Text;
@@ -260,11 +265,12 @@ namespace TeaClient
 
                         // If needed, read the response content
                         string responseBody = await response.Content.ReadAsStringAsync();
-                        Console.WriteLine("Response: " + responseBody);
+                       // Console.WriteLine("Response: " + responseBody);
                     }
                     catch (HttpRequestException ex)
                     {
-                        Console.WriteLine("HTTP Request Error: " + ex.Message);
+                        // Console.WriteLine("HTTP Request Error: " + ex.Message);
+                        await DisplayAlert("Error",ex.Message, "ok");
                     }
                 }
             }
@@ -373,7 +379,7 @@ namespace TeaClient
 
                 }
                 FilePath = file.Path;
-                await DisplayAlert("File Path ", file.Path, "ok");
+              //  await DisplayAlert("File Path ", file.Path, "ok");
                 ChallanImage.Source = ImageSource.FromStream(() =>
                 {
                     var stream = file.GetStream();

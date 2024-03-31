@@ -7,11 +7,15 @@
     </ContentPage.BindingContext>
     <ContentPage.Content>
         <ScrollView>
+            
             <StackLayout Padding="10" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand" >
+
+               
+                
                 <Label x:Name="HeaderName" FontSize="24" HorizontalOptions="Center" />
                
                 <!-- Collection Date -->
-                <Label Text="Collection Date:" />
+                <Label Text="Collection Date: (Mandatory)" />
                 <DatePicker x:Name="collectionDate" Format="dd/MM/yyyy" />
 
                 <!-- Client Name -->
@@ -19,7 +23,7 @@
             <Entry x:Name="clientNameEntry" Placeholder="Enter Client Name" />-->
 
                 <!-- Vehicle No -->
-                <Label Text="Vehicle No:" />
+                <Label Text="Vehicle No:(Mandatory)" />
                 <!--<AbsoluteLayout>-->
                     <Entry TextChanged="SearchBar_OnTextChanged" BackgroundColor="#f9f9f9" TextColor="#FF464859" FontSize="16" PlaceholderColor="#646b7a" x:Name="VehicleNo" Placeholder="Type here..." AbsoluteLayout.LayoutBounds="0,0,285,38"  AbsoluteLayout.LayoutFlags="None"/>
                    
@@ -40,7 +44,12 @@
                     </ListView>
                 <!--</AbsoluteLayout>-->
                 <!--<Entry x:Name="VehicleNo" Placeholder="Enter Vehicle Number" />-->
-
+                    <ActivityIndicator x:Name="LoadingIndicator"
+                    IsRunning="False"
+                    IsVisible="False"
+                    Color="DarkBlue"
+                    HorizontalOptions="Center"
+                    VerticalOptions="Center" />
                 <!-- Factory Name -->
                 <Label Text="Factory Name:" />
                 <!--<Entry x:Name="factoryNameEntry" Placeholder="Enter Factory Name" />-->
@@ -48,17 +57,17 @@
 
 
                 <!-- Account Name -->
-                <Label Text="Account Name:" />
+                <Label Text="Account Name: (Mandatory)" />
                 <!--<Entry x:Name="AccountName" Placeholder="Enter Account Name" />-->
                 <!--<Picker ItemDisplayBinding="{Binding AccountName}" x:Name="AccountName" Title="Select Account" ItemsSource="{Binding Accountlists}" />-->
                 <Picker x:Name="AccountName"     Title="Select Account"   >
                 </Picker>
                 <!-- Fine Leaf -->
-                <Label Text="Fine Leaf:" />
+                <Label Text="Fine Leaf (Optional):" />
                 <Entry x:Name="FineLeaf" Placeholder="Enter Fine Leaf" Keyboard="Numeric" />
 
                 <!-- Challan Weight -->
-                <Label Text="Challan Weight:" />
+                <Label Text="Challan Weight: (Mandatory)" />
                 <Entry x:Name="ChallanWgt" Placeholder="Enter Challan Weight" Keyboard="Numeric" />
 
                 <!-- Rate -->
@@ -70,11 +79,11 @@
             <Entry x:Name="tripEntry" Placeholder="Enter Trip" Keyboard="Numeric" />-->
 
                 <!-- Remarks -->
-                <Label Text="Remarks:" />
+                <Label Text="Remarks (Optional):" />
             <Editor x:Name="remarksEditor" HeightRequest="100" Placeholder="Enter Remarks"></Editor>
 
                 <!--Image Capture-->
-                <Button Text="Upload Challan" Clicked="OnCaptureClicked"  WidthRequest="100"
+                <Button Text="Upload Challan " Clicked="OnCaptureClicked"  WidthRequest="100"
         HeightRequest="60"
         VerticalOptions="CenterAndExpand"
         HorizontalOptions="CenterAndExpand" />
@@ -82,8 +91,8 @@
                 <Image x:Name="ChallanImage" HeightRequest="300" WidthRequest="300">
 
                 </Image>
-                <!-- Submit Button -->
               
+
             </StackLayout>
         </ScrollView>
     </ContentPage.Content>

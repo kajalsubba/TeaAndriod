@@ -10,7 +10,7 @@
 
                 <!-- Dashboard Items -->
                 <Button Text="Supplier Entry"  Clicked="OnSupplier_Clicked" />
-                <Button Text="Supplier View"  Clicked="OnSupplierView_Clicked" />
+                <Button Text="Leaf History"  Clicked="OnSupplierView_Clicked" />
                 <Button Text="Logout"  Clicked="OnLogout_Clicked" />
 
 
