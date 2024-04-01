@@ -30,6 +30,9 @@ namespace TeaClient
         string FilePath = "";
         ObservableCollection<string> data = new ObservableCollection<string>();
         ClientLoginData LoginData = new ClientLoginData();
+
+        private MediaFile _selectedImageFile;
+
         public IList<FactoryAccountModel> Accountlists { get; set; }
         public SupplierPage()
         {
@@ -143,6 +146,15 @@ namespace TeaClient
                 return;
             }
 
+            Stream imageStream = ConvertImagePathToStream(FilePath);
+
+            if (imageStream == null)
+            {
+                await DisplayAlert("Validation", "Please Upload challan Copy", "OK");
+                return;
+            }
+
+
             string url = "http://72.167.37.70:82/Collection/SaveSupplier";
 
             var selectedAccount = AccountName.SelectedItem as FactoryAccountModel;
@@ -183,7 +195,10 @@ namespace TeaClient
                        
                       await UploadChallan(valueData.Id);
                       await DisplayAlert("Success", valueData.Message, "OK");
-                      clearFormControl();
+                      _selectedImageFile.Dispose();
+                       ChallanImage.Source = null;
+
+                        clearFormControl();
                     }
                     else
                     {
@@ -367,22 +382,50 @@ namespace TeaClient
             }
             else
             {
-                var file = await CrossMedia.Current.TakePhotoAsync(new StoreCameraMediaOptions
+
+                var action = await DisplayActionSheet("Select Source", "Cancel", null, "Take Photo", "Pick Photo");
+
+                switch (action)
                 {
-                    Directory = "Images",
-                    Name = DateTime.Now.ToString() + ".jpg"
-                }) ; 
-                if (file==null)
+                    case "Take Photo":
+                        _selectedImageFile = await CrossMedia.Current.TakePhotoAsync(new StoreCameraMediaOptions
+                        {
+                            Directory = "TeaImages",
+                            Name = DateTime.Now.ToString() + ".jpg",
+                            CompressionQuality = 92,
+                            SaveToAlbum = true,
+                            PhotoSize = PhotoSize.Medium
+                        });
+                        break;
+                    case "Pick Photo":
+                        _selectedImageFile = await CrossMedia.Current.PickPhotoAsync(new PickMediaOptions
+                        {
+                            PhotoSize = PhotoSize.Medium,
+                            CompressionQuality = 92
+                        });
+                        break;
+
+                    default:
+                        return;
+                }
+                //var file = await CrossMedia.Current.TakePhotoAsync(new StoreCameraMediaOptions
+                //{
+                //    Directory = "TeaImages",
+                //    Name = DateTime.Now.ToString() + ".jpg",
+                //    CompressionQuality=92,
+                //    SaveToAlbum = true,
+                //}) ; 
+                if (_selectedImageFile == null)
                 {
                     return;
                   
 
                 }
-                FilePath = file.Path;
+                FilePath = _selectedImageFile.Path;
               //  await DisplayAlert("File Path ", file.Path, "ok");
                 ChallanImage.Source = ImageSource.FromStream(() =>
                 {
-                    var stream = file.GetStream();
+                    var stream = _selectedImageFile.GetStream();
                     return stream;
                 });
 

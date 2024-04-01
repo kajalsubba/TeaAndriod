@@ -15,6 +15,8 @@ namespace TeaClient
         public DashboardPage()
         {
             InitializeComponent();
+            NavigationPage.SetHasBackButton(this, false);
+
         }
         private async void OnSupplier_Clicked(object sender, EventArgs e)
         {

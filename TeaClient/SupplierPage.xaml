@@ -88,10 +88,13 @@
         VerticalOptions="CenterAndExpand"
         HorizontalOptions="CenterAndExpand" />
                 <Button Text="Submit" Clicked="OnSubmitClicked" />
-                <Image x:Name="ChallanImage" HeightRequest="300" WidthRequest="300">
-
-                </Image>
               
+                <!--<Image x:Name="ChallanImage" HeightRequest="300" WidthRequest="300">
+
+                </Image>-->
+                <Frame BorderColor="Black" CornerRadius="5" HasShadow="False" Padding="0" Margin="5">
+                    <Image x:Name="ChallanImage" HeightRequest="300" WidthRequest="300" Aspect="AspectFill" />
+                </Frame>
 
             </StackLayout>
         </ScrollView>
