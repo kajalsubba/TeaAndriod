@@ -8,7 +8,19 @@
         <local:TenantViewModel></local:TenantViewModel>
     </ContentPage.BindingContext>
     <ContentPage.Content>
+        
         <StackLayout Padding="40" VerticalOptions="Center" HorizontalOptions="FillAndExpand">
+            <!--<Image Source="notify.jpg" WidthRequest="50" HeightRequest="50" x:Name="Notification" VerticalOptions="Start" HorizontalOptions="Center" />-->
+           
+            <RelativeLayout>
+                <!-- Your content here -->
+
+                <!--<Image Source="notify.png" RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=0}" RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=0}" WidthRequest="50" HeightRequest="50" Margin="10" />-->
+              
+            
+            </RelativeLayout>
+
+
             <Label Text="Welcome to Tea Client Tea Portal"
                 VerticalOptions="CenterAndExpand" 
                 HorizontalOptions="CenterAndExpand" FontAttributes="Bold" />

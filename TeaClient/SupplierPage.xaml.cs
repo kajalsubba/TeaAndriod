@@ -17,6 +17,7 @@ using TeaClient.Model;
 using TeaClient.SessionHelper;
 using TeaClient.ViewModel;
 using Xamarin.Forms;
+//using Xamarin.Forms.PlatformConfiguration.iOSSpecific;
 using Xamarin.Forms.Xaml;
 using static Java.Util.Jar.Attributes;
 
@@ -294,7 +295,11 @@ namespace TeaClient
         public void clearFormControl()
         {
             VehicleNo.Text = "";
-           // FactoryName.SelectedIndex = -1;
+            //if (FactoryName != null)
+            //{
+            //    FactoryName.SelectedIndex = -1;
+            //}
+           // FactoryName.SelectedItem = null;
             //AccountName.SelectedIndex = -1;
             FineLeaf.Text = "";
             ChallanWgt.Text = "";

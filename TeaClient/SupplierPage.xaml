@@ -64,11 +64,11 @@
                 </Picker>
                 <!-- Fine Leaf -->
                 <Label Text="Fine Leaf (Optional):" />
-                <Entry x:Name="FineLeaf" Placeholder="Enter Fine Leaf" Keyboard="Numeric" />
+                <Entry x:Name="FineLeaf" Placeholder="Enter Fine Leaf" Keyboard="Numeric" MaxLength="2"/>
 
                 <!-- Challan Weight -->
                 <Label Text="Challan Weight: (Mandatory)" />
-                <Entry x:Name="ChallanWgt" Placeholder="Enter Challan Weight" Keyboard="Numeric" />
+                <Entry x:Name="ChallanWgt" Placeholder="Enter Challan Weight" Keyboard="Numeric" MaxLength="6"/>
 
                 <!-- Rate -->
                 <!--<Label Text="Rate:" />
@@ -86,8 +86,16 @@
                 <Button Text="Upload Challan " Clicked="OnCaptureClicked"  WidthRequest="100"
         HeightRequest="60"
         VerticalOptions="CenterAndExpand"
-        HorizontalOptions="CenterAndExpand" />
-                <Button Text="Submit" Clicked="OnSubmitClicked" />
+        HorizontalOptions="CenterAndExpand" TextColor="White" 
+                    BackgroundColor="#3aa602"
+                    BorderColor="Gray"
+            BorderWidth="1.5"
+            CornerRadius="50"  />
+                <Button VerticalOptions="Center" Text="Save" TextColor="White" 
+                    BackgroundColor="#3aa602"
+                    BorderColor="Gray"
+            BorderWidth="1.5"
+            CornerRadius="50" Clicked="OnSubmitClicked" />
               
                 <!--<Image x:Name="ChallanImage" HeightRequest="300" WidthRequest="300">
 

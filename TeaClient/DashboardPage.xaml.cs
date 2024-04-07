@@ -1,8 +1,13 @@
-﻿using System;
+﻿using Android.Webkit;
+using Plugin.Media.Abstractions;
+using Plugin.Media;
+using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TeaClient.Model;
 using TeaClient.SessionHelper;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -12,24 +17,76 @@ namespace TeaClient
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class DashboardPage : ContentPage
     {
+      //  ClientLoginData LoginData = new ClientLoginData();
+        public IList<DashboardModel> MySource { get; set; }
         public DashboardPage()
         {
             InitializeComponent();
             NavigationPage.SetHasBackButton(this, false);
+        //    LoginData = SessionManager.GetSessionValue<ClientLoginData>("loginDetails");
 
-        }
-        private async void OnSupplier_Clicked(object sender, EventArgs e)
-        {
-            await Navigation.PushAsync(new SupplierPage());
-        }
-        private void OnSupplierView_Clicked(object sender, EventArgs e)
-        {
+            MySource = new ObservableCollection<DashboardModel>() {
 
+            new DashboardModel(){Title ="Supplier Entry" ,BgImageSource="Supplier.png"},
+            new DashboardModel(){Title ="Leaf History" ,BgImageSource="leaf.png"},
+            new DashboardModel(){Title ="Smart History" ,BgImageSource="smart.png"},
+            new DashboardModel(){Title ="Change Password" ,BgImageSource="password.png"},
+            new DashboardModel(){Title ="Logout" ,BgImageSource="logout.png"},
+         
+       };
+
+            BindingContext = this;
         }
-        private async void OnLogout_Clicked(object sender, EventArgs e)
+      
+
+        private async void OnImageTapped(object sender, EventArgs e)
+
         {
-            SessionManager.ClearSession();
-            await Navigation.PushAsync(new LoginPage());
+            if (sender is Image image)
+            {
+               
+                string sourcePath = image.Source.ToString();
+                //if (sourcePath == "File: Supplier.png")
+                //{
+                //    await Navigation.PushAsync(new SupplierPage());
+                //}
+                //else if (sourcePath == "File: leaf.png" || sourcePath == "File: smart.png")
+                //{
+                //    await DisplayAlert("Info", "This page is under construction!", "OK");
+                //}
+                //else if (sourcePath == "File: password.png")
+                //{
+                //    await Navigation.PushAsync(new PasswordChangePage());
+                //}
+                //else if (sourcePath == "File: logout.png")
+                //{
+                //    SessionManager.ClearSession();
+                //    await Navigation.PushAsync(new LoginPage());
+                //}
+
+                switch (sourcePath)
+                {
+                    case "File: Supplier.png":
+                        await Navigation.PushAsync(new SupplierPage());
+                        break;
+                    case "File: leaf.png":
+                        await DisplayAlert("Info", "This page is under construction !", "OK");
+                        break;
+
+                    case "File: smart.png":
+                        await DisplayAlert("Info", "This page is under construction !", "OK");
+                        break;
+                    case "File: password.png":
+                        await Navigation.PushAsync(new PasswordChangePage());
+                        break;
+                    case "File: logout.png":
+                        SessionManager.ClearSession();
+                        await Navigation.PushAsync(new LoginPage());
+                        break;
+                    default:
+                        return;
+                }
+            }
         }
         
 

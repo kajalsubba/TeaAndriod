@@ -2,19 +2,66 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="TeaClient.DashboardPage">
-    <ContentPage.Content>
-        <StackLayout>
-            <StackLayout Padding="10" Spacing="10">
-             
-                <Label Text="Dashboard" FontSize="24" HorizontalOptions="Center" />
+    <!--<ContentPage.Content>
 
-                <!-- Dashboard Items -->
+        <StackLayout VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
+
+            --><!--<Label Text="Dashboard" FontSize="24" HorizontalOptions="Center" />
+
+                --><!-- Dashboard Items --><!--
                 <Button Text="Supplier Entry"  Clicked="OnSupplier_Clicked" />
                 <Button Text="Leaf History"  Clicked="OnSupplierView_Clicked" />
-                <Button Text="Logout"  Clicked="OnLogout_Clicked" />
+                <Button Text="Smart History"  Clicked="OnSmartHistory_Clicked" />
+                <Button Text="Change Password"  Clicked="OnPasswordChanged_Clicked" />
+                <Button Text="Logout"  Clicked="OnLogout_Clicked" />--><!--
+           
 
-
-            </StackLayout>
         </StackLayout>
-    </ContentPage.Content>
+      
+    </ContentPage.Content>-->
+
+    <StackLayout Padding="40"  VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
+        <!-- Place new controls here -->
+
+        <CollectionView ItemsSource="{Binding MySource}">
+            <CollectionView.ItemsLayout>
+                <GridItemsLayout Orientation="Vertical" Span="2" />
+            </CollectionView.ItemsLayout>
+            
+            <CollectionView.ItemTemplate>
+                
+                <DataTemplate>
+                  
+                    <Frame Padding="10" WidthRequest="150" HeightRequest="170">
+                        <Frame BorderColor="LightBlue" BackgroundColor="AliceBlue" CornerRadius="10"  Padding="8"  HasShadow="True" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
+                            <ContentView >
+                                <Grid >
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="*" />
+                                    </Grid.RowDefinitions>
+
+                                    <Image Grid.Row="0" Source="{Binding BgImageSource}"  WidthRequest="100" HeightRequest="100" >
+                                        <Image.GestureRecognizers>
+                                            <TapGestureRecognizer Tapped="OnImageTapped" />
+                                        </Image.GestureRecognizers>
+                                    </Image>
+
+
+                                    <StackLayout Grid.Row="1" Padding="10" >
+
+                                        <Label Text="{Binding Title}" WidthRequest="100" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" />
+
+                                    </StackLayout>
+                                </Grid>
+                            </ContentView>
+                        </Frame>
+                    </Frame>
+                   
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+    </StackLayout>
+
 </ContentPage>

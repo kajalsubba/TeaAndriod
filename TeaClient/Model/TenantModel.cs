@@ -36,6 +36,15 @@ namespace TeaClient.Model
         public string LoginType { get; set; }
         public long? UserId { get; set; }
         public string ClientName { get; set; }
+        public bool FirstTimeLogin { get; set; }
         public string ContactNo { get; set; }
     }
+
+    public class VesionModel
+    {
+        public long Data { get; set; }
+        public string Message { get; set; }
+
+    }
+
 }
