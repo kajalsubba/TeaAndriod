@@ -21,7 +21,8 @@ namespace TeaClient
         public LoginPage()
         {
             InitializeComponent();
-            GetUpdateApp();
+            NavigationPage.SetHasBackButton(this, false);
+         //   GetUpdateApp();
         }
 
         private async void Button_Clicked(object sender, EventArgs e)
