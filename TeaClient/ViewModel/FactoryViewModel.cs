@@ -29,7 +29,7 @@ namespace TeaClient.ViewModel
     public async void GetFactory()
         {
 
-            string url = "http://72.167.37.70:82/Master/GetFactory";
+            string url = "http://72.167.37.70:94/Master/GetFactory";
 
             //var selectedTenant = (TenantList)Tenant.SelectedItem;
 
