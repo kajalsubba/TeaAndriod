@@ -156,7 +156,7 @@ namespace TeaClient
             }
 
 
-            string url = "http://72.167.37.70:94/Collection/SaveSupplier";
+            string url = "http://72.167.37.70:82/Collection/SaveSupplier";
 
             var selectedAccount = AccountName.SelectedItem as FactoryAccountModel;
             DateTime selectedDate = collectionDate.Date;
@@ -308,7 +308,7 @@ namespace TeaClient
         public async void GetFactoryAccount()
         {
 
-            string url = "http://72.167.37.70:94/Master/GetFactoryAccount";
+            string url = "http://72.167.37.70:82/Master/GetFactoryAccount";
 
             //var selectedTenant = (TenantList)Tenant.SelectedItem;
 
@@ -344,7 +344,7 @@ namespace TeaClient
         public async void GetVehicle()
         {
 
-            string url = "http://72.167.37.70:94/Master/GetVehicle";
+            string url = "http://72.167.37.70:82/Master/GetVehicle";
 
             //var selectedTenant = (TenantList)Tenant.SelectedItem;
 

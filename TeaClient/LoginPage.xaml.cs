@@ -29,7 +29,7 @@ namespace TeaClient
         private async void Button_Clicked(object sender, EventArgs e)
         {
 
-            string url = "http://72.167.37.70:94/Admin/ClientLogin";
+            string url = "http://72.167.37.70:82/Admin/ClientLogin";
 
             var selectedTenant = (TenantList)Tenant.SelectedItem;
 

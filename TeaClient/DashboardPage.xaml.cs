@@ -46,33 +46,16 @@ namespace TeaClient
             {
                
                 string sourcePath = image.Source.ToString();
-                //if (sourcePath == "File: Supplier.png")
-                //{
-                //    await Navigation.PushAsync(new SupplierPage());
-                //}
-                //else if (sourcePath == "File: leaf.png" || sourcePath == "File: smart.png")
-                //{
-                //    await DisplayAlert("Info", "This page is under construction!", "OK");
-                //}
-                //else if (sourcePath == "File: password.png")
-                //{
-                //    await Navigation.PushAsync(new PasswordChangePage());
-                //}
-                //else if (sourcePath == "File: logout.png")
-                //{
-                //    SessionManager.ClearSession();
-                //    await Navigation.PushAsync(new LoginPage());
-                //}
-
+               
                 switch (sourcePath)
                 {
                     case "File: Supplier.png":
                         await Navigation.PushAsync(new SupplierPage());
                         break;
                     case "File: leaf.png":
-                        await DisplayAlert("Info", "This page is under construction !", "OK");
+                        await Navigation.PushAsync(new SupplierHistory());
                         break;
-
+                        
                     case "File: smart.png":
                         await DisplayAlert("Info", "This page is under construction !", "OK");
                         break;

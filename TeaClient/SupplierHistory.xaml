@@ -1,0 +1,136 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="TeaClient.SupplierHistory">
+    <ContentPage.Content>
+        <StackLayout Padding="10" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
+            <Label x:Name="HeaderName" Text="Supplier History" FontSize="24" HorizontalOptions="Center" />
+            <Label Text="From Date: (Mandatory)" />
+            <DatePicker x:Name="FromDate" Format="dd/MM/yyyy" />
+            <Label Text="To Date: (Mandatory)" />
+            <DatePicker x:Name="ToDate" Format="dd/MM/yyyy" />
+
+            <Button VerticalOptions="Center" Text="Search" TextColor="White" 
+           BackgroundColor="#3aa602"
+           BorderColor="Gray"
+   BorderWidth="1.5"
+   CornerRadius="50" Clicked="OnSearchClicked" />
+           <Frame BorderColor="LightBlue" BackgroundColor="AliceBlue" CornerRadius="10" Padding="8" HasShadow="True" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
+
+    <ScrollView Orientation="Horizontal">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                     
+                        </Grid.RowDefinitions>
+
+            <!-- Column Headers -->
+            <Grid Grid.Row="0" BackgroundColor="LightBlue" Padding="5" HorizontalOptions="FillAndExpand">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Label Grid.Column="0" Text="Collection Date" FontAttributes="Bold" />
+                <Label Grid.Column="1" Text="Factory Name" FontAttributes="Bold" />
+                <Label Grid.Column="2" Text="Vehicle No" FontAttributes="Bold" />
+                            <Label Grid.Column="3" Text="Fine Leaf" FontAttributes="Bold" HorizontalOptions="Center"/>
+                            <Label Grid.Column="4" Text="Challan Weight" FontAttributes="Bold" HorizontalOptions="Center"/>
+                            <Label Grid.Column="5" Text="Rate" FontAttributes="Bold" HorizontalOptions="Center"/>
+                            <Label Grid.Column="6" Text="Gross Amount" FontAttributes="Bold" HorizontalOptions="Center"/>
+                <Label Grid.Column="7" Text="Status" FontAttributes="Bold" />
+            </Grid>
+
+            <!-- CollectionView with Data -->
+            <CollectionView Grid.Row="1" ItemsSource="{Binding dataItems}">
+                <CollectionView.ItemsLayout>
+                    <GridItemsLayout Orientation="Vertical" Span="1" />
+                </CollectionView.ItemsLayout>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                                    <Grid Margin="0,0,0,10" >
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                          
+                                <Label   Grid.Column="0" Text="{Binding CollectionDate}"  />
+                                <Label   Grid.Column="1" Text="{Binding FactoryName}" />
+                                <Label   Grid.Column="2" Text="{Binding VehicleNo}" />
+                                        <Label  Grid.Column="3" Text="{Binding FineLeaf}" HorizontalOptions="Center"/>
+                                        <Label   Grid.Column="4" Text="{Binding ChallanWeight}" HorizontalOptions="Center"/>
+                                        <Label   Grid.Column="5" Text="{Binding Rate}" HorizontalOptions="Center"/>
+                                        <Label  Grid.Column="6" Text="{Binding GrossAmount}" HorizontalOptions="Center"/>
+                                <Label   Grid.Column="7" Text="{Binding Status}" />
+                                        <!-- Row Separator -->
+                                        <BoxView Grid.ColumnSpan="8" HeightRequest="1" BackgroundColor="LightGray" VerticalOptions="End" />
+                                       
+                                   
+                                        <!-- DataTrigger to change row background color -->
+                                        <Grid.Triggers>
+                                            <DataTrigger TargetType="Grid" Binding="{Binding Status}" Value="Rejected">
+                                                <Setter Property="BackgroundColor" Value="#ed4c4f" />
+                                            </DataTrigger>
+                                            <DataTrigger TargetType="Grid" Binding="{Binding Status}" Value="Pending">
+                                                <Setter Property="BackgroundColor" Value="#f7f25e" />
+                                            </DataTrigger>
+                                        </Grid.Triggers>
+                                    </Grid>
+                   
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+                       
+                    </Grid>
+    </ScrollView>
+</Frame>
+            <Frame BorderColor="LightBlue" BackgroundColor="AliceBlue" CornerRadius="10" Padding="8" HasShadow="True" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
+                <ScrollView Orientation="Horizontal">
+                    <Grid  BackgroundColor="LightBlue" Padding="5" HorizontalOptions="FillAndExpand">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        
+                    </Grid.RowDefinitions>
+
+                
+                    <Grid Grid.Row="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                            <Label Grid.Column="0" Text="Total" FontAttributes="Bold" />
+                            <Label Grid.Column="1" Text="" FontAttributes="Bold" />
+                            <Label Grid.Column="2" Text="Challan Wgt." FontAttributes="Bold" />
+                            <Label Grid.Column="3" Text="{Binding TotalChallanWeight}" FontAttributes="Bold" />
+                            <Label Grid.Column="4" Text="Avg. Rate" FontAttributes="Bold" />
+                            <Label Grid.Column="5" Text="{Binding AvarageRate}" FontAttributes="Bold" />
+                            <Label Grid.Column="6" Text="Amount :" FontAttributes="Bold" />
+                            <Label Grid.Column="7" Text="{Binding TotalGrossAmount}" FontAttributes="Bold" />
+
+                       
+                    </Grid>
+                </Grid>
+                </ScrollView>
+            </Frame>
+          
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

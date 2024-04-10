@@ -24,7 +24,7 @@ namespace TeaClient.ViewModel
 
             using (HttpClient client = new HttpClient())
             {
-                string url = "http://72.167.37.70:94/Admin/GetTenant";
+                string url = "http://72.167.37.70:82/Admin/GetTenant";
 
                 HttpResponseMessage response = await client.GetAsync(url);
                 var results = await response.Content.ReadAsStringAsync();
