@@ -36,16 +36,20 @@
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
-                <Label Grid.Column="0" Text="Collection Date" FontAttributes="Bold" />
-                <Label Grid.Column="1" Text="Factory Name" FontAttributes="Bold" />
-                <Label Grid.Column="2" Text="Vehicle No" FontAttributes="Bold" />
-                            <Label Grid.Column="3" Text="Fine Leaf" FontAttributes="Bold" HorizontalOptions="Center"/>
-                            <Label Grid.Column="4" Text="Challan Weight" FontAttributes="Bold" HorizontalOptions="Center"/>
-                            <Label Grid.Column="5" Text="Rate" FontAttributes="Bold" HorizontalOptions="Center"/>
-                            <Label Grid.Column="6" Text="Gross Amount" FontAttributes="Bold" HorizontalOptions="Center"/>
-                <Label Grid.Column="7" Text="Status" FontAttributes="Bold" />
-            </Grid>
+                    <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                        <Label Grid.Column="0" Text="Date" FontAttributes="Bold" />
+                        <Label Grid.Column="1" Text="Factory" FontAttributes="Bold" />
+                        <Label Grid.Column="2" Text="Vehicle No" FontAttributes="Bold" />
+                        <Label Grid.Column="3" Text="Fine Leaf" FontAttributes="Bold" HorizontalOptions="Center"/>
+                        <Label Grid.Column="4" Text="Challan Wgt." FontAttributes="Bold" HorizontalOptions="Center"/>
+                        <Label Grid.Column="5" Text="Rate" FontAttributes="Bold" HorizontalOptions="Center"/>
+                        <Label Grid.Column="6" Text="Amount" FontAttributes="Bold" HorizontalOptions="Center"/>
+                        <Label Grid.Column="7" Text="Remarks" FontAttributes="Bold" HorizontalOptions="Center"/>
+
+                            <Label Grid.Column="8" Text="Status" FontAttributes="Bold" />
+                            <Label Grid.Column="9" Text="Created By" FontAttributes="Bold" />
+                        </Grid>
 
             <!-- CollectionView with Data -->
             <CollectionView Grid.Row="1" ItemsSource="{Binding dataItems}">
@@ -64,29 +68,70 @@
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="*" />
-                            </Grid.ColumnDefinitions>
-                          
-                                <Label   Grid.Column="0" Text="{Binding CollectionDate}"  />
-                                <Label   Grid.Column="1" Text="{Binding FactoryName}" />
-                                <Label   Grid.Column="2" Text="{Binding VehicleNo}" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+
+                                        <Label   Grid.Column="0" Text="{Binding CollectionDate}" >
+                                            <!--<Label.Style>
+                                                <Style TargetType="Label">
+                                                    <Setter Property="TextColor" Value="Black" />
+                                                  
+                                                    <Style.Triggers>
+                                                        <DataTrigger TargetType="Label" Binding="{Binding Status}" Value="Rejected">
+                                                            <Setter Property="TextColor" Value="Red" />
+                                                        </DataTrigger>
+                                                        <DataTrigger TargetType="Label" Binding="{Binding Status}" Value="Pending">
+                                                            <Setter Property="TextColor" Value="f7f25e" />
+                                                        </DataTrigger>
+                                                        
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </Label.Style>-->
+
+                                        </Label>
+                                        <Label   Grid.Column="1" Text="{Binding FactoryName}" />
+                                        <Label   Grid.Column="2" Text="{Binding VehicleNo}" />
                                         <Label  Grid.Column="3" Text="{Binding FineLeaf}" HorizontalOptions="Center"/>
                                         <Label   Grid.Column="4" Text="{Binding ChallanWeight}" HorizontalOptions="Center"/>
                                         <Label   Grid.Column="5" Text="{Binding Rate}" HorizontalOptions="Center"/>
                                         <Label  Grid.Column="6" Text="{Binding GrossAmount}" HorizontalOptions="Center"/>
-                                <Label   Grid.Column="7" Text="{Binding Status}" />
+                                        <Label  Grid.Column="7" Text="{Binding Remarks}" HorizontalOptions="Center"/>
+                                        <Label   Grid.Column="8" Text="{Binding Status}" >
+                                        <Label.Style>
+                                            <Style TargetType="Label" >
+                                                <Setter Property="TextColor" Value="Black" />
+                                                <!-- Default color -->
+                                                <Style.Triggers>
+                                                    <DataTrigger TargetType="Label" Binding="{Binding Status}" Value="Rejected">
+                                                        <Setter Property="TextColor" Value="Red" />
+                                                    </DataTrigger>
+                                                        <DataTrigger  TargetType="Label" Binding="{Binding Status}" Value="Pending">
+                                                            <Setter Property="TextColor" Value="#f7f25e" />
+                                                            <Setter Property="FontAttributes" Value="Bold" />
+                                                            <!--<Setter Property="BackgroundColor" Value="#f7f25e" />-->
+                                                        </DataTrigger>
+                                                        <!-- Add more DataTriggers for other status conditions if needed -->
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Label.Style>
+                                        </Label>
+
+                                        <Label   Grid.Column="9" Text="{Binding CreatedBy}" />
                                         <!-- Row Separator -->
-                                        <BoxView Grid.ColumnSpan="8" HeightRequest="1" BackgroundColor="LightGray" VerticalOptions="End" />
+                                        <BoxView Grid.ColumnSpan="10" HeightRequest="1" BackgroundColor="LightGray" VerticalOptions="End" />
                                        
                                    
                                         <!-- DataTrigger to change row background color -->
-                                        <Grid.Triggers>
+                                        <!--<Grid.Triggers>
                                             <DataTrigger TargetType="Grid" Binding="{Binding Status}" Value="Rejected">
-                                                <Setter Property="BackgroundColor" Value="#ed4c4f" />
+                                                --><!--<Setter Property="BackgroundColor" Value="#ed4c4f" />--><!--
+                                                <Setter Property="TextColor" Value="#ed4c4f" />
                                             </DataTrigger>
                                             <DataTrigger TargetType="Grid" Binding="{Binding Status}" Value="Pending">
-                                                <Setter Property="BackgroundColor" Value="#f7f25e" />
+                                                --><!--<Setter Property="BackgroundColor" Value="#f7f25e" />-->
+                                                <!--<Setter Property="" Value="#f7f25e" />--><!--
                                             </DataTrigger>
-                                        </Grid.Triggers>
+                                        </Grid.Triggers>-->
                                     </Grid>
                    
                     </DataTemplate>
@@ -120,7 +165,7 @@
                             <Label Grid.Column="1" Text="" FontAttributes="Bold" />
                             <Label Grid.Column="2" Text="Challan Wgt." FontAttributes="Bold" />
                             <Label Grid.Column="3" Text="{Binding TotalChallanWeight}" FontAttributes="Bold" />
-                            <Label Grid.Column="4" Text="Avg. Rate" FontAttributes="Bold" />
+                            <Label Grid.Column="4" Text="Avg." FontAttributes="Bold" />
                             <Label Grid.Column="5" Text="{Binding AvarageRate}" FontAttributes="Bold" />
                             <Label Grid.Column="6" Text="Amount :" FontAttributes="Bold" />
                             <Label Grid.Column="7" Text="{Binding TotalGrossAmount}" FontAttributes="Bold" />

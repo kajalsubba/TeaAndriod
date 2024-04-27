@@ -7,6 +7,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using TeaClient.Model;
+using TeaClient.Services;
 using TeaClient.SessionHelper;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -16,7 +17,9 @@ namespace TeaClient
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class LoginPage : ContentPage
     {
-        
+        AppSettings _appSetting = AppConfigService.GetConfig();
+
+
         public IList<ClientLoginData> TenantList { get; set; }
 
         public LoginPage()
@@ -28,8 +31,19 @@ namespace TeaClient
 
         private async void Button_Clicked(object sender, EventArgs e)
         {
-
-            string url = "http://72.167.37.70:82/Admin/ClientLogin";
+            string userId = txtUserName.Text;
+            string password = txtPassword.Text;
+            if (string.IsNullOrWhiteSpace(userId))
+            {
+                await DisplayAlert("Validation", "Please Enter User Name", "OK");
+                return;
+            }
+            else if (string.IsNullOrWhiteSpace(password))
+            {
+                await DisplayAlert("Validation", "Please Enter Password", "OK");
+                return;
+            }
+            string url = _appSetting.ApiUrl + "Admin/ClientLogin";
 
             var selectedTenant = (TenantList)Tenant.SelectedItem;
 
@@ -78,7 +92,7 @@ namespace TeaClient
 
             using (HttpClient client = new HttpClient())
             {
-                string url = "http://72.167.37.70:81/Admin/GetApkUpdateNotification";
+                string url = _appSetting.ApiUrl+ "Admin/GetApkUpdateNotification";
 
                 HttpResponseMessage response = await client.GetAsync(url);
                 var results = await response.Content.ReadAsStringAsync();

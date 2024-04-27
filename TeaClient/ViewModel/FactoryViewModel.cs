@@ -8,6 +8,7 @@ using System.Net.Http;
 using System.Text;
 using System.Windows.Input;
 using TeaClient.Model;
+using TeaClient.Services;
 using TeaClient.SessionHelper;
 using Xamarin.Forms;
 
@@ -15,6 +16,7 @@ namespace TeaClient.ViewModel
 {
     public class FactoryViewModel
     {
+        AppSettings _appSetting = AppConfigService.GetConfig();
         public IList<FactoryModel> Factorylists { get; set; }
         ClientLoginData LoginData = new ClientLoginData();
         public FactoryViewModel()
@@ -29,7 +31,7 @@ namespace TeaClient.ViewModel
     public async void GetFactory()
         {
 
-            string url = "http://72.167.37.70:82/Master/GetFactory";
+            string url = _appSetting.ApiUrl+"Master/GetFactory";
 
             //var selectedTenant = (TenantList)Tenant.SelectedItem;
 

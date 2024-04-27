@@ -5,13 +5,18 @@ using System.Collections.ObjectModel;
 using System.Net.Http;
 using System.Text;
 using TeaClient.Model;
+using TeaClient.Services;
 using Xamarin.Forms;
 
 namespace TeaClient.ViewModel
 {
     public class TenantViewModel
     {
+      
         public IList<TenantList> TenantList { get; set; }
+        AppSettings _appSetting = AppConfigService.GetConfig();
+
+
 
         public TenantViewModel()
         {
@@ -21,10 +26,11 @@ namespace TeaClient.ViewModel
 
         public async void GetTenant()
         {
+            
 
             using (HttpClient client = new HttpClient())
             {
-                string url = "http://72.167.37.70:82/Admin/GetTenant";
+                string url = _appSetting.ApiUrl+"Admin/GetTenant";
 
                 HttpResponseMessage response = await client.GetAsync(url);
                 var results = await response.Content.ReadAsStringAsync();

@@ -1,32 +1,35 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Text;
 using TeaClient.EventHelper;
+using TeaClient.Model;
 
 namespace TeaClient.Services
 {
-    public class AppConfigService
+    public static class AppConfigService
     {
-        private readonly string _configFilePath = "appsettings.json";
-
-        public AppConfigModel GetConfig()
+      
+       public static AppSettings GetConfig()
         {
-            var assembly = typeof(AppConfigService).GetTypeInfo().Assembly;
-            using (Stream stream = assembly.GetManifestResourceStream(_configFilePath))
+
+            
+            var assembly = typeof(AppSettings).GetTypeInfo().Assembly;
+            // using (Stream stream = assembly.GetManifestResourceStream("TeaClient.Configuration.appsettings.release.json"))
+            using (Stream stream = assembly.GetManifestResourceStream("TeaClient.Configuration.appsettings.debug.json"))
             {
                 using (StreamReader reader = new StreamReader(stream))
                 {
                     string json = reader.ReadToEnd();
-                    AppConfigModel config = JsonConvert.DeserializeObject<AppConfigModel>(json);
+                    AppSettings config = JsonConvert.DeserializeObject<AppSettings>(json);
                     return config;
                 }
             }
-            //string json = File.ReadAllText(_configFilePath);
-            //AppConfigModel config = JsonConvert.DeserializeObject<AppConfigModel>(json);
-            //return config;
+        
         }
+
     }
 }

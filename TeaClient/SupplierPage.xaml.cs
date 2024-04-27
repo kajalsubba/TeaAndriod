@@ -14,6 +14,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using TeaClient.Model;
+using TeaClient.Services;
 using TeaClient.SessionHelper;
 using TeaClient.ViewModel;
 using Xamarin.Forms;
@@ -26,6 +27,8 @@ namespace TeaClient
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class SupplierPage : ContentPage
     {
+        AppSettings _appSetting = AppConfigService.GetConfig();
+
         public IList<FactoryAccountModel> FactoryAccountlists { get; set; }
         // public IList<VehicleModel> Vehiclelists { get; set; }
         string FilePath = "";
@@ -156,7 +159,7 @@ namespace TeaClient
             }
 
 
-            string url = "http://72.167.37.70:82/Collection/SaveSupplier";
+            string url = _appSetting.ApiUrl+"Collection/SaveSupplier";
 
             var selectedAccount = AccountName.SelectedItem as FactoryAccountModel;
             DateTime selectedDate = collectionDate.Date;
@@ -245,7 +248,7 @@ namespace TeaClient
         }
         private async Task  UploadChallan(long collId)
         {
-            string url = "http://72.167.37.70:83/Collection/UploadSupplierChallan";
+            string url = _appSetting.ApiUrl+"Collection/UploadSupplierChallan";
             // Load the image from the embedded resource
             // string imagePath = "YourNamespace.Images.your_image.png";
           //  ImageConverter imageConverter = new ImageConverter();
@@ -308,7 +311,7 @@ namespace TeaClient
         public async void GetFactoryAccount()
         {
 
-            string url = "http://72.167.37.70:82/Master/GetFactoryAccount";
+            string url = _appSetting.ApiUrl+"Master/GetFactoryAccount";
 
             //var selectedTenant = (TenantList)Tenant.SelectedItem;
 
@@ -344,7 +347,7 @@ namespace TeaClient
         public async void GetVehicle()
         {
 
-            string url = "http://72.167.37.70:82/Master/GetVehicle";
+            string url =_appSetting.ApiUrl+ "Master/GetVehicle";
 
             //var selectedTenant = (TenantList)Tenant.SelectedItem;
 

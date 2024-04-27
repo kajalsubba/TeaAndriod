@@ -13,8 +13,9 @@ namespace TeaClient.Model
         public decimal ChallanWeight { get; set; }
         public decimal Rate { get; set; }
         public decimal GrossAmount { get; set; }
+        public string Remarks { get; set; }
         public string Status { get; set; }
-        
+        public string CreatedBy { get; set; }
     }
     public class SupplierList
     {

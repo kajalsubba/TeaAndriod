@@ -9,6 +9,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using TeaClient.Model;
+using TeaClient.Services;
 using TeaClient.SessionHelper;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -24,7 +25,7 @@ namespace TeaClient
         private decimal _avgRate;
         public IList<SupplierHistoryModel> dataItems { get; set; }
         ClientLoginData LoginData = new ClientLoginData();
-   
+        AppSettings _appSetting = AppConfigService.GetConfig();
         public SupplierHistory()
         {
             InitializeComponent();
@@ -100,7 +101,7 @@ namespace TeaClient
         public async Task GetSupplierHistory()
         {
             dataItems.Clear();
-            string url = "http://72.167.37.70:82/Collection/GetSupplierMobileData";
+            string url =_appSetting.ApiUrl+ "Collection/GetSupplierMobileData";
 
             DateTime fromDate = FromDate.Date;
             string formattedfromDate = fromDate.ToString("yyyy-MM-dd");
@@ -142,7 +143,9 @@ namespace TeaClient
                                 Rate = _supplier.Rate,
                                 GrossAmount = _supplier
                             .GrossAmount,
-                                Status = _supplier.Status
+                                Remarks=_supplier.Remarks,
+                                Status = _supplier.Status,
+                                CreatedBy=_supplier.CreatedBy
                             });
                         }
                     }

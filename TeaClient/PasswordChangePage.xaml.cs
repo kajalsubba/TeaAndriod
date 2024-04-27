@@ -8,6 +8,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using TeaClient.Model;
+using TeaClient.Services;
 using TeaClient.SessionHelper;
 using TeaClient.ViewModel;
 using Xamarin.Forms;
@@ -18,6 +19,8 @@ namespace TeaClient
 	[XamlCompilation(XamlCompilationOptions.Compile)]
 	public partial class PasswordChangePage : ContentPage
 	{
+        AppSettings _appSetting = AppConfigService.GetConfig();
+
         ClientLoginData LoginData = new ClientLoginData();
         public PasswordChangePage()
 		{
@@ -47,7 +50,7 @@ namespace TeaClient
 
        async Task changePassword()
         {
-            string url = "http://72.167.37.70:81/Admin/ChangePassword\r\n";
+            string url = _appSetting.ApiUrl+"Admin/ChangePassword";
 
             if (txtPassword.Text!=txtConfirmPassword.Text)
             {
