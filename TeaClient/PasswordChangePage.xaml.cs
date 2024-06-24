@@ -25,10 +25,25 @@ namespace TeaClient
         public PasswordChangePage()
 		{
 			InitializeComponent();
+            NavigationPage.SetHasBackButton(this, false);
             LoginData = SessionManager.GetSessionValue<ClientLoginData>("loginDetails");
         }
-
-		private async void OnSubmitClicked(object sender, EventArgs e)
+        protected override bool OnBackButtonPressed()
+        {
+            DisplayConfirmation();
+            return true; // Do not continue processing the back button
+        }
+        async void DisplayConfirmation()
+        {
+            bool logout = await DisplayAlert("Logout", "Are you sure you want to logout?", "Yes", "No");
+            if (logout)
+            {
+                // Perform logout action
+                await Navigation.PushAsync(new LoginPage()); // Navigate to dashboard page
+                                                             // Perform logout logic here
+            }
+        }
+        private async void OnSubmitClicked(object sender, EventArgs e)
 		{
             await changePassword();
 
@@ -61,7 +76,7 @@ namespace TeaClient
             // Create an object to be sent as JSON in the request body
             ChangePasswordModel dataToSend = new ChangePasswordModel
             {
-                UserName = LoginData.ClientLoginDetails[0].ContactNo,
+                UserName = LoginData.ClientLoginDetails[0].ClientId.ToString(),
                 Password = txtConfirmPassword.Text,
                 LoginType ="Client",
                 TenantId = Convert.ToInt32(LoginData.ClientLoginDetails[0].TenantId),

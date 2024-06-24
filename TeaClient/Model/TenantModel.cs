@@ -42,7 +42,7 @@ namespace TeaClient.Model
 
     public class VesionModel
     {
-        public long Data { get; set; }
+        public bool UpdateVersion { get; set; }
         public string Message { get; set; }
 
     }

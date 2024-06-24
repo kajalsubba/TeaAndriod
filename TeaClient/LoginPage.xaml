@@ -10,7 +10,11 @@
     <ContentPage.Content>
         
         <StackLayout Padding="40" VerticalOptions="Center" HorizontalOptions="FillAndExpand">
-            <!--<Image Source="notify.jpg" WidthRequest="50" HeightRequest="50" x:Name="Notification" VerticalOptions="Start" HorizontalOptions="Center" />-->
+            <Image Source="notify.jpg" WidthRequest="50" HeightRequest="50" x:Name="Notification" VerticalOptions="Start" HorizontalOptions="Center" >
+                <Image.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="Notification_Tapped"/>
+                </Image.GestureRecognizers>
+            </Image>
            
             <RelativeLayout>
                 <!-- Your content here -->
