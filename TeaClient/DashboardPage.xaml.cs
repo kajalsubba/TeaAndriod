@@ -30,6 +30,7 @@ namespace TeaClient
             new DashboardModel(){Title ="Supplier Entry" ,BgImageSource="Supplier.png"},
             new DashboardModel(){Title ="Leaf History" ,BgImageSource="leaf.png"},
             new DashboardModel(){Title ="Smart History" ,BgImageSource="smart.png"},
+            new DashboardModel(){Title ="Bill History" ,BgImageSource="bill.png"},
             new DashboardModel(){Title ="Change Password" ,BgImageSource="password.png"},
             new DashboardModel(){Title ="Logout" ,BgImageSource="logout.png"},
          
@@ -71,6 +72,9 @@ namespace TeaClient
                         break;
                         
                     case "File: smart.png":
+                        await Navigation.PushAsync(new SmartHistoryPage());
+                        break;
+                    case "File: bill.png":
                         await DisplayAlert("Info", "This page is under construction !", "OK");
                         break;
                     case "File: password.png":

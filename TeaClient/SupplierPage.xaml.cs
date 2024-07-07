@@ -3,6 +3,7 @@ using Java.Util;
 using Newtonsoft.Json;
 using Plugin.Media;
 using Plugin.Media.Abstractions;
+using Stormlion.ImageCropper;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -17,8 +18,8 @@ using TeaClient.Model;
 using TeaClient.Services;
 using TeaClient.SessionHelper;
 using TeaClient.ViewModel;
+using Xamarin.Essentials;
 using Xamarin.Forms;
-//using Xamarin.Forms.PlatformConfiguration.iOSSpecific;
 using Xamarin.Forms.Xaml;
 using static Java.Util.Jar.Attributes;
 
@@ -30,7 +31,6 @@ namespace TeaClient
         AppSettings _appSetting = AppConfigService.GetConfig();
 
         public IList<FactoryAccountModel> FactoryAccountlists { get; set; }
-        // public IList<VehicleModel> Vehiclelists { get; set; }
         string FilePath = "";
         ObservableCollection<string> data = new ObservableCollection<string>();
         ClientLoginData LoginData = new ClientLoginData();
@@ -41,6 +41,7 @@ namespace TeaClient
         public SupplierPage()
         {
             InitializeComponent();
+            CrossMedia.Current.Initialize();
             Accountlists = new ObservableCollection<FactoryAccountModel>();
             LoginData = SessionManager.GetSessionValue<ClientLoginData>("loginDetails");
             GetFactoryAccount();
@@ -380,9 +381,11 @@ namespace TeaClient
 
 
         }
+        string imagefile;
         private async void OnCaptureClicked(object sender, EventArgs e)
         {
-           await CrossMedia.Current.Initialize();
+         //   var status = await Permissions.RequestAsync<Permissions.Camera>();
+
             if (!CrossMedia.Current.IsTakePhotoSupported && !CrossMedia.Current.IsPickPhotoSupported)
             {
                 await DisplayAlert("Error", "Format is not supported", "ok");
@@ -390,32 +393,63 @@ namespace TeaClient
             }
             else
             {
-
-                var action = await DisplayActionSheet("Select Source", "Cancel", null, "Take Photo", "Pick Photo");
-
-                switch (action)
+                try
                 {
-                    case "Take Photo":
-                        _selectedImageFile = await CrossMedia.Current.TakePhotoAsync(new StoreCameraMediaOptions
-                        {
-                            Directory = "TeaImages",
-                            Name = DateTime.Now.ToString() + ".jpg",
-                            CompressionQuality = 92,
-                            SaveToAlbum = true,
-                            PhotoSize = PhotoSize.Medium
-                        });
-                        break;
-                    case "Pick Photo":
-                        _selectedImageFile = await CrossMedia.Current.PickPhotoAsync(new PickMediaOptions
-                        {
-                            PhotoSize = PhotoSize.Medium,
-                            CompressionQuality = 92
-                        });
-                        break;
+                    //var action = await DisplayActionSheet("Select Source", "Cancel", null, "Take Photo", "Pick Photo");
 
-                    default:
-                        return;
+                    //switch (action)
+                    //{
+                    //    case "Take Photo":
+                    //        _selectedImageFile = await CrossMedia.Current.TakePhotoAsync(new StoreCameraMediaOptions
+                    //        {
+                    //            Directory = "TeaImages",
+                    //            Name = DateTime.Now.ToString() + ".jpg",
+                    //            CompressionQuality = 92,
+                    //            SaveToAlbum = true,
+                    //            PhotoSize = PhotoSize.Medium
+                    //        });
+                    //        break;
+                    //    case "Pick Photo":
+                    //_selectedImageFile = await CrossMedia.Current.PickPhotoAsync(new PickMediaOptions
+                    //{
+                    //    PhotoSize = PhotoSize.Medium,
+                    //    CompressionQuality = 92
+                    //});
+
+
+                    await CrossMedia.Current.Initialize();
+
+                    new ImageCropper()
+                    {
+                        PageTitle = "Select Image",
+                        AspectRatioX = 19,
+                        AspectRatioY = 9,
+                        CropShape = ImageCropper.CropShapeType.Rectangle,
+                        SelectSourceTitle = "Select source",
+                        TakePhotoTitle = "Take Photo",
+                        PhotoLibraryTitle = "Photo Library",
+                        Success = (imageFile) =>
+                        {
+                            Device.BeginInvokeOnMainThread(() =>
+                            {
+                                ChallanImage.Source = ImageSource.FromFile(imageFile);
+                                imagefile = imageFile;
+                                FilePath = imageFile;
+                            });
+                        }
+                    }.Show(this);
                 }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine("GalleryException:>" + ex);
+                }
+
+                //        break;
+
+                //    default:
+                //        return;
+                //}
+
                 //var file = await CrossMedia.Current.TakePhotoAsync(new StoreCameraMediaOptions
                 //{
                 //    Directory = "TeaImages",
@@ -423,24 +457,38 @@ namespace TeaClient
                 //    CompressionQuality=92,
                 //    SaveToAlbum = true,
                 //}) ; 
-                if (_selectedImageFile == null)
-                {
-                    return;
-                  
+                //if (_selectedImageFile == null)
+                //{
+                //    return;
 
-                }
-                FilePath = _selectedImageFile.Path;
-              //  await DisplayAlert("File Path ", file.Path, "ok");
-                ChallanImage.Source = ImageSource.FromStream(() =>
-                {
-                    var stream = _selectedImageFile.GetStream();
-                    return stream;
-                });
+
+                //}
+                //FilePath = _selectedImageFile.Path;
+                //ChallanImage.Source = ImageSource.FromStream(() =>
+                //{
+                //    var stream = _selectedImageFile.GetStream();
+                //    return stream;
+                //});
 
             }
         }
 
-        
+        protected void OnClickedRectangle(object sender, EventArgs e)
+        {
+            new ImageCropper()
+            {
+                //                PageTitle = "Test Title",
+                //                AspectRatioX = 1,
+                //                AspectRatioY = 1,
+                Success = (imageFile) =>
+                {
+                    Device.BeginInvokeOnMainThread(() =>
+                    {
+                        ChallanImage.Source = ImageSource.FromFile(imageFile);
+                    });
+                }
+            }.Show(this);
+        }
 
     }
 }

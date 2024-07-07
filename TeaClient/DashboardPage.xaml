@@ -1,28 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="TeaClient.DashboardPage">
-    <!--<ContentPage.Content>
-
-        <StackLayout VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
-
-            --><!--<Label Text="Dashboard" FontSize="24" HorizontalOptions="Center" />
-
-                --><!-- Dashboard Items --><!--
-                <Button Text="Supplier Entry"  Clicked="OnSupplier_Clicked" />
-                <Button Text="Leaf History"  Clicked="OnSupplierView_Clicked" />
-                <Button Text="Smart History"  Clicked="OnSmartHistory_Clicked" />
-                <Button Text="Change Password"  Clicked="OnPasswordChanged_Clicked" />
-                <Button Text="Logout"  Clicked="OnLogout_Clicked" />--><!--
-           
-
-        </StackLayout>
-      
-    </ContentPage.Content>-->
-
+             x:Class="TeaClient.DashboardPage" >
+   
     <StackLayout Padding="40"  VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
-        <!-- Place new controls here -->
-
+        <!--<Label x:Name="HeaderName" Text="Dashboard" FontSize="24" HorizontalOptions="Center" />-->
+        
         <CollectionView ItemsSource="{Binding MySource}">
             <CollectionView.ItemsLayout>
                 <GridItemsLayout Orientation="Vertical" Span="2" />

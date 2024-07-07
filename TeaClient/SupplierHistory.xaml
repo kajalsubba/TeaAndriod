@@ -1,14 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
              x:Class="TeaClient.SupplierHistory">
     <ContentPage.Content>
         <StackLayout Padding="10" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
             <Label x:Name="HeaderName" Text="Supplier History" FontSize="24" HorizontalOptions="Center" />
             <Label Text="From Date: (Mandatory)" />
-            <DatePicker x:Name="FromDate" Format="dd/MM/yyyy" />
+            <DatePicker x:Name="FromDate" Format="dd/MM/yyyy" MaximumDate="{x:Static sys:DateTime.Now}"/>
             <Label Text="To Date: (Mandatory)" />
-            <DatePicker x:Name="ToDate" Format="dd/MM/yyyy" />
+            <DatePicker x:Name="ToDate" Format="dd/MM/yyyy" MaximumDate="{x:Static sys:DateTime.Now}"/>
 
             <Button VerticalOptions="Center" Text="Search" TextColor="White" 
            BackgroundColor="#3aa602"
@@ -72,21 +73,6 @@
                                         </Grid.ColumnDefinitions>
 
                                         <Label   Grid.Column="0" Text="{Binding CollectionDate}" >
-                                            <!--<Label.Style>
-                                                <Style TargetType="Label">
-                                                    <Setter Property="TextColor" Value="Black" />
-                                                  
-                                                    <Style.Triggers>
-                                                        <DataTrigger TargetType="Label" Binding="{Binding Status}" Value="Rejected">
-                                                            <Setter Property="TextColor" Value="Red" />
-                                                        </DataTrigger>
-                                                        <DataTrigger TargetType="Label" Binding="{Binding Status}" Value="Pending">
-                                                            <Setter Property="TextColor" Value="f7f25e" />
-                                                        </DataTrigger>
-                                                        
-                                                    </Style.Triggers>
-                                                </Style>
-                                            </Label.Style>-->
 
                                         </Label>
                                         <Label   Grid.Column="1" Text="{Binding FactoryName}" />
@@ -141,6 +127,7 @@
                     </Grid>
     </ScrollView>
 </Frame>
+        
             <Frame BorderColor="LightBlue" BackgroundColor="AliceBlue" CornerRadius="10" Padding="8" HasShadow="True" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
                 <ScrollView Orientation="Horizontal">
                     <Grid  BackgroundColor="LightBlue" Padding="5" HorizontalOptions="FillAndExpand">

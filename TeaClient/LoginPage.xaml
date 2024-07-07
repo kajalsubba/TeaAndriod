@@ -28,6 +28,7 @@
             <Label Text="Welcome to Tea Client Tea Portal"
                 VerticalOptions="CenterAndExpand" 
                 HorizontalOptions="CenterAndExpand" FontAttributes="Bold" />
+         
             <Image Source="download.jpg" WidthRequest="180" HeightRequest="180"></Image>
           
             <Picker ItemDisplayBinding="{Binding TenantName}" x:Name="Tenant" Title="Select Company" ItemsSource="{Binding TenantList}" />
