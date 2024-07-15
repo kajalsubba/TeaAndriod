@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+               xmlns:sys="clr-namespace:System;assembly=mscorlib"
              x:Class="TeaClient.BillHistoryPage">
     <ContentPage.Content>
         <StackLayout Padding="10" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
@@ -16,7 +17,7 @@
 BorderWidth="1.5"
 CornerRadius="50" Clicked="OnSearchClicked" />
 
-            <Frame BorderColor="LightBlue" BackgroundColor="AliceBlue" CornerRadius="10" Padding="8" HasShadow="True" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
+            <!--<Frame BorderColor="LightBlue" BackgroundColor="AliceBlue" CornerRadius="10" Padding="8" HasShadow="True" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
 
                 <ScrollView Orientation="Horizontal">
                     <Grid>
@@ -26,7 +27,7 @@ CornerRadius="50" Clicked="OnSearchClicked" />
 
                         </Grid.RowDefinitions>
 
-                        <!-- Column Headers -->
+                        --><!-- Column Headers --><!--
                         <Grid Grid.Row="0" BackgroundColor="LightBlue" Padding="5" HorizontalOptions="FillAndExpand">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
@@ -60,7 +61,7 @@ CornerRadius="50" Clicked="OnSearchClicked" />
                             <Label Grid.Column="15" Text="Preview" FontAttributes="Bold" />
                         </Grid>
 
-                        <!-- CollectionView with Data -->
+                        --><!-- CollectionView with Data --><!--
                         <CollectionView Grid.Row="1" ItemsSource="{Binding dataItems}">
                             <CollectionView.ItemsLayout>
                                 <GridItemsLayout Orientation="Vertical" Span="1" />
@@ -93,7 +94,7 @@ CornerRadius="50" Clicked="OnSearchClicked" />
                                      
 
                                         <Label   Grid.Column="9" Text="{Binding CreatedBy}" />
-                                        <!-- Row Separator -->
+                                        --><!-- Row Separator --><!--
                                         <BoxView Grid.ColumnSpan="10" HeightRequest="1" BackgroundColor="LightGray" VerticalOptions="End" />
 
 
@@ -105,7 +106,7 @@ CornerRadius="50" Clicked="OnSearchClicked" />
 
                     </Grid>
                 </ScrollView>
-            </Frame>
+            </Frame>-->
 
 
         </StackLayout>

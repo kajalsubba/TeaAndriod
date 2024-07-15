@@ -1,5 +1,7 @@
 ﻿using Android.App;
 using Java.Util;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Internal;
 using Newtonsoft.Json;
 using Plugin.Media;
 using Plugin.Media.Abstractions;
@@ -35,7 +37,7 @@ namespace TeaClient
         ObservableCollection<string> data = new ObservableCollection<string>();
         ClientLoginData LoginData = new ClientLoginData();
 
-        private MediaFile _selectedImageFile;
+       // private MediaFile _selectedImageFile;
 
         public IList<FactoryAccountModel> Accountlists { get; set; }
         public SupplierPage()
@@ -53,8 +55,8 @@ namespace TeaClient
         {
             LoadingIndicator.IsRunning = true;
             LoadingIndicator.IsVisible = true;
-            await SaveSupplier();
-
+            //  await SaveSupplier();
+            await SaveSupplierUsingMQ();
             LoadingIndicator.IsRunning = false;
             LoadingIndicator.IsVisible = false;
         }
@@ -200,7 +202,7 @@ namespace TeaClient
                        
                       await UploadChallan(valueData.Id);
                       await DisplayAlert("Success", valueData.Message, "OK");
-                      _selectedImageFile.Dispose();
+                   //   _selectedImageFile.Dispose();
                        ChallanImage.Source = null;
 
                         clearFormControl();
@@ -214,6 +216,137 @@ namespace TeaClient
 
             }
         }
+
+        public async Task SaveSupplierUsingMQ()
+        {
+            // await UploadChallan(0);
+            string vehicle = VehicleNo.Text;
+            string challan = ChallanWgt.Text;
+            if (string.IsNullOrWhiteSpace(vehicle))
+            {
+                await DisplayAlert("Validation", "Please Enter Vehicle", "OK");
+                return;
+            }
+            else if (string.IsNullOrWhiteSpace(challan))
+            {
+                await DisplayAlert("Validation", "Please Enter Challan Weight", "OK");
+                return;
+            }
+            else if (FactoryName.SelectedIndex == -1)
+            {
+                await DisplayAlert("Validation", "Please Select Factory", "OK");
+                return;
+            }
+            else if (AccountName.SelectedIndex == -1)
+            {
+                await DisplayAlert("Validation", "Please Select Account", "OK");
+                return;
+            }
+
+            Stream imageStream = ConvertImagePathToStream(FilePath);
+
+            if (imageStream == null)
+            {
+                await DisplayAlert("Validation", "Please Upload challan Copy", "OK");
+                return;
+            }
+
+
+              string url = _appSetting.ApiUrl + "MessageBroker/ProduceSupplier";
+         
+            var selectedAccount = AccountName.SelectedItem as FactoryAccountModel;
+            DateTime selectedDate = collectionDate.Date;
+            string formattedDate = selectedDate.ToString("yyyy-MM-dd");
+
+            using (HttpClient httpClient = new HttpClient())
+            {
+                using (MultipartFormDataContent formData = new MultipartFormDataContent())
+                {
+                    // Add image data
+                   // formData.Add(new IFormFile(ChallanImage), "ChallanImage", "your_image.png");
+
+                    // Add additional form data
+                    formData.Add(new StringContent("0"), "CollectionId");
+                    formData.Add(new StringContent(formattedDate), "CollectionDate");
+                    formData.Add(new StringContent(VehicleNo.Text), "VehicleNo");
+                    formData.Add(new StringContent(LoginData.ClientLoginDetails[0].ClientId.ToString()), "ClientId");
+                    formData.Add(new StringContent(selectedAccount.AccountId.ToString()), "AccountId");
+                    formData.Add(new StringContent(FineLeaf.Text), "FineLeaf");
+                    formData.Add(new StringContent(ChallanWgt.Text), "ChallanWeight");
+                    formData.Add(new StringContent("0"), "Rate");
+                    formData.Add(new StringContent("0"), "GrossAmount");
+                    formData.Add(new StringContent("1"), "TripId");
+                    formData.Add(new StringContent("Pending"), "Status");
+                    formData.Add(new StringContent(remarksEditor.Text), "Remarks");
+                    formData.Add(new StreamContent(imageStream), "ChallanImage", "your_image.png");
+                    formData.Add(new StringContent(LoginData.ClientLoginDetails[0].UserId.ToString()), "CreatedBy");
+                    formData.Add(new StringContent(LoginData.ClientLoginDetails[0].TenantId.ToString()), "TenantId");
+
+                    try
+                    {
+
+                        HttpResponseMessage response = await httpClient.PostAsync(url, formData);
+                        response.EnsureSuccessStatusCode();
+
+                        // If needed, read the response content
+                        string results = await response.Content.ReadAsStringAsync();
+                        if (response.IsSuccessStatusCode)
+                        {
+                            var valueData = JsonConvert.DeserializeObject<SaveReturn>(results);
+
+                            if (valueData.Id != 0)
+                            {
+                                 await DisplayAlert("Success", valueData.Message, "OK");
+                              //  _selectedImageFile.Dispose();
+                                 ChallanImage.Source = null;
+                                 clearFormControl();
+                            }
+                            else
+                            {
+                                await DisplayAlert("Info", valueData.Message, "OK");
+                            }
+
+                        }
+                    }
+                    catch (HttpRequestException ex)
+                    {
+                        // Console.WriteLine("HTTP Request Error: " + ex.Message);
+                        await DisplayAlert("Error", ex.Message, "ok");
+                    }
+                }
+
+            }
+        }
+        //public static IFormFile ConvertFilePathToIFormFile(string filePath)
+        //{
+        //    // Open the file as a FileStream
+        //    FileStream fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
+
+        //    // Create an instance of FormFile
+        //    var formFile = new FormFile(fileStream, 0, fileStream.Length, "file", Path.GetFileName(filePath))
+        //    {
+        //        Headers = new HeaderDictionary(),
+        //        ContentType = GetContentType(filePath)
+        //    };
+
+        //    return formFile;
+        //}
+        //public static string GetContentType(string path)
+        //{
+        //    // You can use MimeMapping library or manually specify the content types
+        //    var extension = Path.GetExtension(path).ToLowerInvariant();
+        //    switch (extension)
+        //    {
+        //        case ".txt": return "text/plain";
+        //        case ".jpg": return "image/jpeg";
+        //        case ".png": return "image/png";
+        //        case ".pdf": return "application/pdf";
+        //        // Add more cases as needed
+        //        default: return "application/octet-stream";
+        //    }
+        //}
+
+
         public Stream ConvertImagePathToStream(string imagePath)
         {
             try
@@ -441,7 +574,7 @@ namespace TeaClient
                 }
                 catch (Exception ex)
                 {
-                    System.Diagnostics.Debug.WriteLine("GalleryException:>" + ex);
+                    System.Diagnostics.Debug.WriteLine("GalleryException:" + ex);
                 }
 
                 //        break;
