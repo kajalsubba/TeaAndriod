@@ -44,12 +44,12 @@
                     </ListView>
                 <!--</AbsoluteLayout>-->
                 <!--<Entry x:Name="VehicleNo" Placeholder="Enter Vehicle Number" />-->
-                    <ActivityIndicator x:Name="LoadingIndicator"
+                    <!--<ActivityIndicator x:Name="LoadingIndicator"
                     IsRunning="False"
                     IsVisible="False"
                     Color="DarkBlue"
                     HorizontalOptions="Center"
-                    VerticalOptions="Center" />
+                    VerticalOptions="Center" />-->
                 <!-- Factory Name -->
                 <Label Text="Factory Name:" />
                 <!--<Entry x:Name="factoryNameEntry" Placeholder="Enter Factory Name" />-->

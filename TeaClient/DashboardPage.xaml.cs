@@ -75,7 +75,7 @@ namespace TeaClient
                         await Navigation.PushAsync(new SmartHistoryPage());
                         break;
                     case "File: bill.png":
-                        await DisplayAlert("Info", "This page is under construction !", "OK");
+                        await Navigation.PushAsync(new BillHistoryPage());
                         break;
                     case "File: password.png":
                         await Navigation.PushAsync(new PasswordChangePage());

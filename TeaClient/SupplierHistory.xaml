@@ -16,50 +16,18 @@
            BorderColor="Gray"
    BorderWidth="1.5"
    CornerRadius="50" Clicked="OnSearchClicked" />
-           <Frame BorderColor="LightBlue" BackgroundColor="AliceBlue" CornerRadius="10" Padding="8" HasShadow="True" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
+            <Frame BorderColor="LightBlue" BackgroundColor="AliceBlue" CornerRadius="10" Padding="8" HasShadow="True" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
 
-    <ScrollView Orientation="Horizontal">
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="*" />
-                     
+                <ScrollView Orientation="Horizontal">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+
                         </Grid.RowDefinitions>
 
-            <!-- Column Headers -->
-            <Grid Grid.Row="0" BackgroundColor="LightBlue" Padding="5" HorizontalOptions="FillAndExpand">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="*" />
-                            </Grid.ColumnDefinitions>
-                        <Label Grid.Column="0" Text="Date" FontAttributes="Bold" />
-                        <Label Grid.Column="1" Text="Factory" FontAttributes="Bold" />
-                        <Label Grid.Column="2" Text="Vehicle No" FontAttributes="Bold" />
-                        <Label Grid.Column="3" Text="Fine Leaf" FontAttributes="Bold" HorizontalOptions="Center"/>
-                        <Label Grid.Column="4" Text="Challan Wgt." FontAttributes="Bold" HorizontalOptions="Center"/>
-                        <Label Grid.Column="5" Text="Rate" FontAttributes="Bold" HorizontalOptions="Center"/>
-                        <Label Grid.Column="6" Text="Amount" FontAttributes="Bold" HorizontalOptions="Center"/>
-                        <Label Grid.Column="7" Text="Remarks" FontAttributes="Bold" HorizontalOptions="Center"/>
-
-                            <Label Grid.Column="8" Text="Status" FontAttributes="Bold" />
-                            <Label Grid.Column="9" Text="Created By" FontAttributes="Bold" />
-                        </Grid>
-
-            <!-- CollectionView with Data -->
-            <CollectionView Grid.Row="1" ItemsSource="{Binding dataItems}">
-                <CollectionView.ItemsLayout>
-                    <GridItemsLayout Orientation="Vertical" Span="1" />
-                </CollectionView.ItemsLayout>
-                <CollectionView.ItemTemplate>
-                    <DataTemplate>
-                                    <Grid Margin="0,0,0,10" >
+                        <!-- Column Headers -->
+                        <Grid Grid.Row="0" BackgroundColor="LightBlue" Padding="5" HorizontalOptions="FillAndExpand">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="*" />
@@ -69,6 +37,38 @@
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Column="0" Text="Date" FontAttributes="Bold" />
+                            <Label Grid.Column="1" Text="Factory" FontAttributes="Bold" />
+                            <Label Grid.Column="2" Text="Vehicle No" FontAttributes="Bold" />
+                            <Label Grid.Column="3" Text="Fine Leaf" FontAttributes="Bold" HorizontalOptions="Center"/>
+                            <Label Grid.Column="4" Text="Challan Wgt." FontAttributes="Bold" HorizontalOptions="Center"/>
+                            <Label Grid.Column="5" Text="Rate" FontAttributes="Bold" HorizontalOptions="Center"/>
+                            <Label Grid.Column="6" Text="Amount" FontAttributes="Bold" HorizontalOptions="Center"/>
+                            <Label Grid.Column="7" Text="Remarks" FontAttributes="Bold" HorizontalOptions="Center"/>
+
+                            <Label Grid.Column="8" Text="Status" FontAttributes="Bold" />
+                            <Label Grid.Column="9" Text="Created By" FontAttributes="Bold" />
+                        </Grid>
+
+                        <!-- CollectionView with Data -->
+                        <CollectionView Grid.Row="1" ItemsSource="{Binding dataItems}">
+                            <CollectionView.ItemsLayout>
+                                <GridItemsLayout Orientation="Vertical" Span="1" />
+                            </CollectionView.ItemsLayout>
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid Margin="0,0,0,10" >
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
                                             <ColumnDefinition Width="*" />
                                         </Grid.ColumnDefinitions>
 
@@ -83,86 +83,75 @@
                                         <Label  Grid.Column="6" Text="{Binding GrossAmount}" HorizontalOptions="Center"/>
                                         <Label  Grid.Column="7" Text="{Binding Remarks}" HorizontalOptions="Center"/>
                                         <Label   Grid.Column="8" Text="{Binding Status}" >
-                                        <Label.Style>
-                                            <Style TargetType="Label" >
-                                                <Setter Property="TextColor" Value="Black" />
-                                                <!-- Default color -->
-                                                <Style.Triggers>
-                                                    <DataTrigger TargetType="Label" Binding="{Binding Status}" Value="Rejected">
-                                                        <Setter Property="TextColor" Value="Red" />
-                                                    </DataTrigger>
+                                            <Label.Style>
+                                                <Style TargetType="Label" >
+                                                    <Setter Property="TextColor" Value="Black" />
+                                                    <!-- Default color -->
+                                                    <Style.Triggers>
+                                                        <DataTrigger TargetType="Label" Binding="{Binding Status}" Value="Rejected">
+                                                            <Setter Property="TextColor" Value="Red" />
+                                                        </DataTrigger>
                                                         <DataTrigger  TargetType="Label" Binding="{Binding Status}" Value="Pending">
                                                             <Setter Property="TextColor" Value="#f7f25e" />
                                                             <Setter Property="FontAttributes" Value="Bold" />
                                                             <!--<Setter Property="BackgroundColor" Value="#f7f25e" />-->
                                                         </DataTrigger>
                                                         <!-- Add more DataTriggers for other status conditions if needed -->
-                                                </Style.Triggers>
-                                            </Style>
-                                        </Label.Style>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </Label.Style>
                                         </Label>
 
                                         <Label   Grid.Column="9" Text="{Binding CreatedBy}" />
                                         <!-- Row Separator -->
                                         <BoxView Grid.ColumnSpan="10" HeightRequest="1" BackgroundColor="LightGray" VerticalOptions="End" />
-                                       
-                                   
-                                        <!-- DataTrigger to change row background color -->
-                                        <!--<Grid.Triggers>
-                                            <DataTrigger TargetType="Grid" Binding="{Binding Status}" Value="Rejected">
-                                                --><!--<Setter Property="BackgroundColor" Value="#ed4c4f" />--><!--
-                                                <Setter Property="TextColor" Value="#ed4c4f" />
-                                            </DataTrigger>
-                                            <DataTrigger TargetType="Grid" Binding="{Binding Status}" Value="Pending">
-                                                --><!--<Setter Property="BackgroundColor" Value="#f7f25e" />-->
-                                                <!--<Setter Property="" Value="#f7f25e" />--><!--
-                                            </DataTrigger>
-                                        </Grid.Triggers>-->
+
+
                                     </Grid>
-                   
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
-                       
+
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+
                     </Grid>
-    </ScrollView>
-</Frame>
-        
+                </ScrollView>
+            </Frame>
+
             <Frame BorderColor="LightBlue" BackgroundColor="AliceBlue" CornerRadius="10" Padding="8" HasShadow="True" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
                 <ScrollView Orientation="Horizontal">
                     <Grid  BackgroundColor="LightBlue" Padding="5" HorizontalOptions="FillAndExpand">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        
-                    </Grid.RowDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
 
-                
-                    <Grid Grid.Row="0">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
+                        </Grid.RowDefinitions>
+
+
+                        <Grid Grid.Row="0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
                             <Label Grid.Column="0" Text="Total" FontAttributes="Bold" />
                             <Label Grid.Column="1" Text="" FontAttributes="Bold" />
                             <Label Grid.Column="2" Text="Challan Wgt." FontAttributes="Bold" />
                             <Label Grid.Column="3" Text="{Binding TotalChallanWeight}" FontAttributes="Bold" />
                             <Label Grid.Column="4" Text="Avg." FontAttributes="Bold" />
-                            <Label Grid.Column="5" Text="{Binding AvarageRate}" FontAttributes="Bold" />
+                            <Label Grid.Column="5" Text="{Binding AvgRate}" FontAttributes="Bold" />
                             <Label Grid.Column="6" Text="Amount :" FontAttributes="Bold" />
                             <Label Grid.Column="7" Text="{Binding TotalGrossAmount}" FontAttributes="Bold" />
 
-                       
+
+                        </Grid>
                     </Grid>
-                </Grid>
                 </ScrollView>
             </Frame>
-          
+
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

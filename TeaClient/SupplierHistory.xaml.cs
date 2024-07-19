@@ -23,6 +23,8 @@ namespace TeaClient
         private decimal _totalChallanWeight;
         private decimal _totalGrossAmount;
         private decimal _avgRate;
+
+      //  public decimal AvgRate;
         public IList<SupplierHistoryModel> dataItems { get; set; }
         ClientLoginData LoginData = new ClientLoginData();
         AppSettings _appSetting = AppConfigService.GetConfig();
@@ -36,27 +38,27 @@ namespace TeaClient
 
         private async void OnSearchClicked(object sender, EventArgs e)
         {
-           await GetSupplierHistory();
+            await GetSupplierHistory();
             if (dataItems != null && dataItems.Any())
             {
                 TotalChallanWeight = dataItems.Where(item => item.Status != "Rejected")
                                 .Sum(item => item.ChallanWeight);
-                TotalGrossAmount = dataItems.Where(item => item.Status!="Rejected")
+                TotalGrossAmount = dataItems.Where(item => item.Status != "Rejected")
                                 .Sum(item => item.GrossAmount);
-                AvarageRate = dataItems.Where(item => item.Status != "Rejected")
-                                .Sum(item => item.Rate);
+               
+                AvgRate =TotalGrossAmount / TotalChallanWeight;
             }
             else
             {
                 TotalChallanWeight = 0;
                 TotalGrossAmount = 0;
-                AvarageRate = 0;
+                AvgRate = 0;
                 dataItems.Clear();
                 await DisplayAlert("Info", "Record is not found !", "OK");
             }
-           
+
         }
-   
+
         public decimal TotalChallanWeight
         {
             get { return _totalChallanWeight; }
@@ -64,13 +66,13 @@ namespace TeaClient
             {
                 if (_totalChallanWeight != value)
                 {
-                  
+
                     _totalChallanWeight = Math.Round(value, 0);
                     OnPropertyChanged(nameof(TotalChallanWeight));
                 }
             }
         }
-    
+
         public decimal TotalGrossAmount
         {
             get { return _totalGrossAmount; }
@@ -78,30 +80,30 @@ namespace TeaClient
             {
                 if (_totalGrossAmount != value)
                 {
-                   
+
                     _totalGrossAmount = Math.Round(value, 2);
                     OnPropertyChanged(nameof(TotalGrossAmount));
                 }
             }
         }
-      
-        public decimal AvarageRate
+
+        public decimal AvgRate
         {
             get { return _avgRate; }
             set
             {
                 if (_avgRate != value)
                 {
-                   _avgRate = Math.Round(value, 2);
+                    _avgRate = Math.Round(value, 2);
 
-                    OnPropertyChanged(nameof(AvarageRate));
+                    OnPropertyChanged(nameof(AvgRate));
                 }
             }
         }
         public async Task GetSupplierHistory()
         {
             dataItems.Clear();
-            string url =_appSetting.ApiUrl+ "Collection/GetSupplierMobileData";
+            string url = _appSetting.ApiUrl + "Collection/GetSupplierMobileData";
 
             DateTime fromDate = FromDate.Date;
             string formattedfromDate = fromDate.ToString("yyyy-MM-dd");
@@ -143,16 +145,16 @@ namespace TeaClient
                                 Rate = _supplier.Rate,
                                 GrossAmount = _supplier
                             .GrossAmount,
-                                Remarks=_supplier.Remarks,
+                                Remarks = _supplier.Remarks,
                                 Status = _supplier.Status,
-                                CreatedBy=_supplier.CreatedBy
+                                CreatedBy = _supplier.CreatedBy
                             });
                         }
                     }
                     else
                     {
-                       
-                      
+
+
                     }
 
                 }
@@ -160,5 +162,5 @@ namespace TeaClient
             }
         }
 
-        }
     }
+}

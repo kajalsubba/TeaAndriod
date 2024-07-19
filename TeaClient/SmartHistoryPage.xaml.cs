@@ -53,8 +53,7 @@ namespace TeaClient
                                 .Sum(item =>Convert.ToInt32(item.FinalWeight));
                 TotalGrossAmount = dataItems.Where(item => item.Status != "Rejected")
                                 .Sum(item => item.Amount);
-                AvarageRate = dataItems.Where(item => item.Status != "Rejected")
-                                .Sum(item => item.Rate);
+                AvgRate = TotalGrossAmount / TotalFinalWeight;
 
                 TotalDays = dataItems.Where(item => item.Status != "Rejected")
                 .Select(item =>item.CollectionDate).Distinct().Count();
@@ -63,7 +62,7 @@ namespace TeaClient
             {
                 TotalFinalWeight = 0;
                 TotalGrossAmount = 0;
-                AvarageRate = 0;
+                AvgRate = 0;
                 TotalDays = 0;
                 dataItems.Clear();
                 await DisplayAlert("Info", "Record is not found !", "OK");
@@ -165,7 +164,7 @@ namespace TeaClient
             }
         }
 
-        public decimal AvarageRate
+        public decimal AvgRate
         {
             get { return _avgRate; }
             set
@@ -174,7 +173,7 @@ namespace TeaClient
                 {
                     _avgRate = Math.Round(value, 2);
 
-                    OnPropertyChanged(nameof(AvarageRate));
+                    OnPropertyChanged(nameof(AvgRate));
                 }
             }
         }

@@ -16,6 +16,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using TeaClient.CommonPage;
 using TeaClient.Model;
 using TeaClient.Services;
 using TeaClient.SessionHelper;
@@ -53,12 +54,16 @@ namespace TeaClient
         }
         private async void OnSubmitClicked(object sender, EventArgs e)
         {
-            LoadingIndicator.IsRunning = true;
-            LoadingIndicator.IsVisible = true;
-            //  await SaveSupplier();
+            var loadingPage = new LoadingPage();
+            await Navigation.PushModalAsync(loadingPage);
+
+            //LoadingIndicator.IsRunning = true;
+            //LoadingIndicator.IsVisible = true;
             await SaveSupplierUsingMQ();
-            LoadingIndicator.IsRunning = false;
-            LoadingIndicator.IsVisible = false;
+            //LoadingIndicator.IsRunning = false;
+            //LoadingIndicator.IsVisible = false;
+            await Navigation.PopModalAsync();
+
         }
         public async void ListOfStore() //List of Countries  
         {
@@ -219,7 +224,7 @@ namespace TeaClient
 
         public async Task SaveSupplierUsingMQ()
         {
-            // await UploadChallan(0);
+            
             string vehicle = VehicleNo.Text;
             string challan = ChallanWgt.Text;
             if (string.IsNullOrWhiteSpace(vehicle))
@@ -277,7 +282,7 @@ namespace TeaClient
                     formData.Add(new StringContent("0"), "GrossAmount");
                     formData.Add(new StringContent("1"), "TripId");
                     formData.Add(new StringContent("Pending"), "Status");
-                    formData.Add(new StringContent(remarksEditor.Text), "Remarks");
+                    formData.Add(new StringContent(remarksEditor.Text??""), "Remarks");
                     formData.Add(new StreamContent(imageStream), "ChallanImage", "your_image.png");
                     formData.Add(new StringContent(LoginData.ClientLoginDetails[0].UserId.ToString()), "CreatedBy");
                     formData.Add(new StringContent(LoginData.ClientLoginDetails[0].TenantId.ToString()), "TenantId");
@@ -310,7 +315,7 @@ namespace TeaClient
                     }
                     catch (HttpRequestException ex)
                     {
-                        // Console.WriteLine("HTTP Request Error: " + ex.Message);
+                        await Navigation.PopModalAsync();
                         await DisplayAlert("Error", ex.Message, "ok");
                     }
                 }

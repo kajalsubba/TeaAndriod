@@ -119,11 +119,9 @@ CornerRadius="50" Clicked="OnSearchClicked" />
                             </Grid.ColumnDefinitions>
                             <Label Grid.Column="0" Text="{Binding TotalDays, StringFormat='Total: {0} Days'}" FontAttributes="Bold" />
                             <Label Grid.Column="1" Text="{Binding TotalFinalWeight, StringFormat='Total Weight: {0} kg'}" FontAttributes="Bold" />
-                            <Label Grid.Column="2" Text="{Binding AvarageRate, StringFormat='Avg Rate: {0:F2}'}" FontAttributes="Bold" />
+                            <Label Grid.Column="2" Text="{Binding AvgRate, StringFormat='Avg Rate: {0:F2}'}" FontAttributes="Bold" />
                             <Label Grid.Column="3" Text="{Binding TotalGrossAmount, StringFormat='Total Amount: {0:F2}'}" FontAttributes="Bold" />
                             <Label Grid.Column="4" Text="" FontAttributes="Bold" />
-                        
-
 
                         </Grid>
                     </Grid>
