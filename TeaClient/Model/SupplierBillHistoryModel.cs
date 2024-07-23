@@ -18,6 +18,7 @@ namespace TeaClient.Model
         public decimal CessAmount { get; set; }
         public decimal LessSeasonAdv { get; set; }
         public decimal AmountToPay { get; set; }
+        public string CreatedBy { get; set; }
     }
 
     public class SupplierBillList

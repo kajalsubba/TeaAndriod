@@ -241,7 +241,8 @@ namespace TeaClient
                                 CommAmount = _supplier.CommAmount,
                                 CessAmount = _supplier.CessAmount,
                                 LessSeasonAdv = _supplier.LessSeasonAdv,
-                                AmountToPay = _supplier.AmountToPay
+                                AmountToPay = _supplier.AmountToPay,
+                                CreatedBy=_supplier.CreatedBy,
                             });
                         }
                     }

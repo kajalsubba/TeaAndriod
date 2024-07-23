@@ -17,13 +17,6 @@
             BorderWidth="1.5"
             CornerRadius="50" Clicked="OnSearchClicked" />
 
-            <!--<ActivityIndicator x:Name="LoadingIndicator"
-            IsRunning="False"
-            IsVisible="False"
-            Color="DarkBlue"
-            HorizontalOptions="Center"
-            VerticalOptions="Center" />-->
-
             <Frame BorderColor="LightBlue" BackgroundColor="AliceBlue" CornerRadius="10" Padding="8" HasShadow="True" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
 
                 <ScrollView Orientation="Horizontal">
@@ -40,8 +33,8 @@
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="*" />
-                                <!--<ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="*" />
+                                <!--<ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="*" />
@@ -54,6 +47,7 @@
                             <!--<Label Grid.Column="0" Text="Bill Id" FontAttributes="Bold" />-->
                             <Label Grid.Column="0" Text="Bill Date" FontAttributes="Bold" />
                             <Label Grid.Column="1" Text="Bill Period" FontAttributes="Bold" />
+                            <Label Grid.Column="2" Text="Created By" FontAttributes="Bold" />
                             <!--<Label Grid.Column="3" Text="Client" FontAttributes="Bold" HorizontalOptions="Center"/>
                             <Label Grid.Column="4" Text="Avg Rate" FontAttributes="Bold" HorizontalOptions="Center"/>
                             <Label Grid.Column="5" Text="Final Weight" FontAttributes="Bold" HorizontalOptions="Center"/>
@@ -63,7 +57,7 @@
                             <Label Grid.Column="9" Text="Cess. Amount" FontAttributes="Bold" />
                             <Label Grid.Column="10" Text="Less Season Adv" FontAttributes="Bold" />
                             <Label Grid.Column="11" Text="Bill Amount Receipt." FontAttributes="Bold" />-->
-                            <Label Grid.Column="2" Text="Preview" FontAttributes="Bold" />
+                            <Label Grid.Column="3" Text="Preview" FontAttributes="Bold" />
                         </Grid>
 
                         <!--CollectionView with Data-->
@@ -75,6 +69,7 @@
                                 <DataTemplate>
                                     <Grid Margin="0,0,0,10" >
                                         <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
                                             <ColumnDefinition Width="*" />
                                             <ColumnDefinition Width="*" />
                                             <ColumnDefinition Width="*" />
@@ -93,6 +88,7 @@
                                         <!--<Label  Grid.Column="0" Text="{Binding BillId}" />-->
                                         <Label  Grid.Column="0" Text="{Binding BillDate}" />
                                         <Label  Grid.Column="1" Text="{Binding BillPeriod}" />
+                                        <Label  Grid.Column="2" Text="{Binding CreatedBy}" />
                                         <!--<Label  Grid.Column="3" Text="{Binding ClientName}" HorizontalOptions="Center"/>
                                         <Label  Grid.Column="4" Text="{Binding AvgRate}" HorizontalOptions="Center"/>
                                         <Label  Grid.Column="5" Text="{Binding FinalWeight}" HorizontalOptions="Center"/>
@@ -102,7 +98,7 @@
                                         <Label  Grid.Column="9" Text="{Binding CessAmount}" HorizontalOptions="Center"/>
                                         <Label  Grid.Column="10" Text="{Binding LessSeasonAdv}" HorizontalOptions="Center"/>
                                         <Label  Grid.Column="11" Text="{Binding AmountToPay}" HorizontalOptions="Center"/>-->
-                                        <Button Grid.Column="2" Text="View" HorizontalOptions="Center"
+                                        <Button Grid.Column="3" Text="View" HorizontalOptions="Center"
                                         Clicked="OnPrintButtonClicked"  
                                         TextColor="White" 
                                         BackgroundColor="#3aa602"
@@ -111,7 +107,7 @@
                                         CornerRadius="10" CommandParameter="{Binding BillId}"/>
 
                                         <!--Row Separator-->
-                                        <BoxView Grid.ColumnSpan="3" HeightRequest="1" BackgroundColor="LightGray" VerticalOptions="End" />
+                                        <BoxView Grid.ColumnSpan="4" HeightRequest="1" BackgroundColor="LightGray" VerticalOptions="End" />
 
 
                                     </Grid>
