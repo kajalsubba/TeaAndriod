@@ -22,8 +22,8 @@ namespace TeaClient
         private decimal _avgRate;
         private int _totalDays;
         private decimal _totalPaymentAmount;
-        private decimal _previousBalance;
-        private decimal _standingSeasonAdv;
+        //private decimal _previousBalance;
+        //private decimal _standingSeasonAdv;
         public IList<SmartHistoryModel> dataItems { get; set; }
 
         public IList<SmartPaymentModel> paymentItems { get; set; }
@@ -80,47 +80,47 @@ namespace TeaClient
                 paymentItems.Clear();
               //  await DisplayAlert("Info", "Record is not found !", "OK");
             }
-            if (outstandingItems != null && outstandingItems.Any())
-            {
-                PreviousBalance = outstandingItems.Sum(item => item.PreviousBalance);
-                TotalSeasonAdvance = outstandingItems.Sum(item => item.SeasonAdvance);
-            }
-            else
-            {
-                TotalPaymentAmount = 0;
+            //if (outstandingItems != null && outstandingItems.Any())
+            //{
+            //    PreviousBalance = outstandingItems.Sum(item => item.PreviousBalance);
+            //    TotalSeasonAdvance = outstandingItems.Sum(item => item.SeasonAdvance);
+            //}
+            //else
+            //{
+            //    TotalPaymentAmount = 0;
 
-                outstandingItems.Clear();
-                //  await DisplayAlert("Info", "Record is not found !", "OK");
-            }
+            //    outstandingItems.Clear();
+            //    //  await DisplayAlert("Info", "Record is not found !", "OK");
+            //}
 
         }
 
-        public decimal TotalSeasonAdvance
-        {
-            get { return _standingSeasonAdv; }
-            set
-            {
-                if (_standingSeasonAdv != value)
-                {
+        //public decimal TotalSeasonAdvance
+        //{
+        //    get { return _standingSeasonAdv; }
+        //    set
+        //    {
+        //        if (_standingSeasonAdv != value)
+        //        {
 
-                    _standingSeasonAdv = Math.Round(value, 2);
-                    OnPropertyChanged(nameof(TotalSeasonAdvance));
-                }
-            }
-        }
-        public decimal PreviousBalance
-        {
-            get { return _previousBalance; }
-            set
-            {
-                if (_previousBalance != value)
-                {
+        //            _standingSeasonAdv = Math.Round(value, 2);
+        //            OnPropertyChanged(nameof(TotalSeasonAdvance));
+        //        }
+        //    }
+        //}
+        //public decimal PreviousBalance
+        //{
+        //    get { return _previousBalance; }
+        //    set
+        //    {
+        //        if (_previousBalance != value)
+        //        {
 
-                    _previousBalance = Math.Round(value, 2);
-                    OnPropertyChanged(nameof(PreviousBalance));
-                }
-            }
-        }
+        //            _previousBalance = Math.Round(value, 2);
+        //            OnPropertyChanged(nameof(PreviousBalance));
+        //        }
+        //    }
+        //}
         public int TotalDays
         {
             get { return _totalDays; }
@@ -259,18 +259,21 @@ namespace TeaClient
                         foreach (var _outstanding in data.OutstandingSummary)
                         {
 
-                            outstandingItems.Add(new OutstandingModel
-                            {
-                                SeasonAdvance = _outstanding.SeasonAdvance,
-                                PreviousBalance = _outstanding.PreviousBalance,
-                           
+                            //outstandingItems.Add(new OutstandingModel
+                            //{
+                            //    SeasonAdvance = _outstanding.SeasonAdvance,
+                            //    PreviousBalance = _outstanding.PreviousBalance,
 
-                            });
+
+                            //});
+                            txtPreviousBalance.Text = _outstanding.SeasonAdvance.ToString();
+                            txtStandingSeasonAdv.Text = _outstanding.PreviousBalance.ToString();
                         }
                     }
                     else
                     {
-
+                        txtPreviousBalance.Text = "0";
+                        txtStandingSeasonAdv.Text="0";
 
                     }
 
