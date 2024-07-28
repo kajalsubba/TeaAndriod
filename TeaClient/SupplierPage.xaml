@@ -1,7 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" xmlns:sys="clr-namespace:System;assembly=mscorlib" xmlns:local="clr-namespace:TeaClient.ViewModel"
-             x:Class="TeaClient.SupplierPage">
+             x:Class="TeaClient.SupplierPage"
+             BackgroundColor="#F8F8FF">
     <ContentPage.BindingContext>
         <local:FactoryViewModel></local:FactoryViewModel>
     </ContentPage.BindingContext>
@@ -87,20 +88,20 @@
         HeightRequest="60"
         VerticalOptions="CenterAndExpand"
         HorizontalOptions="CenterAndExpand" TextColor="White" 
-                    BackgroundColor="#3aa602"
+                    BackgroundColor="#008CBA"
                     BorderColor="Gray"
             BorderWidth="1.5"
-            CornerRadius="50"  />
+            CornerRadius="10"  />
                 <Button VerticalOptions="Center" Text="Save" TextColor="White" 
-                    BackgroundColor="#3aa602"
+                    BackgroundColor="#008CBA"
                     BorderColor="Gray"
             BorderWidth="1.5"
-            CornerRadius="50" Clicked="OnSubmitClicked" />
+            CornerRadius="10" Clicked="OnSubmitClicked" />
               
                 <!--<Image x:Name="ChallanImage" HeightRequest="300" WidthRequest="300">
 
                 </Image>-->
-                <Frame BorderColor="Black" CornerRadius="5" HasShadow="False" Padding="0" Margin="5">
+                <Frame BorderColor="Black" BackgroundColor="#006a55" CornerRadius="5" HasShadow="False" Padding="0" Margin="5">
                     <Image x:Name="ChallanImage" HeightRequest="300" WidthRequest="300" Aspect="AspectFill" />
                 </Frame>
 

@@ -3,7 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:sys="clr-namespace:System;assembly=mscorlib"
              xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
-             x:Class="TeaClient.SmartHistoryPage">
+             x:Class="TeaClient.SmartHistoryPage"
+              BackgroundColor="#F8F8FF">
     <ContentPage.Content>
         <!--<ScrollView>-->
         <StackLayout Padding="10" >
@@ -14,10 +15,10 @@
             <DatePicker x:Name="ToDate" Format="dd/MM/yyyy" MaximumDate="{x:Static sys:DateTime.Now}"/>
 
             <Button VerticalOptions="Center" Text="Search" TextColor="White" 
-        BackgroundColor="#3aa602"
+        BackgroundColor="#008CBA"
         BorderColor="Gray"
 BorderWidth="1.5"
-CornerRadius="50" Clicked="OnSearchClicked" />
+CornerRadius="10" Clicked="OnSearchClicked" />
 
 
             <xct:TabView
@@ -29,7 +30,7 @@ CornerRadius="50" Clicked="OnSearchClicked" />
                     TabContentBackgroundColor="White"
                    IsSwipeEnabled="False" >
 
-                <xct:TabViewItem Text="Collection" FontSizeSelected="15" BackgroundColor="#2196F3"
+                <xct:TabViewItem Text="Collection" FontSizeSelected="15" BackgroundColor="#17a2b8"
                                  TextColor="White" FontAttributesSelected="bold">
                     <xct:TabViewItem.Content>
 
@@ -40,7 +41,7 @@ CornerRadius="50" Clicked="OnSearchClicked" />
                           HorizontalOptions="Center"
                           VerticalOptions="Center"
                           Text="TabContent1" />-->
-                            <Frame BorderColor="LightBlue" BackgroundColor="AliceBlue" CornerRadius="10" Padding="10" HasShadow="True" VerticalOptions="FillAndExpand"   HorizontalOptions="FillAndExpand">
+                            <Frame BorderColor="LightBlue" BackgroundColor="#F8F8FF" CornerRadius="10" Padding="10" HasShadow="True" VerticalOptions="FillAndExpand"   HorizontalOptions="FillAndExpand">
 
                                 <ScrollView Orientation="Horizontal">
                                     <Grid>
@@ -51,7 +52,7 @@ CornerRadius="50" Clicked="OnSearchClicked" />
                                         </Grid.RowDefinitions>
 
                                         <!--Column Headers-->
-                                        <Grid Grid.Row="0" BackgroundColor="LightBlue" Padding="5" HorizontalOptions="FillAndExpand">
+                                        <Grid Grid.Row="0" BackgroundColor="#018353" Padding="5" HorizontalOptions="FillAndExpand">
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="*" />
                                                 <ColumnDefinition Width="*" />
@@ -59,11 +60,11 @@ CornerRadius="50" Clicked="OnSearchClicked" />
                                                 <ColumnDefinition Width="*" />
                                                 <ColumnDefinition Width="*" />
                                             </Grid.ColumnDefinitions>
-                                            <Label Grid.Column="0" Text="Collection Date" FontAttributes="Bold" />
-                                            <Label Grid.Column="1" Text="Final Weight" FontAttributes="Bold" HorizontalOptions="Center"/>
-                                            <Label Grid.Column="2" Text="Rate" FontAttributes="Bold" HorizontalOptions="Center"/>
-                                            <Label Grid.Column="3" Text="Amount" FontAttributes="Bold" HorizontalOptions="Center"/>
-                                            <Label Grid.Column="4" Text="Status" FontAttributes="Bold" HorizontalOptions="Center"/>
+                                            <Label Grid.Column="0" Text="Date" FontAttributes="Bold" TextColor="White"/>
+                                            <Label Grid.Column="1" Text="Final Wgt" FontAttributes="Bold" HorizontalOptions="Center" TextColor="White"/>
+                                            <Label Grid.Column="2" Text="Rate" FontAttributes="Bold" HorizontalOptions="Center" TextColor="White"/>
+                                            <Label Grid.Column="3" Text="Amount" FontAttributes="Bold" HorizontalOptions="Center" TextColor="White"/>
+                                            <Label Grid.Column="4" Text="Status" FontAttributes="Bold" HorizontalOptions="Center" TextColor="White"/>
 
                                         </Grid>
 
@@ -85,7 +86,7 @@ CornerRadius="50" Clicked="OnSearchClicked" />
                                                         </Grid.ColumnDefinitions>
 
                                                         <Label   Grid.Column="0" Text="{Binding CollectionDate}"  />
-                                                        <Label  Grid.Column="1" Text="{Binding FinalWeight}" HorizontalOptions="Center"/>
+                                                        <Label  Grid.Column="1" Text="{Binding FinalWeight, StringFormat='{0}'}" HorizontalOptions="Center"/>
                                                         <Label   Grid.Column="2" Text="{Binding Rate}" HorizontalOptions="Center"/>
                                                         <Label  Grid.Column="3" Text="{Binding Amount}" HorizontalOptions="Center"/>
                                                         <Label   Grid.Column="4" Text="{Binding Status}" HorizontalOptions="Center" >
@@ -123,7 +124,7 @@ CornerRadius="50" Clicked="OnSearchClicked" />
                             </Frame>
                             <Frame BorderColor="LightBlue" BackgroundColor="AliceBlue" CornerRadius="10" Padding="8" HasShadow="True" VerticalOptions="FillAndExpand"   HorizontalOptions="FillAndExpand">
                                 <ScrollView Orientation="Horizontal">
-                                    <Grid  BackgroundColor="LightBlue" Padding="5" HorizontalOptions="FillAndExpand">
+                                    <Grid  BackgroundColor="#018353" Padding="5" HorizontalOptions="FillAndExpand">
                                         <Grid.RowDefinitions>
                                             <RowDefinition Height="Auto" />
 
@@ -139,10 +140,10 @@ CornerRadius="50" Clicked="OnSearchClicked" />
                                                 <ColumnDefinition Width="*" />
 
                                             </Grid.ColumnDefinitions>
-                                            <Label Grid.Column="0" Text="{Binding TotalDays, StringFormat='Total: {0} Days'}" FontAttributes="Bold" />
-                                            <Label Grid.Column="1" Text="{Binding TotalFinalWeight, StringFormat='Total Weight: {0} kg'}" FontAttributes="Bold" />
-                                            <Label Grid.Column="2" Text="{Binding AvgRate, StringFormat='Avg Rate: {0:F2}'}" FontAttributes="Bold" />
-                                            <Label Grid.Column="3" Text="{Binding TotalGrossAmount, StringFormat='Total Amount: {0:F2}'}" FontAttributes="Bold" />
+                                            <Label Grid.Column="0" Text="{Binding TotalDays, StringFormat='Total: {0} Days'}" FontAttributes="Bold" TextColor="White" />
+                                            <Label Grid.Column="1" Text="{Binding TotalFinalWeight, StringFormat='Total Weight: {0} kg'}" FontAttributes="Bold" TextColor="White"/>
+                                            <Label Grid.Column="2" Text="{Binding AvgRate, StringFormat='Avg Rate: {0:F2}'}" FontAttributes="Bold" TextColor="White"/>
+                                            <Label Grid.Column="3" Text="{Binding TotalGrossAmount, StringFormat='Total Amount: {0:F2}'}" FontAttributes="Bold" TextColor="White"/>
                                             <Label Grid.Column="4" Text="" FontAttributes="Bold" />
 
                                         </Grid>
@@ -155,13 +156,13 @@ CornerRadius="50" Clicked="OnSearchClicked" />
                     </xct:TabViewItem.Content>
                 </xct:TabViewItem>
 
-                <xct:TabViewItem Text="Payment" FontSizeSelected="15"  BackgroundColor="#737360" TextColor="White" FontAttributesSelected="bold">
+                <xct:TabViewItem Text="Payment" FontSizeSelected="15"  BackgroundColor="#17a2b8" TextColor="White" FontAttributesSelected="bold">
                     <xct:TabViewItem.Content>
 
                         <StackLayout  HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
                             <!--<Grid>-->
 
-                            <Frame BorderColor="LightBlue"  BackgroundColor="AliceBlue" CornerRadius="10" Padding="8" HasShadow="True" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
+                            <Frame BorderColor="LightBlue"  BackgroundColor="#F8F8FF" CornerRadius="10" Padding="8" HasShadow="True" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
 
                                 <ScrollView Orientation="Horizontal">
                                     <Grid>
@@ -172,15 +173,15 @@ CornerRadius="50" Clicked="OnSearchClicked" />
                                         </Grid.RowDefinitions>
 
                                         <!-- Column Headers -->
-                                        <Grid Grid.Row="0" BackgroundColor="LightBlue" Padding="5" HorizontalOptions="FillAndExpand">
+                                        <Grid Grid.Row="0" BackgroundColor="#018353" Padding="5" HorizontalOptions="FillAndExpand">
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="*" />
                                                 <ColumnDefinition Width="*" />
                                                 <ColumnDefinition Width="*" />
                                             </Grid.ColumnDefinitions>
-                                            <Label Grid.Column="0" Text="Payment Date" FontAttributes="Bold" />
-                                            <Label Grid.Column="1" Text="Narration" FontAttributes="Bold" HorizontalOptions="Center"/>
-                                            <Label Grid.Column="2" Text="Amount" FontAttributes="Bold" HorizontalOptions="Center"/>
+                                            <Label Grid.Column="0" Text="Date" FontAttributes="Bold" TextColor="White" />
+                                            <Label Grid.Column="1" Text="Narration" FontAttributes="Bold" HorizontalOptions="Center" TextColor="White"/>
+                                            <Label Grid.Column="2" Text="Amount" FontAttributes="Bold" HorizontalOptions="Center" TextColor="White"/>
 
                                         </Grid>
 
@@ -219,7 +220,7 @@ CornerRadius="50" Clicked="OnSearchClicked" />
                             </Frame>
                             <Frame BorderColor="LightBlue" BackgroundColor="AliceBlue" CornerRadius="10" Padding="8" HasShadow="True" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
                                 <ScrollView Orientation="Horizontal">
-                                    <Grid  BackgroundColor="LightBlue" Padding="5" HorizontalOptions="FillAndExpand">
+                                    <Grid  BackgroundColor="#018353" Padding="5" HorizontalOptions="FillAndExpand">
                                         <Grid.RowDefinitions>
                                             <RowDefinition Height="Auto" />
 
@@ -232,7 +233,7 @@ CornerRadius="50" Clicked="OnSearchClicked" />
 
 
                                             </Grid.ColumnDefinitions>
-                                            <Label Grid.Column="0" Text="{Binding TotalPaymentAmount, StringFormat='Total Amount: {0:F2}'}" FontAttributes="Bold" />
+                                            <Label Grid.Column="0" Text="{Binding TotalPaymentAmount, StringFormat='Total Amount: {0:F2}'}" FontAttributes="Bold" TextColor="White" />
 
 
 
@@ -247,11 +248,11 @@ CornerRadius="50" Clicked="OnSearchClicked" />
 
                 </xct:TabViewItem>
 
-                <xct:TabViewItem Text="OutStanding" FontSizeSelected="15"  BackgroundColor="#f53b66" TextColor="White" FontAttributesSelected="bold">
+                <xct:TabViewItem Text="OutStanding" FontSizeSelected="15"  BackgroundColor="#17a2b8" TextColor="White" FontAttributesSelected="bold">
                     <xct:TabViewItem.Content>
 
 
-                        <StackLayout  HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+                        <StackLayout BackgroundColor="#F8F8FF"  HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
 
                             <!--<Grid Background="Gray">-->
 

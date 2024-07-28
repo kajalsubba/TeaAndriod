@@ -2,7 +2,8 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
                xmlns:sys="clr-namespace:System;assembly=mscorlib"
-             x:Class="TeaClient.BillHistoryPage">
+             x:Class="TeaClient.BillHistoryPage"
+              BackgroundColor="#F8F8FF">
     <ContentPage.Content>
         <StackLayout Padding="10" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
             <Label x:Name="HeaderName" Text="Bill History" FontSize="24" HorizontalOptions="Center" />
@@ -12,12 +13,12 @@
             <DatePicker x:Name="ToDate" Format="dd/MM/yyyy" MaximumDate="{x:Static sys:DateTime.Now}"/>
 
             <Button VerticalOptions="Center" Text="Search" TextColor="White" 
-            BackgroundColor="#3aa602"
+            BackgroundColor="#008CBA"
             BorderColor="Gray"
             BorderWidth="1.5"
-            CornerRadius="50" Clicked="OnSearchClicked" />
+            CornerRadius="10" Clicked="OnSearchClicked" />
 
-            <Frame BorderColor="LightBlue" BackgroundColor="AliceBlue" CornerRadius="10" Padding="8" HasShadow="True" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
+            <Frame BorderColor="LightBlue" BackgroundColor="#F8F8FF" CornerRadius="10" Padding="8" HasShadow="True" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
 
                 <ScrollView Orientation="Horizontal">
                     <Grid>
@@ -28,26 +29,18 @@
                         </Grid.RowDefinitions>
 
                         <!--Column Headers-->
-                        <Grid Grid.Row="0" BackgroundColor="LightBlue" Padding="5" HorizontalOptions="FillAndExpand">
+                        <Grid Grid.Row="0" BackgroundColor="#018353" Padding="5" HorizontalOptions="FillAndExpand">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="*" />
-                                <!--<ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="*" />-->
+                            
                             </Grid.ColumnDefinitions>
                             <!--<Label Grid.Column="0" Text="Bill Id" FontAttributes="Bold" />-->
-                            <Label Grid.Column="0" Text="Bill Date" FontAttributes="Bold" />
-                            <Label Grid.Column="1" Text="Bill Period" FontAttributes="Bold" />
-                            <Label Grid.Column="2" Text="Created By" FontAttributes="Bold" />
+                            <Label Grid.Column="0" Text="Date" FontAttributes="Bold" TextColor="White"/>
+                            <Label Grid.Column="1" Text="Bill Period" FontAttributes="Bold" TextColor="White"/>
+                            <Label Grid.Column="2" Text="Created By" FontAttributes="Bold" TextColor="White"/>
                             <!--<Label Grid.Column="3" Text="Client" FontAttributes="Bold" HorizontalOptions="Center"/>
                             <Label Grid.Column="4" Text="Avg Rate" FontAttributes="Bold" HorizontalOptions="Center"/>
                             <Label Grid.Column="5" Text="Final Weight" FontAttributes="Bold" HorizontalOptions="Center"/>
@@ -57,7 +50,7 @@
                             <Label Grid.Column="9" Text="Cess. Amount" FontAttributes="Bold" />
                             <Label Grid.Column="10" Text="Less Season Adv" FontAttributes="Bold" />
                             <Label Grid.Column="11" Text="Bill Amount Receipt." FontAttributes="Bold" />-->
-                            <Label Grid.Column="3" Text="Preview" FontAttributes="Bold" />
+                            <Label Grid.Column="3" Text="Preview" FontAttributes="Bold" TextColor="White"/>
                         </Grid>
 
                         <!--CollectionView with Data-->
@@ -98,13 +91,14 @@
                                         <Label  Grid.Column="9" Text="{Binding CessAmount}" HorizontalOptions="Center"/>
                                         <Label  Grid.Column="10" Text="{Binding LessSeasonAdv}" HorizontalOptions="Center"/>
                                         <Label  Grid.Column="11" Text="{Binding AmountToPay}" HorizontalOptions="Center"/>-->
-                                        <Button Grid.Column="3" Text="View" HorizontalOptions="Center"
+                                        <Button Grid.Column="3" Text="View" HorizontalOptions="Start"
                                         Clicked="OnPrintButtonClicked"  
                                         TextColor="White" 
-                                        BackgroundColor="#3aa602"
+                                        BackgroundColor="#008CBA"
                                         BorderColor="Gray"
                                         BorderWidth="1"
-                                        CornerRadius="10" CommandParameter="{Binding BillId}"/>
+                                            
+                                        CornerRadius="5" CommandParameter="{Binding BillId}"/>
 
                                         <!--Row Separator-->
                                         <BoxView Grid.ColumnSpan="4" HeightRequest="1" BackgroundColor="LightGray" VerticalOptions="End" />

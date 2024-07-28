@@ -2,7 +2,8 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
              xmlns:sys="clr-namespace:System;assembly=mscorlib"
-             x:Class="TeaClient.SupplierHistory">
+             x:Class="TeaClient.SupplierHistory"
+              BackgroundColor="#F8F8FF">
     <ContentPage.Content>
         <StackLayout Padding="10" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
             <Label x:Name="HeaderName" Text="Supplier History" FontSize="24" HorizontalOptions="Center" />
@@ -12,11 +13,11 @@
             <DatePicker x:Name="ToDate" Format="dd/MM/yyyy" MaximumDate="{x:Static sys:DateTime.Now}"/>
 
             <Button VerticalOptions="Center" Text="Search" TextColor="White" 
-           BackgroundColor="#3aa602"
+           BackgroundColor="#008CBA"
            BorderColor="Gray"
    BorderWidth="1.5"
-   CornerRadius="50" Clicked="OnSearchClicked" />
-            <Frame BorderColor="LightBlue" BackgroundColor="AliceBlue" CornerRadius="10" Padding="8" HasShadow="True" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
+   CornerRadius="10" Clicked="OnSearchClicked" />
+            <Frame BorderColor="LightBlue" BackgroundColor="#F8F8FF" CornerRadius="10" Padding="8" HasShadow="True" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
 
                 <ScrollView Orientation="Horizontal">
                     <Grid>
@@ -27,7 +28,7 @@
                         </Grid.RowDefinitions>
 
                         <!-- Column Headers -->
-                        <Grid Grid.Row="0" BackgroundColor="LightBlue" Padding="5" HorizontalOptions="FillAndExpand">
+                        <Grid Grid.Row="0" BackgroundColor="#018353" Padding="5" HorizontalOptions="FillAndExpand">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="*" />
@@ -39,14 +40,14 @@
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
-                            <Label Grid.Column="0" Text="Date" FontAttributes="Bold" />
-                            <Label Grid.Column="1" Text="Factory" FontAttributes="Bold" />
-                            <Label Grid.Column="2" Text="Vehicle No" FontAttributes="Bold" />
-                            <Label Grid.Column="3" Text="Fine Leaf" FontAttributes="Bold" HorizontalOptions="Center"/>
-                            <Label Grid.Column="4" Text="Challan Wgt." FontAttributes="Bold" HorizontalOptions="Center"/>
-                            <Label Grid.Column="5" Text="Rate" FontAttributes="Bold" HorizontalOptions="Center"/>
-                            <Label Grid.Column="6" Text="Amount" FontAttributes="Bold" HorizontalOptions="Center"/>
-                            <Label Grid.Column="7" Text="Remarks" FontAttributes="Bold" HorizontalOptions="Center"/>
+                            <Label Grid.Column="0" Text="Date" FontAttributes="Bold" TextColor="White" />
+                            <Label Grid.Column="1" Text="Factory" FontAttributes="Bold" TextColor="White" />
+                            <Label Grid.Column="2" Text="Vehicle No" FontAttributes="Bold" TextColor="White" />
+                            <Label Grid.Column="3" Text="Fine Leaf" FontAttributes="Bold" HorizontalOptions="Center" TextColor="White" />
+                            <Label Grid.Column="4" Text="Challan Wgt." FontAttributes="Bold" HorizontalOptions="Center" TextColor="White" />
+                            <Label Grid.Column="5" Text="Rate" FontAttributes="Bold" HorizontalOptions="Center" TextColor="White" />
+                            <Label Grid.Column="6" Text="Amount" FontAttributes="Bold" HorizontalOptions="Center" TextColor="White" />
+                            <Label Grid.Column="7" Text="Remarks" FontAttributes="Bold" HorizontalOptions="Center" TextColor="White" />
 
                             <Label Grid.Column="8" Text="Status" FontAttributes="Bold" />
                             <Label Grid.Column="9" Text="Created By" FontAttributes="Bold" />
@@ -119,7 +120,7 @@
 
             <Frame BorderColor="LightBlue" BackgroundColor="AliceBlue" CornerRadius="10" Padding="8" HasShadow="True" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
                 <ScrollView Orientation="Horizontal">
-                    <Grid  BackgroundColor="LightBlue" Padding="5" HorizontalOptions="FillAndExpand">
+                    <Grid  BackgroundColor="#018353" Padding="5" HorizontalOptions="FillAndExpand">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
 
@@ -133,18 +134,22 @@
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="*" />
+                                <!--<ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />-->
                             </Grid.ColumnDefinitions>
-                            <Label Grid.Column="0" Text="Total" FontAttributes="Bold" />
-                            <Label Grid.Column="1" Text="" FontAttributes="Bold" />
-                            <Label Grid.Column="2" Text="Challan Wgt." FontAttributes="Bold" />
-                            <Label Grid.Column="3" Text="{Binding TotalChallanWeight}" FontAttributes="Bold" />
-                            <Label Grid.Column="4" Text="Avg." FontAttributes="Bold" />
-                            <Label Grid.Column="5" Text="{Binding AvgRate}" FontAttributes="Bold" />
-                            <Label Grid.Column="6" Text="Amount :" FontAttributes="Bold" />
-                            <Label Grid.Column="7" Text="{Binding TotalGrossAmount}" FontAttributes="Bold" />
+                            <!--<Label Grid.Column="0" Text="{Binding PreviousBalance, StringFormat='Previous Balance: {0:F2}'}" FontAttributes="Bold" />-->
+
+                            <Label Grid.Column="0" Text="Total" FontAttributes="Bold" TextColor="White" />
+                            <Label Grid.Column="1" Text="{Binding TotalChallanWeight, StringFormat='Challan Wgt.: {0:0}'}" FontAttributes="Bold" TextColor="White" />
+                            <Label Grid.Column="2" Text="" FontAttributes="Bold" TextColor="White" />
+
+                            <Label Grid.Column="3" Text="{Binding AvgRate, StringFormat='Avg.: {0:F2}'}" FontAttributes="Bold" TextColor="White" />
+                            <!--<Label Grid.Column="3" Text="{Binding TotalChallanWeight}" FontAttributes="Bold" TextColor="White" />-->
+                            <!--<Label Grid.Column="4" Text="Avg." FontAttributes="Bold" TextColor="White" />-->
+                            <!--<Label Grid.Column="5" Text="{Binding AvgRate}" FontAttributes="Bold" TextColor="White" />-->
+                            <Label Grid.Column="4" Text="{Binding TotalGrossAmount, StringFormat='Amount: {0:F2}'}" FontAttributes="Bold" TextColor="White" />
+                            <!--<Label Grid.Column="7" Text="{Binding TotalGrossAmount}" FontAttributes="Bold" TextColor="White" />-->
 
 
                         </Grid>

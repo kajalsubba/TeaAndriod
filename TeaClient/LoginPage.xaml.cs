@@ -30,7 +30,8 @@ namespace TeaClient
         {
             InitializeComponent();
             NavigationPage.SetHasBackButton(this, false);
-           GetUpdateApp();
+         
+            GetUpdateApp();
             
           
         }
@@ -154,7 +155,7 @@ namespace TeaClient
                 var results = await response.Content.ReadAsStringAsync();
                 var data = JsonConvert.DeserializeObject<List<VesionModel>>(results);
                 
-                Notification.IsVisible = data[0].UpdateVersion;
+               // Notification.IsVisible = data[0].UpdateVersion;
             }
 
 
