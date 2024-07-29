@@ -31,12 +31,11 @@ namespace TeaClient
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class SupplierPage : ContentPage
     {
-        AppSettings _appSetting = AppConfigService.GetConfig();
-
+        readonly AppSettings _appSetting = AppConfigService.GetConfig();
         public IList<FactoryAccountModel> FactoryAccountlists { get; set; }
         string FilePath = "";
-        ObservableCollection<string> data = new ObservableCollection<string>();
-        ClientLoginData LoginData = new ClientLoginData();
+        readonly ObservableCollection<string> data = new ObservableCollection<string>();
+        readonly ClientLoginData LoginData = new ClientLoginData();
 
        // private MediaFile _selectedImageFile;
 
@@ -50,7 +49,7 @@ namespace TeaClient
             GetFactoryAccount();
             GetVehicle();
           
-            HeaderName.Text = "Welcome " + LoginData.ClientLoginDetails[0].ClientName;
+           // HeaderName.Text = "Welcome " + LoginData.ClientLoginDetails[0].ClientName;
         }
         private async void OnSubmitClicked(object sender, EventArgs e)
         {

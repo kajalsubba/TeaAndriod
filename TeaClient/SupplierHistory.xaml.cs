@@ -26,8 +26,8 @@ namespace TeaClient
 
       //  public decimal AvgRate;
         public IList<SupplierHistoryModel> dataItems { get; set; }
-        ClientLoginData LoginData = new ClientLoginData();
-        AppSettings _appSetting = AppConfigService.GetConfig();
+        readonly ClientLoginData LoginData = new ClientLoginData();
+        readonly AppSettings _appSetting = AppConfigService.GetConfig();
         public SupplierHistory()
         {
             InitializeComponent();

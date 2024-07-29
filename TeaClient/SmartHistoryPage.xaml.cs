@@ -30,8 +30,8 @@ namespace TeaClient
 
         public IList<OutstandingModel> outstandingItems { get; set; }
 
-        ClientLoginData LoginData = new ClientLoginData();
-        AppSettings _appSetting = AppConfigService.GetConfig();
+       readonly ClientLoginData LoginData = new ClientLoginData();
+       readonly AppSettings _appSetting = AppConfigService.GetConfig();
 
         public SmartHistoryPage()
         {
@@ -41,7 +41,7 @@ namespace TeaClient
             paymentItems = new ObservableCollection<SmartPaymentModel>();
             outstandingItems = new ObservableCollection<OutstandingModel>();
             BindingContext = this;
-            HeaderName.Text = "Smart History for " + LoginData.ClientLoginDetails[0].ClientName;
+            //HeaderName.Text = "Smart History for " + LoginData.ClientLoginDetails[0].ClientName;
         }
 
         private async void OnSearchClicked(object sender, EventArgs e)

@@ -17,26 +17,33 @@ namespace TeaClient
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class DashboardPage : ContentPage
     {
-      //  ClientLoginData LoginData = new ClientLoginData();
+       readonly ClientLoginData LoginData = new ClientLoginData();
         public IList<DashboardModel> MySource { get; set; }
         public DashboardPage()
         {
+
             InitializeComponent();
             NavigationPage.SetHasBackButton(this, false);
-        //    LoginData = SessionManager.GetSessionValue<ClientLoginData>("loginDetails");
+            LoginData = SessionManager.GetSessionValue<ClientLoginData>("loginDetails");
+            if (LoginData != null)
+            {
+                MySource = new ObservableCollection<DashboardModel>() {
 
-            MySource = new ObservableCollection<DashboardModel>() {
+                new DashboardModel(){Title ="Supplier Entry" ,BgImageSource="Supplier.png"},
+                new DashboardModel(){Title ="Leaf History" ,BgImageSource="leaf.png"},
+                new DashboardModel(){Title ="Smart History" ,BgImageSource="smart.png"},
+                new DashboardModel(){Title ="Bill History" ,BgImageSource="bill.png"},
+                new DashboardModel(){Title ="Change Password" ,BgImageSource="password.png"},
+                new DashboardModel(){Title ="Logout" ,BgImageSource="logout.png"},
+            };
 
-            new DashboardModel(){Title ="Supplier Entry" ,BgImageSource="Supplier.png"},
-            new DashboardModel(){Title ="Leaf History" ,BgImageSource="leaf.png"},
-            new DashboardModel(){Title ="Smart History" ,BgImageSource="smart.png"},
-            new DashboardModel(){Title ="Bill History" ,BgImageSource="bill.png"},
-            new DashboardModel(){Title ="Change Password" ,BgImageSource="password.png"},
-            new DashboardModel(){Title ="Logout" ,BgImageSource="logout.png"},
-         
-       };
-
-            BindingContext = this;
+                BindingContext = this;
+                HeaderName.Text = "Welcome, " + LoginData.ClientLoginDetails[0].ClientName;
+            }
+            else
+            {
+                Navigation.PushAsync(new LoginPage());
+            }
         }
 
         protected override bool OnBackButtonPressed()
@@ -51,7 +58,7 @@ namespace TeaClient
             {
                 // Perform logout action
                 await Navigation.PushAsync(new LoginPage()); // Navigate to dashboard page
-                                                                 // Perform logout logic here
+                                                             // Perform logout logic here
             }
         }
         private async void OnImageTapped(object sender, EventArgs e)
@@ -59,9 +66,9 @@ namespace TeaClient
         {
             if (sender is Image image)
             {
-               
+
                 string sourcePath = image.Source.ToString();
-               
+
                 switch (sourcePath)
                 {
                     case "File: Supplier.png":
@@ -70,7 +77,7 @@ namespace TeaClient
                     case "File: leaf.png":
                         await Navigation.PushAsync(new SupplierHistory());
                         break;
-                        
+
                     case "File: smart.png":
                         await Navigation.PushAsync(new SmartHistoryPage());
                         break;
@@ -89,7 +96,7 @@ namespace TeaClient
                 }
             }
         }
-        
+
 
     }
 }

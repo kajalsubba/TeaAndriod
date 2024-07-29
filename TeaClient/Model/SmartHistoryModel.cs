@@ -7,7 +7,7 @@ namespace TeaClient.Model
     public class SmartHistoryModel
     {
         public string CollectionDate { get; set; }
-        public decimal FinalWeight { get; set; }
+        public long FinalWeight { get; set; }
         public decimal Rate { get; set; }
         public decimal Amount { get; set; }
         public string Status { get; set; }

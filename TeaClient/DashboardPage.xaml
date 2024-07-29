@@ -5,7 +5,7 @@
               BackgroundColor="#006a55">
 
     <StackLayout Padding="40"  VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand" >
-        <Label x:Name="HeaderName" Text="Welcome to Tea Portal" TextColor="White" FontAttributes="Bold" FontSize="24" HorizontalOptions="Center" />
+        <Label x:Name="HeaderName" Text="" TextColor="White" FontAttributes="Bold" FontSize="24" HorizontalOptions="Center" />
         <Label x:Name="HeaderName1" Text="" TextColor="White" FontAttributes="Bold" FontSize="24" HorizontalOptions="Center" />
 
         <CollectionView ItemsSource="{Binding MySource}">

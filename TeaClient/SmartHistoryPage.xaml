@@ -99,9 +99,9 @@ CornerRadius="10" Clicked="OnSearchClicked" />
                                                                             <Setter Property="TextColor" Value="Red" />
                                                                         </DataTrigger>
                                                                         <DataTrigger  TargetType="Label" Binding="{Binding Status}" Value="Pending">
-                                                                            <Setter Property="TextColor" Value="#f7f25e" />
-                                                                            <Setter Property="FontAttributes" Value="Bold" />
-                                                                            <Setter Property="BackgroundColor" Value="#f7f25e" />
+                                                                            <Setter Property="TextColor" Value="#018353" />
+                                                                            <!--<Setter Property="FontAttributes" Value="Bold" />-->
+                                                                           
                                                                         </DataTrigger>
                                                                         <!--Add more DataTriggers for other status conditions if needed-->
                                                                     </Style.Triggers>
