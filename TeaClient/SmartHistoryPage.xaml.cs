@@ -266,8 +266,8 @@ namespace TeaClient
 
 
                             //});
-                            txtPreviousBalance.Text = _outstanding.SeasonAdvance.ToString();
-                            txtStandingSeasonAdv.Text = _outstanding.PreviousBalance.ToString();
+                            txtPreviousBalance.Text = _outstanding.PreviousBalance.ToString();
+                            txtStandingSeasonAdv.Text = _outstanding.SeasonAdvance.ToString();
                         }
                     }
                     else

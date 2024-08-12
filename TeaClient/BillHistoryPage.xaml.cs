@@ -97,14 +97,12 @@ namespace TeaClient
 
                 var billId = button.CommandParameter;
 
-             //   DisplayAlert("Bill ID", $"Bill ID: {button.CommandParameter}", "OK");
-
+            
                 var data = new
                 {
                     BillNo = billId,
                     TenantId = Convert.ToInt32(LoginData.ClientLoginDetails[0].TenantId)
                 };
-
                 try
                 {
                     var loadingPage = new LoadingPage();
@@ -113,7 +111,7 @@ namespace TeaClient
                     //LoadingIndicator.IsRunning = true;
                     //LoadingIndicator.IsVisible = true;
                     var pdfBytes = await PostDataAndGetPdfAsync(url, data);
-                    var filePath = Path.Combine(FileSystem.CacheDirectory, "SupplierBill.pdf");
+                    var filePath = Path.Combine(FileSystem.CacheDirectory, "SupplierBill_"+DateTime.Now.ToString("HH:mm:ss") + ".pdf");
                     await SavePdfAsync(filePath, pdfBytes);
                     await OpenPdfAsync(filePath);
                     await Navigation.PopModalAsync();
