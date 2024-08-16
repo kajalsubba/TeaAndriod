@@ -3,8 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
              xmlns:local="clr-namespace:TeaClient.ViewModel"
              x:Class="TeaClient.LoginPage"
-             BackgroundColor="#006a55"
-             NavigationPage.HasNavigationBar="False">
+             BackgroundColor="#006a55">
     <ContentPage.BindingContext>
         <local:TenantViewModel></local:TenantViewModel>
     </ContentPage.BindingContext>

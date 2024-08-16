@@ -1,0 +1,36 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace TeaClient.Model
+{
+    public class SaveLocalCollectionModel
+    {
+        public DateTime CollectionDate { get; set; }
+        public int TripId { get; set; }
+        public string VehicleNo { get; set; }
+
+        public long ClientId { get; set; }
+
+        public string ClientName{ get; set; }
+        public int FirstWeight { get; set; }
+        public int WetLeaf { get; set; }
+        public int LongLeaf { get; set; }
+        public int Deduction { get; set; }
+        public int FinalWeight { get; set; }
+        public decimal Rate { get; set; }
+
+        public decimal GrossAmount { get; set; }
+        public int GradeId { get; set; }
+
+        public string GradeName { get; set; }
+        public string Remarks { get; set; }
+        public long TenantId { get; set; }
+        public string Status { get; set; }
+
+        public string CollectionBreakList { get; set; }
+
+        public long CreatedBy { get; set; }
+    }
+
+}

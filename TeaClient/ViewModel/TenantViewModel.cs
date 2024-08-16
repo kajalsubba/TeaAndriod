@@ -26,22 +26,32 @@ namespace TeaClient.ViewModel
 
         public async void GetTenant()
         {
-            
-
-            using (HttpClient client = new HttpClient())
+            try
             {
-                string url = _appSetting.ApiUrl+"Admin/GetTenant";
 
-                HttpResponseMessage response = await client.GetAsync(url);
-                var results = await response.Content.ReadAsStringAsync();
-
-                var data = JsonConvert.DeserializeObject<TenantModel>(results);
-
-                foreach (var tenant in data.TenantDetails)
+                using (HttpClient client = new HttpClient())
                 {
-                    TenantList.Add(new TenantList { TenantId = tenant.TenantId, TenantName = tenant.TenantName });
-                }
+                    string url = _appSetting.ApiUrl + "Admin/GetTenant";
 
+                    HttpResponseMessage response = await client.GetAsync(url);
+                    var results = await response.Content.ReadAsStringAsync();
+
+                    var data = JsonConvert.DeserializeObject<TenantModel>(results);
+
+                    foreach (var tenant in data.TenantDetails)
+                    {
+                        TenantList.Add(new TenantList { TenantId = tenant.TenantId, TenantName = tenant.TenantName });
+                    }
+
+                }
+            }
+            catch(Exception ex)
+            {
+                throw ex;
+            }
+
+            finally { 
+            
             }
 
            

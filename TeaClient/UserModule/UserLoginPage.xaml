@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="TeaClient.UserModule.UserLoginPage"             
+             BackgroundColor="#006a55"
+             >
+
+    <ContentPage.Content>
+
+        <StackLayout Padding="40" VerticalOptions="Center" HorizontalOptions="FillAndExpand">
+          
+
+            
+            <Frame BorderColor="LightBlue" BackgroundColor="#F8F8FF" CornerRadius="10"  Padding="20"  HasShadow="True" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
+
+                <StackLayout>
+            
+                    <Frame Padding="0" HasShadow="False" BorderColor="Transparent" BackgroundColor="Transparent">
+                        <Entry x:Name="txtUserName"  Placeholder="Enter Username" TextColor="Black" PlaceholderColor="#6c757d"  ></Entry>
+                    </Frame>
+                    <Frame Padding="0" HasShadow="False" BorderColor="Transparent" BackgroundColor="Transparent">
+                        <Entry x:Name="txtPassword" Placeholder="Enter password" IsPassword="True" TextColor="Black" PlaceholderColor="#6c757d" ></Entry>
+                    </Frame>
+                    
+            <Button VerticalOptions="Center" Text="Login" TextColor="White" 
+                    BackgroundColor="#008CBA"
+                    BorderColor="Gray"
+            BorderWidth="1.5"
+            CornerRadius="10" Clicked="Button_Clicked">
+
+                    </Button>
+                    <Label Text="Version 1.1.0" FontAttributes="Bold" TextColor="#008CBA" HorizontalOptions="Center" />
+                </StackLayout>
+            </Frame>
+
+
+        </StackLayout>
+
+    </ContentPage.Content>
+</ContentPage>

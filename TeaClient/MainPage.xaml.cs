@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Android.Content.Res;
+using Android.Views.Accessibility;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -13,6 +15,16 @@ namespace TeaClient
         public MainPage()
         {
             InitializeComponent();
+        }
+
+        private async void BtnSupplier_Clicked(object sender, EventArgs e)
+        {
+            await Navigation.PushAsync(new LoginPage());
+        }
+  
+        private async void BtnClient_Clicked(object sender, EventArgs e)
+        {
+            await Navigation.PushAsync(new UserModule.UserLoginPage());
         }
     }
 }

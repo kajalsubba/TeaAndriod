@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" xmlns:sys="clr-namespace:System;assembly=mscorlib" xmlns:local="clr-namespace:TeaClient.ViewModel"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
+             xmlns:sys="clr-namespace:System;assembly=mscorlib" xmlns:local="clr-namespace:TeaClient.ViewModel"
              x:Class="TeaClient.SupplierPage"
              BackgroundColor="#F8F8FF">
     <ContentPage.BindingContext>
@@ -44,13 +45,7 @@
                         </ListView.ItemTemplate>
                     </ListView>
                 <!--</AbsoluteLayout>-->
-                <!--<Entry x:Name="VehicleNo" Placeholder="Enter Vehicle Number" />-->
-                    <!--<ActivityIndicator x:Name="LoadingIndicator"
-                    IsRunning="False"
-                    IsVisible="False"
-                    Color="DarkBlue"
-                    HorizontalOptions="Center"
-                    VerticalOptions="Center" />-->
+             
                 <!-- Factory Name -->
                 <Label Text="Factory Name:" />
                 <!--<Entry x:Name="factoryNameEntry" Placeholder="Enter Factory Name" />-->

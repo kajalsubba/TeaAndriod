@@ -1,6 +1,5 @@
 ﻿using Android.Webkit;
-using Plugin.Media.Abstractions;
-using Plugin.Media;
+using Microsoft.Net.Http.Headers;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -12,24 +11,20 @@ using TeaClient.SessionHelper;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
-namespace TeaClient
+namespace TeaClient.UserModule
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class DashboardPage : ContentPage
+    public partial class UserDashboardPage : ContentPage
     {
-       readonly ClientLoginData LoginData = new ClientLoginData();
         public IList<DashboardModel> MySource { get; set; }
-        public DashboardPage()
-        {
 
+        public UserDashboardPage()
+        {
             InitializeComponent();
             NavigationPage.SetHasBackButton(this, false);
-            LoginData = SessionManager.GetSessionValue<ClientLoginData>("loginDetails");
-            if (LoginData != null)
+            MySource = new ObservableCollection<DashboardModel>()
             {
-                MySource = new ObservableCollection<DashboardModel>() {
-
-                new DashboardModel(){Title ="Supplier Entry" ,BgImageSource="Supplier.png"},
+                new DashboardModel(){Title ="STG Entry" ,BgImageSource="addStg.png"},
                 new DashboardModel(){Title ="Leaf History" ,BgImageSource="leaf.png"},
                 new DashboardModel(){Title ="Smart History" ,BgImageSource="smart.png"},
                 new DashboardModel(){Title ="Bill History" ,BgImageSource="bill.png"},
@@ -37,30 +32,16 @@ namespace TeaClient
                 new DashboardModel(){Title ="Logout" ,BgImageSource="logout.png"},
             };
 
-                BindingContext = this;
-                HeaderName.Text = "Welcome, " + LoginData.ClientLoginDetails[0].ClientName;
-            }
-            else
-            {
-                Navigation.PushAsync(new LoginPage());
-            }
+            BindingContext = this;
+            HeaderName.Text = "Welcome";
         }
 
         protected override bool OnBackButtonPressed()
         {
-            DisplayConfirmation();
+          //  DisplayConfirmation();
             return true; // Do not continue processing the back button
         }
-        async void DisplayConfirmation()
-        {
-            bool logout = await DisplayAlert("Logout", "Are you sure you want to logout?", "Yes", "No");
-            if (logout)
-            {
-                // Perform logout action
-                await Navigation.PushAsync(new LoginPage()); // Navigate to dashboard page
-                                                             // Perform logout logic here
-            }
-        }
+
         private async void OnImageTapped(object sender, EventArgs e)
 
         {
@@ -71,8 +52,8 @@ namespace TeaClient
 
                 switch (sourcePath)
                 {
-                    case "File: Supplier.png":
-                        await Navigation.PushAsync(new SupplierPage());
+                    case "File: addStg.png":
+                       // await Navigation.PushAsync(new CollectionPage());
                         break;
                     case "File: leaf.png":
                         await Navigation.PushAsync(new SupplierHistory());
@@ -89,14 +70,12 @@ namespace TeaClient
                         break;
                     case "File: logout.png":
                         SessionManager.ClearSession();
-                        await Navigation.PushAsync(new MainPage());
+                        await Navigation.PushAsync(new LoginPage());
                         break;
                     default:
                         return;
                 }
             }
         }
-
-
     }
 }

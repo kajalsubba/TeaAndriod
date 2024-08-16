@@ -29,9 +29,9 @@ namespace TeaClient
         public LoginPage()
         {
             InitializeComponent();
-            NavigationPage.SetHasBackButton(this, false);
+        //    NavigationPage.SetHasBackButton(this, false);
          
-            GetUpdateApp();
+          //  GetUpdateApp();
             
           
         }

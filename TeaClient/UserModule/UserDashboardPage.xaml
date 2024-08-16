@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="TeaClient.DashboardPage"
-              BackgroundColor="#006a55">
+             x:Class="TeaClient.UserModule.UserDashboardPage"             
+             BackgroundColor="#006a55">
 
     <StackLayout Padding="40"  VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand" >
         <Label x:Name="HeaderName" Text="" TextColor="White" FontAttributes="Bold" FontSize="24" HorizontalOptions="Center" />
@@ -12,9 +12,9 @@
             <CollectionView.ItemsLayout>
                 <GridItemsLayout Orientation="Vertical" Span="2" />
             </CollectionView.ItemsLayout>
-            
+
             <CollectionView.ItemTemplate>
-                
+
                 <DataTemplate>
 
                     <Frame Padding="10" WidthRequest="150" HeightRequest="170"  BackgroundColor="AliceBlue">
@@ -42,7 +42,7 @@
                             </ContentView>
                         </Frame>
                     </Frame>
-                   
+
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>

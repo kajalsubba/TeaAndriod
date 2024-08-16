@@ -1,0 +1,243 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib" 
+             xmlns:local="clr-namespace:TeaClient.ViewModel"
+             NavigationPage.HasNavigationBar="False"
+             x:Class="TeaClient.UserModule.CollectionPage">
+    <ContentPage.BindingContext>
+        <local:GradeViewModel></local:GradeViewModel>
+    </ContentPage.BindingContext>
+    <ContentPage.Content>
+        <ScrollView>
+            <StackLayout Padding="10" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
+
+                <!-- Place the AbsoluteLayout for the images first -->
+                <AbsoluteLayout>
+                    <!-- Top Left Image with Label -->
+                    <StackLayout Orientation="Horizontal"
+                         AbsoluteLayout.LayoutBounds="0, 0, AutoSize, AutoSize"
+                         AbsoluteLayout.LayoutFlags="PositionProportional">
+                        <Image Source="lorry.png" 
+                       WidthRequest="40" 
+                       HeightRequest="40" 
+                       Aspect="AspectFit" />
+                        <Label x:Name="lblVehicle" 
+                       VerticalOptions="Center" 
+                       FontAttributes="Bold"          
+                       TextColor="Black" 
+                       Margin="5,0,0,0"/>
+                    </StackLayout>
+
+                    <!-- Middle Label -->
+                        <Label x:Name="GrossTotalWgt"
+                       
+                        VerticalOptions="Center"
+                               FontAttributes="Bold"
+                        HorizontalOptions="Center"
+                                 Margin="5,10,0,0"
+                               TextColor="#006a55" 
+                        AbsoluteLayout.LayoutBounds="0.5, 0, AutoSize, AutoSize"
+                        AbsoluteLayout.LayoutFlags="PositionProportional" />
+                    
+                    <!-- Top Right Image with Label -->
+                    <StackLayout Orientation="Horizontal"
+                         AbsoluteLayout.LayoutBounds="1, 0, AutoSize, AutoSize"
+                         AbsoluteLayout.LayoutFlags="PositionProportional">
+                        <Image Source="QRScanner.png" 
+                       WidthRequest="40" 
+                       HeightRequest="40" 
+                       Aspect="AspectFit" />
+                    </StackLayout>
+                </AbsoluteLayout>
+
+
+                <!-- Place the ListView and other controls after the AbsoluteLayout -->
+                <DatePicker x:Name="collectionDate" Format="dd/MM/yyyy" MaximumDate="{x:Static sys:DateTime.Now}"/>
+                <Entry  x:Name="Client" Placeholder="Select Client" TextChanged="SearchBar_OnTextChanged" BackgroundColor="#f9f9f9" TextColor="Black" FontSize="16" PlaceholderColor="#646b7a" />
+
+                <!-- Ensure ListView is placed before other controls -->
+                <ListView x:Name="ClientListView" IsVisible="False" CachingStrategy="RecycleElement" BackgroundColor="White" ItemTapped="ListView_OnItemTapped">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <ViewCell>
+                                <Frame>
+                                    <StackLayout BackgroundColor="White">
+                                        <Label Text="{Binding ClientName}" FontSize="16" TextColor="#FF464859"/>
+                                    </StackLayout>
+                                </Frame>
+                            </ViewCell>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+
+                <!-- Rest of the controls -->
+                <Entry x:Name="FieldWeight" Placeholder="Enter Weight" Keyboard="Numeric" />
+                <!--<Button VerticalOptions="Center" Text="Add" TextColor="White" 
+                BackgroundColor="#008CBA"
+                BorderColor="Gray"
+                BorderWidth="1.5"
+                CornerRadius="10"  Clicked="OnAddClicked"/>-->
+
+                <Grid ColumnSpacing="10" Padding="10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Back Button (Left) -->
+                    <Button Grid.Column="0" VerticalOptions="Center" Text="Clear" TextColor="White" 
+                    BackgroundColor="#008CBA"
+                    BorderColor="Gray"
+                    BorderWidth="1.5"
+                    CornerRadius="10" Clicked="OnClearClicked"/>
+
+                    <!-- Submit Button (Right) -->
+                    <Button Grid.Column="2" VerticalOptions="Center" Text="Add" TextColor="White" 
+                    BackgroundColor="#008CBA"
+                    BorderColor="Gray"
+                    BorderWidth="1.5"
+                    CornerRadius="10"  Clicked="OnAddClicked"/>
+                    </Grid>
+
+
+
+                <StackLayout Padding="10" Orientation="Horizontal" VerticalOptions="Center">
+                    <CheckBox x:Name="CheckDisplayWgt" IsChecked="False" CheckedChanged="CheckDisplayWgt_CheckedChanged"/>
+                    <Editor x:Name="DisplayWgt" AutoSize="TextChanges" Margin="10,0,0,0" Placeholder="Field Wgt" />
+                </StackLayout>
+                <StackLayout Padding="4">
+                <Grid >
+                    <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="0.3*" />
+                            <ColumnDefinition Width="0.7*" />
+                        </Grid.ColumnDefinitions>
+
+                    <!-- Label on the left -->
+                    <Label Grid.Column="0" FontAttributes="Bold" Text="Total Collection" VerticalOptions="Center" />
+
+                    <!-- Entry on the right -->
+                    <Entry Grid.Column="1" x:Name="TotalWeight" FontAttributes="Bold" Placeholder="Total Weight(KG)" IsReadOnly="True" HorizontalOptions="FillAndExpand" />
+                </Grid>
+              
+
+                    <!-- Rain (%) -->
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="0.3*" />
+                            <ColumnDefinition Width="0.7*" />
+                        </Grid.ColumnDefinitions>
+
+                        <Label Text="Rain (%)" FontAttributes="Bold" VerticalOptions="Center" Grid.Column="0" />
+                        <Entry x:Name="RainLeaf" Placeholder="Rain (%)" Keyboard="Numeric" TextChanged="RainLeaf_TextChanged" Grid.Column="1" />
+                    </Grid>
+
+                    <!-- Long Leaf (%) -->
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="0.3*" />
+                            <ColumnDefinition Width="0.7*" />
+                        </Grid.ColumnDefinitions>
+
+                        <Label Text="Long Leaf (%)" FontAttributes="Bold" VerticalOptions="Center" Grid.Column="0" />
+                        <Entry x:Name="LongLeaf" Placeholder="Long Leaf (%)" Keyboard="Numeric" TextChanged="LongLeaf_TextChanged" Grid.Column="1" />
+                    </Grid>
+
+                    <!-- Deduction (KG) -->
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="0.3*" />
+                            <ColumnDefinition Width="0.7*" />
+                        </Grid.ColumnDefinitions>
+
+                        <Label Text="Deduction (KG)" FontAttributes="Bold" VerticalOptions="Center" Grid.Column="0" />
+                        <Entry x:Name="Deduction" FontAttributes="Bold" Placeholder="Deduction (KG)" IsReadOnly="True" Grid.Column="1" />
+                    </Grid>
+
+                    <!-- Final Weight (KG) -->
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="0.3*" />
+                            <ColumnDefinition Width="0.7*" />
+                        </Grid.ColumnDefinitions>
+
+                        <Label Text="Final Weight (KG)" FontAttributes="Bold" VerticalOptions="Center" Grid.Column="0" />
+                        <Entry x:Name="FinalWeight" FontAttributes="Bold" Placeholder="Final Weight (KG)" IsReadOnly="True" Grid.Column="1" />
+                    </Grid>
+
+                    <!-- Rate -->
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="0.3*" />
+                            <ColumnDefinition Width="0.7*" />
+                        </Grid.ColumnDefinitions>
+
+                        <Label Text="Rate" FontAttributes="Bold" VerticalOptions="Center" Grid.Column="0" />
+                        <Entry x:Name="Rate" Placeholder="Rate" Keyboard="Numeric" TextChanged="Rate_TextChanged" Grid.Column="1" />
+                    </Grid>
+
+                    <!-- Final Amount -->
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="0.3*" />
+                            <ColumnDefinition Width="0.7*" />
+                        </Grid.ColumnDefinitions>
+
+                        <Label Text="Final Amount" FontAttributes="Bold" VerticalOptions="Center" Grid.Column="0" />
+                        <Entry x:Name="FinalAmount" Placeholder="Final Amount" IsReadOnly="True" Grid.Column="1" />
+                    </Grid>
+
+                    <!-- Grade -->
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="0.3*" />
+                            <ColumnDefinition Width="0.7*" />
+                        </Grid.ColumnDefinitions>
+
+                        <Label Text="Grade" FontAttributes="Bold" VerticalOptions="Center" Grid.Column="0" />
+                        <Picker ItemDisplayBinding="{Binding GradeName}" x:Name="Grade" TitleColor="#6c757d" Title="Select Grade" ItemsSource="{Binding GradeList}" TextColor="Black" Grid.Column="1" />
+                    </Grid>
+
+                    <!-- Remarks -->
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="0.3*" />
+                            <ColumnDefinition Width="0.7*" />
+                        </Grid.ColumnDefinitions>
+
+                        <Label Text="Remarks" FontAttributes="Bold" VerticalOptions="Center" Grid.Column="0" />
+                        <Entry x:Name="Remarks" Placeholder="Remarks" Grid.Column="1" />
+                    </Grid>
+
+                </StackLayout>
+
+               
+                
+                <Grid ColumnSpacing="10" Padding="10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Back Button (Left) -->
+                    <Button Grid.Column="0" VerticalOptions="Center" Text="View Collection" TextColor="White" 
+            BackgroundColor="#008CBA"
+            BorderColor="Gray"
+            BorderWidth="1.5"
+            CornerRadius="10" Clicked="OnBackClicked"/>
+
+                    <!-- Submit Button (Right) -->
+                    <Button Grid.Column="2" VerticalOptions="Center" Text="Submit" TextColor="White" 
+            BackgroundColor="#008CBA"
+            BorderColor="Gray"
+            BorderWidth="1.5"
+            CornerRadius="10"  Clicked="OnSubmitClicked"/>
+                </Grid>
+
+            </StackLayout>
+        </ScrollView>
+    </ContentPage.Content>
+
+</ContentPage>

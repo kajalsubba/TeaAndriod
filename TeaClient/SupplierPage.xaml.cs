@@ -55,12 +55,7 @@ namespace TeaClient
         {
             var loadingPage = new LoadingPage();
             await Navigation.PushModalAsync(loadingPage);
-
-            //LoadingIndicator.IsRunning = true;
-            //LoadingIndicator.IsVisible = true;
             await SaveSupplierUsingMQ();
-            //LoadingIndicator.IsRunning = false;
-            //LoadingIndicator.IsVisible = false;
             await Navigation.PopModalAsync();
 
         }
