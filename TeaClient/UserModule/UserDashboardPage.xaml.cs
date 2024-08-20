@@ -26,8 +26,8 @@ namespace TeaClient.UserModule
             {
                 new DashboardModel(){Title ="STG Entry" ,BgImageSource="addStg.png"},
                 new DashboardModel(){Title ="Leaf History" ,BgImageSource="leaf.png"},
-                new DashboardModel(){Title ="Smart History" ,BgImageSource="smart.png"},
-                new DashboardModel(){Title ="Bill History" ,BgImageSource="bill.png"},
+                new DashboardModel(){Title ="Payment History" ,BgImageSource="smart.png"},
+                //new DashboardModel(){Title ="Bill History" ,BgImageSource="bill.png"},
                 new DashboardModel(){Title ="Change Password" ,BgImageSource="password.png"},
                 new DashboardModel(){Title ="Logout" ,BgImageSource="logout.png"},
             };
@@ -53,24 +53,29 @@ namespace TeaClient.UserModule
                 switch (sourcePath)
                 {
                     case "File: addStg.png":
-                       // await Navigation.PushAsync(new CollectionPage());
+                        await Navigation.PushAsync(new TripAssignPage());
                         break;
                     case "File: leaf.png":
-                        await Navigation.PushAsync(new SupplierHistory());
+                        // await Navigation.PushAsync(new SupplierHistory());
+                        await DisplayAlert("Info", "This Page is under construction. ", "Ok");
                         break;
 
                     case "File: smart.png":
-                        await Navigation.PushAsync(new SmartHistoryPage());
+                        //  await Navigation.PushAsync(new SmartHistoryPage());
+                        await DisplayAlert("Info", "This Page is under construction. ", "Ok");
+
                         break;
-                    case "File: bill.png":
-                        await Navigation.PushAsync(new BillHistoryPage());
-                        break;
+                    //case "File: bill.png":
+                    //    await Navigation.PushAsync(new BillHistoryPage());
+                    //    break;
                     case "File: password.png":
-                        await Navigation.PushAsync(new PasswordChangePage());
+                        //    await Navigation.PushAsync(new PasswordChangePage());
+                        await DisplayAlert("Info", "This Page is under construction. ", "Ok");
+
                         break;
                     case "File: logout.png":
                         SessionManager.ClearSession();
-                        await Navigation.PushAsync(new LoginPage());
+                        await Navigation.PushAsync(new MainPage());
                         break;
                     default:
                         return;

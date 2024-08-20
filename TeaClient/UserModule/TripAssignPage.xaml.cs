@@ -1,6 +1,7 @@
 ﻿using Android.Content.Res;
 using Android.Telephony.Data;
 using Android.Webkit;
+using Java.Net;
 using Newtonsoft.Json;
 using SQLite;
 using System;
@@ -27,9 +28,12 @@ namespace TeaClient.UserModule
     {
         AppSettings _appSetting = AppConfigService.GetConfig();
         public IList<TripModel> Triplists { get; set; }
+
+        public IList<GradeModel> GradeList { get; set; }
         readonly ObservableCollection<string> vehicleData = new ObservableCollection<string>();
         UserModel LoginData = new UserModel();
-     
+        
+        public IList<VehicleLockModel> VehicleList { get; set; }
         public SQLiteConnection conn;
         public LocalClientSaveModel _clientModel;
         public TripAssignPage()
@@ -43,10 +47,10 @@ namespace TeaClient.UserModule
             conn.CreateTable<LocalGradeSaveModel>();
             conn.CreateTable<SaveLocalCollectionModel>();
             
-            //DeleteClientData();
             DropAndRecreateTable();
             GetClient();
             GetGrade();
+            CheckLockVehicle();
         }
 
      
@@ -143,12 +147,65 @@ namespace TeaClient.UserModule
 
         private async void OnLockClicked(object sender, EventArgs e)
         {
+            string _vehicle = VehicleNo.Text;
+            if (string.IsNullOrWhiteSpace(_vehicle))
+            {
+                await DisplayAlert("Validation", "Please Enter Vehicle", "OK");
+                return;
+            }
             bool _lock = await DisplayAlert("Lock", "This vehicle is locked for "+ DateTime.Today.ToString("dd/MM/yyyy"), "Yes", "No");
             if (_lock)
             {
                 var selectedTrip = (TripModel)Trip.SelectedItem;
-
+                await SaveVehicleLockGlobally(selectedTrip.TripId);
                 await Navigation.PushAsync(new UserModule.CollectionPage(VehicleNo.Text,Convert.ToInt16(selectedTrip.TripId)));
+            }
+        }
+
+        private async Task SaveVehicleLockGlobally(int _TripId)
+        {
+            string url = _appSetting.ApiUrl + "Collection/VehicleLockSaveMobile";
+
+            string _vehicle = VehicleNo.Text;
+            if (string.IsNullOrWhiteSpace(_vehicle))
+            {
+                await DisplayAlert("Validation", "Please Enter Vehicle", "OK");
+                return;
+            }
+            SaveVehicleLockModel dataToSend = new SaveVehicleLockModel
+            {
+
+                LockDate = DateTime.Now.ToString("yyyy-MM-dd"),
+                VehicleNo = VehicleNo.Text,
+                TripId = _TripId,
+                TenantId = Convert.ToInt32(LoginData.LoginDetails[0].TenantId),
+                CreatedBy = Convert.ToInt32(LoginData.LoginDetails[0].UserId)
+            };
+
+            using (HttpClient client = new HttpClient())
+            {
+                var json = JsonConvert.SerializeObject(dataToSend);
+                var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
+                var response = await client.PostAsync(url, content);
+                var results = await response.Content.ReadAsStringAsync();
+                if (response.IsSuccessStatusCode)
+                {
+                    var valueData = JsonConvert.DeserializeObject<SaveReturn>(results);
+
+                    if (valueData.Id != 0)
+                    {
+
+
+                        await DisplayAlert("Success", valueData.Message, "OK");
+
+                    }
+                    else
+                    {
+                        await DisplayAlert("Info", valueData.Message, "OK");
+                    }
+
+                }
+
             }
         }
 
@@ -236,8 +293,8 @@ namespace TeaClient.UserModule
             conn.Execute("DROP TABLE IF EXISTS LocalGradeSaveModel");
             conn.CreateTable<LocalGradeSaveModel>();
 
-            //conn.Execute("DROP TABLE IF EXISTS SaveLocalCollectionModel");
-            //conn.CreateTable<SaveLocalCollectionModel>();
+            conn.Execute("DROP TABLE IF EXISTS SaveLocalCollectionModel");
+            conn.CreateTable<SaveLocalCollectionModel>();
 
         }
         void DeleteClientData()
@@ -287,5 +344,50 @@ namespace TeaClient.UserModule
 
 
         }
-    }
+
+        public async void CheckLockVehicle()
+        {
+            try
+            {
+                string url = _appSetting.ApiUrl + "Collection/GetVehicleLockDetails";
+
+                var dataToSend = new
+                {
+                    VehicleNo= "",
+                    TripId= 0,
+                    LockDate= DateTime.Now.ToString("yyyy-MM-dd"),
+                    CreatedBy= Convert.ToInt32(LoginData.LoginDetails[0].UserId),
+                    TenantId = Convert.ToInt32(LoginData.LoginDetails[0].TenantId)
+                };
+
+                using (HttpClient client = new HttpClient())
+                {
+                    var json = JsonConvert.SerializeObject(dataToSend);
+                    var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
+                    var response = await client.PostAsync(url, content);
+                    var results = await response.Content.ReadAsStringAsync();
+                    if (response.IsSuccessStatusCode)
+                    {
+                        var data = JsonConvert.DeserializeObject<VehicleLockList>(results);
+                        foreach (var _vehicle in data.LockDetails)
+                        {
+          
+                           // VehicleList.Add(new VehicleLockModel { VehicleId = _vehicle.VehicleId, TripId = _vehicle.TripId });
+                        }
+
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                //  throw ex;
+                await DisplayAlert("Error", ex.Message, "Ok");
+            }
+
+            finally
+            {
+
+            }
+        }
+        }
 }

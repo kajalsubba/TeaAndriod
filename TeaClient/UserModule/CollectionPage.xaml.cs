@@ -1,4 +1,5 @@
-﻿using Android.Locations;
+﻿using Android.Accounts;
+using Android.Locations;
 using Javax.Xml.Transform.Sax;
 using Newtonsoft.Json;
 using Org.Apache.Http.Client.Params;
@@ -29,9 +30,13 @@ namespace TeaClient.UserModule
         UserModel LoginData = new UserModel();
         int ClientId;
         int TripId;
+        int BagCount=0;
+
+   
         public IList<GradeModel> GradeList { get; set; }
         public SQLiteConnection conn;
         public LocalClientSaveModel _clientModel;
+
         public CollectionPage(string _VehicleNo,int _TripId)
         {
             InitializeComponent();
@@ -48,8 +53,8 @@ namespace TeaClient.UserModule
             
             GetClientFromLocalDB();
 
-            var _grossWgtTotal = GetTotalFinalWeight();
-            GrossTotalWgt.Text ="Gross Wgt: "+ _grossWgtTotal;
+            var _finalWgtTotal = GetTotalFinalWeight();
+            GrossTotalWgt.Text ="Total Final Wgt: "+ _finalWgtTotal;
 
 
         }
@@ -59,61 +64,135 @@ namespace TeaClient.UserModule
             var sum = conn.ExecuteScalar<int>("SELECT SUM(FinalWeight) FROM SaveLocalCollectionModel");
             return sum;
         }
-
-        private void CheckDisplayWgt_CheckedChanged(object sender, CheckedChangedEventArgs e)
+    
+   
+        private async void OnNumberButtonClicked(object sender, EventArgs e)
         {
-            if (e.Value) // e.Value is true if the CheckBox is checked
+            string _ClientName = Client.Text;
+            if (string.IsNullOrWhiteSpace(_ClientName) || ClientId == 0)
             {
-                DisplayWgt.IsReadOnly = false;
-               
+                await DisplayAlert("Validation", "Please Enter Client", "OK");
+                return;
             }
-            else
+            var button = sender as Button;
+            if (button != null)
             {
-                DisplayWgt.IsReadOnly = true;
-               
+                // Append the number or decimal point to the entry
+                EntryFieldWeight.Text += button.Text;
             }
         }
-        private async void OnAddClicked(object sender, EventArgs e)
+
+        private void OnOperatorButtonClicked(object sender, EventArgs e)
         {
-            DisplayWgt.IsReadOnly = true;
-            int newWeight;
-            string _Client = Client.Text;
-            if (string.IsNullOrWhiteSpace(_Client) || ClientId == null || ClientId <= 0)
+            
+
+            Button button = sender as Button;
+            if (button != null && EntryFieldWeight != null)
             {
-                await DisplayAlert("Validation", "Please Select Client", "OK");
-                Client.Focus();
-                return;
+                string buttonText = button.Text;
+                string currentText = EntryFieldWeight.Text;
+
+                // Prevent multiple consecutive '+' operators
+                if (buttonText == "+")
+                {
+                    if (currentText.Length > 0 && currentText.Last() == '+')
+                    {
+                        // Do nothing if the last character is already '+'
+                        return;
+                    }
+                }
+
+                // Append the operator to the current text
+                EntryFieldWeight.Text += buttonText;
             }
-            if (!int.TryParse(FieldWeight.Text, out newWeight))
+        }
+
+        private void OnEqualsButtonClicked(object sender, EventArgs e)
+        {
+           
+            if (EntryFieldWeight != null)
             {
-                await DisplayAlert("Validation", "Please enter a field weight.", "Yes");
-                FieldWeight.Focus();
-                return;
+                string expression = EntryFieldWeight.Text;
+
+                // Remove trailing '+' if it exists
+                if (expression.EndsWith("+"))
+                {
+                    expression = expression.Substring(0, expression.Length - 1);
+                }
+
+                try
+                {
+                    // Calculate the result
+                    double result = EvaluateExpression(expression);
+                    TotalFieldWeight.Text = result.ToString();
+                    FinalWeight.Text= result.ToString();
+                }
+                catch (Exception ex)
+                {
+                    // Handle any errors that might occur during evaluation
+                    DisplayAlert("Error", "Invalid Expression", "OK");
+                }
+
+                TotalBagCount();
+            }
+        }
+
+        private void OnClearButtonClicked(object sender, EventArgs e)
+        {
+            // Clear the entry
+            EntryFieldWeight.Text = string.Empty;
+            TotalFieldWeight.Text = string.Empty;
+            FinalWeight.Text = string.Empty;
+            txtBagCount.Text=string.Empty;
+        }
+        private async void OnStepCleanButtonClicked(object sender, EventArgs e)
+        {
+            if (EntryFieldWeight != null)
+            {
+
+                string currentText = EntryFieldWeight.Text;
+                if (!string.IsNullOrEmpty(currentText))
+                {
+                    // Remove the last character from the text
+                    EntryFieldWeight.Text = currentText.Substring(0, currentText.Length - 1);
+
+                    string expression = EntryFieldWeight.Text;
+
+                    // Remove trailing '+' if it exists
+                    if (expression.EndsWith("+"))
+                    {
+                        expression = expression.Substring(0, expression.Length - 1);
+                    }
+
+                    try
+                    {
+                        // Calculate the result
+                        double result = EvaluateExpression(expression);
+                        TotalFieldWeight.Text = result.ToString();
+                        FinalWeight.Text = result.ToString();
+                    }
+                    catch (Exception ex)
+                    {
+                        TotalFieldWeight.Text = string.Empty;
+                        FinalWeight.Text = string.Empty;
+                        await DisplayAlert("Error", ex.Message, "Ok");
+
+                    }
+                }
+                TotalBagCount();
             }
 
           
-            // If TotalWgt is not empty, prepend a '+' before adding the new weight
-            if (!string.IsNullOrWhiteSpace(DisplayWgt.Text))
-            {
-                DisplayWgt.Text += "+" + FieldWeight.Text;
-
-            }
-            else
-            {
-                // If TotalWgt is empty, just add the new weight without a '+'
-                DisplayWgt.Text = FieldWeight.Text;
-
-            }
-            InitialVal += newWeight;
-            TotalWeight.Text = InitialVal.ToString();
-
-            // Clear the FieldWeight entry after appending the value
-            FieldWeight.Text = string.Empty;
-            FinalWeight.Text = TotalWeight.Text;
-            FieldWeight.Focus();
         }
 
-        private void RainLeaf_TextChanged(object sender, TextChangedEventArgs e)
+  
+        private double EvaluateExpression(string expression)
+        {
+            var dataTable = new System.Data.DataTable();
+            return Convert.ToDouble(dataTable.Compute(expression, string.Empty));
+        }
+      
+        private async void RainLeaf_TextChanged(object sender, TextChangedEventArgs e)
         {
             try
             {
@@ -133,15 +212,17 @@ namespace TeaClient.UserModule
             }
             catch(Exception ex)
             {
-                throw ex;
+                // throw ex;
+                await DisplayAlert("Error", ex.Message, "Ok");
+
             }
         }
 
-        private void CalculateFinalWeight(int RainPercentage,int longLeafPercentage,double rate)
+        private async void CalculateFinalWeight(int RainPercentage,int longLeafPercentage,double rate)
         {
             try
             {
-                int FirstWeightValue = string.IsNullOrWhiteSpace(TotalWeight.Text) ? 0 : int.Parse(TotalWeight.Text);
+                int FirstWeightValue = string.IsNullOrWhiteSpace(TotalFieldWeight.Text) ? 0 : int.Parse(TotalFieldWeight.Text);
 
                 var RainResult = (RainPercentage * FirstWeightValue) / 100; // Example calculation
                 var LongResult = (longLeafPercentage * FirstWeightValue) / 100; // Example calculation
@@ -152,10 +233,12 @@ namespace TeaClient.UserModule
             }
             catch(Exception ex)
             {
-                throw ex;
+                // throw ex;
+                await DisplayAlert("Error", ex.Message, "Ok");
+
             }
         }
-        private void Rate_TextChanged(object sender, TextChangedEventArgs e)
+        private async void Rate_TextChanged(object sender, TextChangedEventArgs e)
         {
             try
             {
@@ -175,12 +258,14 @@ namespace TeaClient.UserModule
             }
             catch(Exception ex)
             {
-                throw ex;
+                // throw ex;
+                await DisplayAlert("Error", ex.Message, "Ok");
+
             }
         }
 
         
-        private void LongLeaf_TextChanged(object sender, TextChangedEventArgs e)
+        private async void LongLeaf_TextChanged(object sender, TextChangedEventArgs e)
         {
             try
             {
@@ -200,14 +285,21 @@ namespace TeaClient.UserModule
             }
             catch (Exception ex)
             {
-                throw ex;
+                // throw ex;
+                await DisplayAlert("Error", ex.Message, "Ok");
+
             }
         }
 
        
         public void GetClientFromLocalDB()
         {
-            var ClientDetails = (from x in conn.Table<LocalClientSaveModel>() select x).ToList();
+            // var ClientDetails = (from x in conn.Table<LocalClientSaveModel>() select x).ToList();
+            var ClientDetails=conn.Table<LocalClientSaveModel>()
+                            .Select(x => new { x.ClientId, x.ClientName }) // Select the columns you want to be unique
+                            .Distinct()
+                            .ToList();
+
             foreach (var _client in ClientDetails)
             {
                 clientData.Add(new ClientModel {ClientId= _client.ClientId,ClientName= _client.ClientName });
@@ -262,7 +354,7 @@ namespace TeaClient.UserModule
 
             ((ListView)sender).SelectedItem = null;
         }
-        private void SearchBar_OnTextChanged(object sender, TextChangedEventArgs e)
+        private async void SearchBar_OnTextChanged(object sender, TextChangedEventArgs e)
         {
             ClientListView.IsVisible = true;
             ClientListView.BeginRefresh();
@@ -285,105 +377,210 @@ namespace TeaClient.UserModule
             catch (Exception ex)
             {
                 ClientListView.IsVisible = false;
-                throw ex;
+                //  throw ex;
+                await DisplayAlert("Error", ex.Message, "Ok");
+
             }
             ClientListView.EndRefresh();
 
         }
 
-        private async void OnBackClicked(object sender, EventArgs e)
+        private async void OnViewCollectionClicked(object sender, EventArgs e)
         {
             //bool _back = await DisplayAlert("Info", "Do you want to logout", "Yes", "No");
             //if (_back)
             //{
-                await Navigation.PushAsync(new LocalDataShow.DailyCollectionView());
+                await Navigation.PushAsync(new LocalDataShow.DailyCollectionView(lblVehicle.Text,TripId));
                 //SessionManager.ClearSession();
                 //await Navigation.PushAsync(new MainPage());
            // }
         }
-         private async void OnClearClicked(object sender, EventArgs e)
+        protected override bool OnBackButtonPressed()
         {
-            cleanForm();
+            DisplayConfirmation();
+            return true; // Do not continue processing the back button
         }
+        async void DisplayConfirmation()
+        {
+
+          //  await Navigation.PushAsync(new UserModule.CollectionPage(VehicleNo, TripId));
+
+
+        }
+
         private async void OnSubmitClicked(object sender, EventArgs e)
         {
-            string FieldWeight = TotalWeight.Text;
-            if (string.IsNullOrWhiteSpace(FieldWeight))
-            {
-                await DisplayAlert("Validation", "Please Enter Field Weight", "OK");
-                return;
-            }
-          
-            else if (Grade.SelectedIndex == -1)
-            {
-                await DisplayAlert("Validation", "Please Select Grade", "OK");
-                return;
-            }
-
-            SaveLocalCollectionModel _collect= new SaveLocalCollectionModel();
-            _collect.CollectionDate = DateTime.Now;
-            _collect.TripId = TripId;
-            _collect.VehicleNo = lblVehicle.Text;
-            _collect.ClientId = ClientId;
-            _collect.ClientName = Client.Text;
-            _collect.FinalWeight = Convert.ToInt16(TotalWeight.Text);
-            _collect.WetLeaf = Convert.ToInt16(RainLeaf.Text);
-            _collect.LongLeaf = Convert.ToInt16(LongLeaf.Text);
-
-            _collect.Deduction = Convert.ToInt16(Deduction.Text);
-            _collect.FinalWeight = Convert.ToInt16(FinalWeight.Text);
-            _collect.Rate = Convert.ToDecimal(Rate.Text);
-
-            var selectedGrade = (GradeModel)Grade.SelectedItem;
-
-
-            _collect.GrossAmount =Convert.ToDecimal(FinalAmount.Text);
-            _collect.GradeId = selectedGrade.GradeId;
-            _collect.GradeName= selectedGrade.GradeName;
-            _collect.Remarks = Remarks.Text;
-
-
-            _collect.TenantId = Convert.ToInt32(LoginData.LoginDetails[0].TenantId);
-            _collect.Status = "Pending";
-            _collect.CollectionBreakList = DisplayWgt.Text;
-            _collect.CreatedBy = Convert.ToInt32(LoginData.LoginDetails[0].UserId);
-
             try
             {
-                conn.Insert(_collect);
-                await DisplayAlert("Info", "Data is added Successfully. ", "Yes");
-                cleanForm();
-                var _grossWgtTotal = GetTotalFinalWeight();
-                GrossTotalWgt.Text = "Gross Wgt: " + _grossWgtTotal;
+                string _FldWeight = TotalFieldWeight.Text;
+                string _ClientName = Client.Text;
+                if (string.IsNullOrWhiteSpace(_FldWeight))
+                {
+                    await DisplayAlert("Validation", "Please Enter Field Weight", "OK");
+                    return;
+                }
+             
+                if (string.IsNullOrWhiteSpace(_ClientName) || ClientId==0)
+                {
+                    await DisplayAlert("Validation", "Please Enter Client", "OK");
+                    return;
+                }
+                else if (Grade.SelectedIndex == -1)
+                {
+                    await DisplayAlert("Validation", "Please Select Grade", "OK");
+                    return;
+                }
+
+                int FirstValue = string.IsNullOrWhiteSpace(TotalFieldWeight.Text) ? 0 : int.Parse(TotalFieldWeight.Text);
+                int RainValue = string.IsNullOrWhiteSpace(RainLeaf.Text) ? 0 : int.Parse(RainLeaf.Text);
+                int LongValue = string.IsNullOrWhiteSpace(LongLeaf.Text) ? 0 : int.Parse(LongLeaf.Text);
+                int DeductValue = string.IsNullOrWhiteSpace(Deduction.Text) ? 0 : int.Parse(Deduction.Text);
+                int FinalValue = string.IsNullOrWhiteSpace(FinalWeight.Text) ? 0 : int.Parse(FinalWeight.Text);
+                Decimal RateValue = string.IsNullOrWhiteSpace(Rate.Text) ? 0 : Decimal.Parse(Rate.Text);
+                Decimal FinalAmountValue = string.IsNullOrWhiteSpace(FinalAmount.Text) ? 0 : Decimal.Parse(FinalAmount.Text);
+
+                SaveLocalCollectionModel _collect = new SaveLocalCollectionModel();
+                _collect.CollectionDate = DateTime.Now;
+                _collect.TripId = TripId;
+                _collect.VehicleNo = lblVehicle.Text;
+                _collect.ClientId = ClientId;
+                _collect.ClientName = Client.Text;
+                _collect.FirstWeight = FirstValue;
+                _collect.WetLeaf = RainValue;
+                _collect.LongLeaf = LongValue;
+                _collect.Deduction = DeductValue;
+                _collect.FinalWeight = FinalValue;
+                _collect.Rate = RateValue;
+                var selectedGrade = (GradeModel)Grade.SelectedItem;
+                _collect.GrossAmount = FinalAmountValue;
+                _collect.GradeId = selectedGrade.GradeId;
+                _collect.GradeName = selectedGrade.GradeName;
+                _collect.Remarks = Remarks.Text;
+                _collect.TenantId = Convert.ToInt32(LoginData.LoginDetails[0].TenantId);
+                _collect.Status = "Pending";
+                _collect.CollectionBreakList = EntryFieldWeight.Text;
+                _collect.CreatedBy = Convert.ToInt32(LoginData.LoginDetails[0].UserId);
+
+                try
+                {
+                    bool _submit = await DisplayAlert("Confirm", "Do you want to submit.", "Yes", "No");
+                    if(_submit )
+                    {
+                        conn.Insert(_collect);
+                        await DisplayAlert("Info", "Data is added Successfully. ", "Yes");
+                        cleanForm();
+                             Grade.SelectedItem = null;
+                        var _finalWgtTotal = GetTotalFinalWeight();
+                        GrossTotalWgt.Text = "Total Final Wgt: " + _finalWgtTotal;
+                        FieldEntryLaout.IsVisible = false;
+                        BtnFinish.IsVisible = true;
+                        CalculateView.IsVisible = true;
+                    }
+                 
+                }
+                catch (Exception ex)
+                {
+                    // throw ex;
+                    await DisplayAlert("Error", ex.Message, "Ok");
+
+                }
+                finally
+                {
+                }
+            }
+            catch(Exception ex)
+            {
+                //  throw ex;
+                await DisplayAlert("Error", ex.Message, "Ok");
+
+            }
+
+            finally
+            {
+
+            }
+
+        }
+
+      private async  void TotalBagCount()
+        {
+            try
+            {
+                string StrWgtSum = EntryFieldWeight.Text;
+
+                // Remove trailing '+' if it exists
+                if (StrWgtSum.EndsWith("+"))
+                {
+                    StrWgtSum = StrWgtSum.Substring(0, StrWgtSum.Length - 1);
+                }
+             //   string StrWgtSum = EntryFieldWeight.Text;// "12+33+44+55+66+77+88+66+77+88+99+99+90";
+                var numbers = StrWgtSum.Split('+');
+
+                // Convert the array of strings to an array of integers
+                var intNumbers = numbers.Select(int.Parse).ToArray();
+
+                // Calculate the count
+                int count = intNumbers.Length;
+
+              
+                txtBagCount.Text = "Total Bag :" + count;
 
             }
             catch (Exception ex)
             {
-                throw ex;
+                // throw ex;
+                await DisplayAlert("Error", ex.Message, "Ok");
+
             }
             finally
             {
-               // conn.Close();
+
+            }
+        }
+      
+        private async void OnBtnFinishClicked(object sender, EventArgs e)
+        {
+            string _totalWgt = TotalFieldWeight.Text;
+            if (string.IsNullOrWhiteSpace(_totalWgt))
+            {
+                await DisplayAlert("Validation", "Please enter total field weight.", "OK");
+                return;
             }
 
+            FieldEntryLaout.IsVisible = true;
+            BtnFinish.IsVisible = false;
+            CalculateView.IsVisible = false;
         }
-
+            
         void cleanForm()
         {
+            BagCount = 0;
+            txtBagCount.Text = "";
             Client.Text = "";
             ClientId = 0;
-            TotalWeight.Text = "";
+            InitialVal = 0;
+            TotalFieldWeight.Text = "";
             RainLeaf.Text = "";
             LongLeaf.Text = "";
             Deduction.Text = "";
             FinalWeight.Text = "";
-            DisplayWgt.Text = "";
+            EntryFieldWeight.Text = "";
             Rate.Text = "";
             FinalAmount.Text = "";
             Remarks.Text = "";
             Client.Focus();
         }
 
+        void cleanClientForm()
+        {
+            BagCount = 0;
+            txtBagCount.Text = "";
+            EntryFieldWeight.Text = "";
+            EntryFieldWeight.Text = "";
+            InitialVal = 0;
+            TotalFieldWeight.Text = "";
+            EntryFieldWeight.Focus();
+        }
 
 
 

@@ -105,7 +105,7 @@ namespace TeaClient.UserModule
                           //  }
                             //else
                             //{
-                                await Navigation.PushAsync(new TripAssignPage());
+                                await Navigation.PushAsync(new UserDashboardPage());
                            // }
                         }
                         else

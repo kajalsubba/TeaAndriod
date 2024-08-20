@@ -35,7 +35,11 @@ namespace TeaClient.ViewModel
         }
         public void GetGradeFromLocalDB()
         {
-            var GradeDetails = (from x in conn.Table<LocalGradeSaveModel>() select x).ToList();
+            // var GradeDetails = (from x in conn.Table<LocalGradeSaveModel>() select x).ToList();
+            var GradeDetails = conn.Table<LocalGradeSaveModel>()
+                             .Select(x => new { x.GradeId, x.GradeName }) // Select the columns you want to be unique
+                             .Distinct()
+                             .ToList();
             foreach (var _grade in GradeDetails)
             {
                 GradeList.Add(new GradeModel { GradeId = _grade.GradeId, GradeName = _grade.GradeName });

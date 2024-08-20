@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SQLite;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -6,6 +7,8 @@ namespace TeaClient.Model
 {
     public class SaveLocalCollectionModel
     {
+        [PrimaryKey, AutoIncrement]
+        public int Id { get; set; }
         public DateTime CollectionDate { get; set; }
         public int TripId { get; set; }
         public string VehicleNo { get; set; }
@@ -32,5 +35,7 @@ namespace TeaClient.Model
 
         public long CreatedBy { get; set; }
     }
+
+
 
 }

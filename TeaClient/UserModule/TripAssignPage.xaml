@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
              xmlns:local="clr-namespace:TeaClient.ViewModel"
              x:Class="TeaClient.UserModule.TripAssignPage"
-             NavigationPage.HasNavigationBar="False"
+             NavigationPage.HasNavigationBar="True"
              BackgroundColor="#006a55">
 
     <ContentPage.BindingContext>
@@ -55,7 +55,7 @@
             </StackLayout>
 
             <!-- Logout Image at the top right corner -->
-            <Image Source="logout.png" 
+            <!--<Image Source="logout.png" 
                    VerticalOptions="Start" 
                    HorizontalOptions="End" 
                    HeightRequest="30"
@@ -64,7 +64,7 @@
                 <Image.GestureRecognizers>
                     <TapGestureRecognizer Tapped="OnLogoutTapped" />
                 </Image.GestureRecognizers>
-            </Image>
+            </Image>-->
         </Grid>
     </ContentPage.Content>
 </ContentPage>
