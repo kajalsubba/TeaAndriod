@@ -103,9 +103,51 @@
                                             <!-- Client Name and Details -->
                                             <StackLayout Orientation="Vertical" HorizontalOptions="FillAndExpand">
                                                 <Label Text="{Binding ClientName}" FontSize="16" FontAttributes="Bold" TextColor="Black" />
-                                                <Label Text="{Binding FirstWeight,StringFormat='Field Wgt. : {0}'}" TextColor="#006a55"  FontSize="14" FontAttributes="Bold" />
-                                                <Label Text="{Binding Deduction,StringFormat='Deduction : {0}'}" TextColor="#006a55" FontSize="14" FontAttributes="Bold"/>
-                                                <Label Text="{Binding FinalWeight,StringFormat='Final Wgt. : {0}'}" TextColor="#006a55" FontSize="14" FontAttributes="Bold"/>
+                                                <Label Text="{Binding FirstWeight,StringFormat='Field Wgt. : {0}'}" TextColor="#006a55"  FontSize="14" FontAttributes="Bold" >
+                                                    <Label.Style>
+                                                        <Style TargetType="Label" >
+                                                            <Setter Property="TextColor" Value="Black" />
+                                                            <!-- Default color -->
+                                                            <Style.Triggers>
+                                                                <DataTrigger TargetType="Label" Binding="{Binding IsEdit}" Value="True">
+                                                                    <Setter Property="TextColor" Value="#ff5c33" />
+                                                                </DataTrigger>
+                                                         
+                                                                <!-- Add more DataTriggers for other status conditions if needed -->
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </Label.Style>
+                                                </Label>
+                                                <Label Text="{Binding Deduction,StringFormat='Deduction : {0}'}" TextColor="#006a55" FontSize="14" FontAttributes="Bold">
+                                                    <Label.Style>
+                                                        <Style TargetType="Label" >
+                                                            <Setter Property="TextColor" Value="Black" />
+                                                            <!-- Default color -->
+                                                            <Style.Triggers>
+                                                                <DataTrigger TargetType="Label" Binding="{Binding IsEdit}" Value="True">
+                                                                    <Setter Property="TextColor" Value="#ff5c33" />
+                                                                </DataTrigger>
+
+                                                                <!-- Add more DataTriggers for other status conditions if needed -->
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </Label.Style>
+                                                </Label>
+                                                <Label Text="{Binding FinalWeight,StringFormat='Final Wgt. : {0}'}" TextColor="#006a55" FontSize="14" FontAttributes="Bold">
+                                                    <Label.Style>
+                                                        <Style TargetType="Label" >
+                                                            <Setter Property="TextColor" Value="Black" />
+                                                            <!-- Default color -->
+                                                            <Style.Triggers>
+                                                                <DataTrigger TargetType="Label" Binding="{Binding IsEdit}" Value="True">
+                                                                    <Setter Property="TextColor" Value="#ff5c33" />
+                                                                </DataTrigger>
+
+                                                                <!-- Add more DataTriggers for other status conditions if needed -->
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </Label.Style>
+                                                </Label>
                                             </StackLayout>
 
                                             <!-- Edit Button -->

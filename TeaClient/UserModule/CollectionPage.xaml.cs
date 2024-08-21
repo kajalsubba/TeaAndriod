@@ -613,7 +613,7 @@ namespace TeaClient.UserModule
                 await DisplayAlert("Validation", "Please enter total field weight.", "OK");
                 return;
             }
-
+            TotalCollectionOnType();
             FieldEntryLaout.IsVisible = true;
             BtnFinish.IsVisible = false;
             CalculateView.IsVisible = false;

@@ -74,7 +74,7 @@ namespace TeaClient.UserModule
             existingCollect.Rate = RateValue;
             existingCollect.GrossAmount = FinalAmountValue;
             existingCollect.Remarks = Remarks.Text;
-           
+            existingCollect.IsEdit = true;
                 bool _submit = await DisplayAlert("Confirm", "Do you want to update!", "Yes", "No");
                 if (_submit)
                 {

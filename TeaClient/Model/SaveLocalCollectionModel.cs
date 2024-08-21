@@ -34,6 +34,8 @@ namespace TeaClient.Model
         public string CollectionBreakList { get; set; }
 
         public long CreatedBy { get; set; }
+
+        public bool IsEdit { get; set; } = false;
     }
 
 
