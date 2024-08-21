@@ -30,15 +30,15 @@
                     </StackLayout>
 
                     <!-- Middle Label -->
-                    <!--<Label x:Name="GrossTotalWgt"
-                       
+                    <Label x:Name="TotalRecord"
+                  
                         VerticalOptions="Center"
                                FontAttributes="Bold"
                         HorizontalOptions="Center"
                                  Margin="5,10,0,0"
                                TextColor="#006a55" 
                         AbsoluteLayout.LayoutBounds="0.5, 0, AutoSize, AutoSize"
-                        AbsoluteLayout.LayoutFlags="PositionProportional" />-->
+                        AbsoluteLayout.LayoutFlags="PositionProportional" />
 
                     <!-- Top Right Image with Label -->
                     <StackLayout Orientation="Horizontal"
@@ -51,7 +51,44 @@
                     </StackLayout>
                 </AbsoluteLayout>
 
-                <Label x:Name="GrossTotalWgt" FontSize="16" TextColor="#006a55" HorizontalOptions="Center" FontAttributes="Bold"  />
+                <!--<Label x:Name="GrossTotalWgt" FontSize="16" TextColor="#006a55" HorizontalOptions="Center" FontAttributes="Bold"  />-->
+                <Grid Margin="0,5,10,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <!-- Left column -->
+                        <ColumnDefinition Width="Auto" />
+                        <!-- Center column -->
+                        <ColumnDefinition Width="*" />
+                        <!-- Right column -->
+                    </Grid.ColumnDefinitions>
+
+                    <Label x:Name="TotalFirstWgt"
+           
+           FontSize="14"
+           TextColor="#006a55"
+           FontAttributes="Bold"
+           HorizontalOptions="Start"
+           VerticalOptions="Center"
+           Grid.Column="0" />
+
+                    <Label x:Name="TotalDeducttion"
+          
+           FontSize="14"
+           TextColor="#006a55"
+           FontAttributes="Bold"
+           HorizontalOptions="Center"
+           VerticalOptions="Center"
+           Grid.Column="1" />
+
+                    <Label x:Name="GrossTotalWgt"
+      
+           FontSize="14"
+           TextColor="#006a55"
+           FontAttributes="Bold"
+           HorizontalOptions="End"
+           VerticalOptions="Center"
+           Grid.Column="2" />
+                </Grid>
 
 
                 <!-- Place the ListView and other controls after the AbsoluteLayout -->

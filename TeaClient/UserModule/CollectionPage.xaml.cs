@@ -52,11 +52,44 @@ namespace TeaClient.UserModule
             conn.CreateTable<SaveLocalCollectionModel>();
             
             GetClientFromLocalDB();
+            GetTotal();
+
+        }
+
+        void GetTotal()
+        {
+
+            var _recordTotal = GetTotalRecord();
+            TotalRecord.Text= "Total Record:" + _recordTotal;
+
+            var _firstWgtTotal = GetTotalFirstWeight();
+            TotalFirstWgt.Text = "Total Field:" + _firstWgtTotal;
+
+            var _deductionTotal = GetTotalDeduction();
+            TotalDeducttion.Text = "Total Deduct:" + _deductionTotal;
+
 
             var _finalWgtTotal = GetTotalFinalWeight();
-            GrossTotalWgt.Text ="Total Final Wgt: "+ _finalWgtTotal;
+            GrossTotalWgt.Text = "Total Final: " + _finalWgtTotal;
 
-
+        }
+        public int GetTotalFirstWeight()
+        {
+            // Compute the sum of FinalWeight
+            var sum = conn.ExecuteScalar<int>("SELECT SUM(FirstWeight) FROM SaveLocalCollectionModel");
+            return sum;
+        }
+        public int GetTotalDeduction()
+        {
+            // Compute the sum of FinalWeight
+            var sum = conn.ExecuteScalar<int>("SELECT SUM(Deduction) FROM SaveLocalCollectionModel");
+            return sum;
+        }
+        public int GetTotalRecord()
+        {
+            // Compute the sum of FinalWeight
+            var count = conn.ExecuteScalar<int>("SELECT COUNT(*) FROM SaveLocalCollectionModel");
+            return count;
         }
         public int GetTotalFinalWeight()
         {
@@ -104,12 +137,45 @@ namespace TeaClient.UserModule
 
                 // Append the operator to the current text
                 EntryFieldWeight.Text += buttonText;
+
+                TotalCollectionOnType();
             }
         }
 
         private void OnEqualsButtonClicked(object sender, EventArgs e)
         {
-           
+
+            //if (EntryFieldWeight != null)
+            //{
+            //    string expression = EntryFieldWeight.Text;
+
+            //    // Remove trailing '+' if it exists
+            //    if (expression.EndsWith("+"))
+            //    {
+            //        expression = expression.Substring(0, expression.Length - 1);
+            //    }
+
+            //    try
+            //    {
+            //        // Calculate the result
+            //        double result = EvaluateExpression(expression);
+            //        TotalFieldWeight.Text = result.ToString();
+            //        FinalWeight.Text= result.ToString();
+            //    }
+            //    catch (Exception ex)
+            //    {
+            //        // Handle any errors that might occur during evaluation
+            //        DisplayAlert("Error", "Invalid Expression", "OK");
+            //    }
+
+            //    TotalBagCount();
+            //}
+
+            TotalCollectionOnType();
+        }
+
+        void TotalCollectionOnType()
+        {
             if (EntryFieldWeight != null)
             {
                 string expression = EntryFieldWeight.Text;
@@ -125,7 +191,7 @@ namespace TeaClient.UserModule
                     // Calculate the result
                     double result = EvaluateExpression(expression);
                     TotalFieldWeight.Text = result.ToString();
-                    FinalWeight.Text= result.ToString();
+                    FinalWeight.Text = result.ToString();
                 }
                 catch (Exception ex)
                 {
@@ -224,8 +290,8 @@ namespace TeaClient.UserModule
             {
                 int FirstWeightValue = string.IsNullOrWhiteSpace(TotalFieldWeight.Text) ? 0 : int.Parse(TotalFieldWeight.Text);
 
-                var RainResult = (RainPercentage * FirstWeightValue) / 100; // Example calculation
-                var LongResult = (longLeafPercentage * FirstWeightValue) / 100; // Example calculation
+                var RainResult =Math.Round((double)(RainPercentage * FirstWeightValue) / 100); 
+                var LongResult = Math.Round((double)(longLeafPercentage * FirstWeightValue) / 100); 
                 Deduction.Text = (RainResult + LongResult).ToString();
                 FinalWeight.Text = (FirstWeightValue - RainResult - LongResult).ToString();
 
@@ -470,8 +536,9 @@ namespace TeaClient.UserModule
                         await DisplayAlert("Info", "Data is added Successfully. ", "Yes");
                         cleanForm();
                              Grade.SelectedItem = null;
-                        var _finalWgtTotal = GetTotalFinalWeight();
-                        GrossTotalWgt.Text = "Total Final Wgt: " + _finalWgtTotal;
+                        //var _finalWgtTotal = GetTotalFinalWeight();
+                        //GrossTotalWgt.Text = "Total Final Wgt: " + _finalWgtTotal;
+                        GetTotal();
                         FieldEntryLaout.IsVisible = false;
                         BtnFinish.IsVisible = true;
                         CalculateView.IsVisible = true;

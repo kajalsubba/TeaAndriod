@@ -5,11 +5,14 @@
              x:Class="TeaClient.LocalDataShow.DailyCollectionView">
     <ContentPage.Content>
         <StackLayout Padding="10" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
-            <Label x:Name="HeaderName"  FontSize="24" HorizontalOptions="Center" />
             <Grid>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
+                    <!-- Column for Back Button -->
+                    <ColumnDefinition Width="*" />
+                    <!-- Column for Header Name (centered) -->
+                    <ColumnDefinition Width="Auto" />
+                    <!-- Column for Total Record -->
                 </Grid.ColumnDefinitions>
 
                 <!-- Back Button -->
@@ -24,18 +27,68 @@
             BorderWidth="1.5"
             CornerRadius="10"
             HorizontalOptions="Start" 
-                        Clicked="OnBackClicked" />
+            Clicked="OnBackClicked" />
 
-                <!-- Final Total Label -->
-                <Label x:Name="FinalTotal"
+                <!-- Header Name (Centered) -->
+                <Label x:Name="HeaderName"
            Grid.Column="1"
-           FontSize="14"
-                       FontAttributes="bold"
-           HorizontalOptions="End"
+           FontSize="18"
+                       TextColor="Black"
+           FontAttributes="Bold"
+           HorizontalOptions="Center"
            VerticalOptions="Center" />
+
+                <!-- Total Record -->
+                <Label x:Name="TotalRecord"
+           Grid.Column="2"
+           VerticalOptions="Center"
+           FontAttributes="Bold"
+           TextColor="#006a55" />
             </Grid>
 
-            <Frame BorderColor="LightBlue" BackgroundColor="#F8F8FF" CornerRadius="10" Padding="8" HasShadow="True" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
+            <!-- Final Total Label -->
+            <!--<Label x:Name="FinalTotal"  FontSize="24" HorizontalOptions="Center" />-->
+
+            <Grid Margin="0,5,10,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <!-- Left column -->
+                    <ColumnDefinition Width="Auto" />
+                    <!-- Center column -->
+                    <ColumnDefinition Width="*" />
+                    <!-- Right column -->
+                </Grid.ColumnDefinitions>
+
+                <Label x:Name="TotalFirstWgt"
+       Text="Total First Wgt"
+       FontSize="14"
+       TextColor="#006a55"
+       FontAttributes="Bold"
+       HorizontalOptions="Start"
+       VerticalOptions="Center"
+       Grid.Column="0" />
+
+                <Label x:Name="TotalDeducttion"
+       Text="Total Deducttion"
+       FontSize="14"
+       TextColor="#006a55"
+       FontAttributes="Bold"
+       HorizontalOptions="Center"
+       VerticalOptions="Center"
+       Grid.Column="1" />
+
+                <Label x:Name="FinalTotal"
+       Text="Final Total"
+       FontSize="14"
+       TextColor="#006a55"
+       FontAttributes="Bold"
+       HorizontalOptions="End"
+       VerticalOptions="Center"
+       Grid.Column="2" />
+
+            </Grid>
+
+            <Frame BorderColor="LightBlue" Margin="0,5,0,0" BackgroundColor="#F8F8FF" CornerRadius="10" Padding="8" HasShadow="True" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
                 <ScrollView >
                     <ListView x:Name="myListView" HasUnevenRows="True">
                         <ListView.ItemTemplate>

@@ -36,8 +36,9 @@ namespace TeaClient.LocalDataShow
             // CollectionData();
             HeaderName.Text = DateTime.Now.ToString("dd/MM/yyyy");
             DisplayDetails();
-            var _finalWgtTotal = GetTotalFinalWeight();
-            FinalTotal.Text = "Total Final Wgt: " + _finalWgtTotal;
+            //var _finalWgtTotal = GetTotalFinalWeight();
+            //FinalTotal.Text = "Total Final Wgt: " + _finalWgtTotal;
+            GetTotal();
         }
         protected override bool OnBackButtonPressed()
         {
@@ -73,7 +74,41 @@ namespace TeaClient.LocalDataShow
                 });
             }
         }
+        void GetTotal()
+        {
 
+            var _recordTotal = GetTotalRecord();
+            TotalRecord.Text = "Total Record:" + _recordTotal;
+
+            var _firstWgtTotal = GetTotalFirstWeight();
+            TotalFirstWgt.Text = "Total Field:" + _firstWgtTotal;
+
+            var _deductionTotal = GetTotalDeduction();
+            TotalDeducttion.Text = "Total Deduct:" + _deductionTotal;
+
+
+            var _finalWgtTotal = GetTotalFinalWeight();
+            FinalTotal.Text = "Total Final: " + _finalWgtTotal;
+
+        }
+        public int GetTotalFirstWeight()
+        {
+            // Compute the sum of FinalWeight
+            var sum = conn.ExecuteScalar<int>("SELECT SUM(FirstWeight) FROM SaveLocalCollectionModel");
+            return sum;
+        }
+        public int GetTotalDeduction()
+        {
+            // Compute the sum of FinalWeight
+            var sum = conn.ExecuteScalar<int>("SELECT SUM(Deduction) FROM SaveLocalCollectionModel");
+            return sum;
+        }
+        public int GetTotalRecord()
+        {
+            // Compute the sum of FinalWeight
+            var count = conn.ExecuteScalar<int>("SELECT COUNT(*) FROM SaveLocalCollectionModel");
+            return count;
+        }
         public int GetTotalFinalWeight()
         {
             // Compute the sum of FinalWeight

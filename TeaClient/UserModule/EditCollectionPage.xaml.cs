@@ -127,8 +127,11 @@ namespace TeaClient.UserModule
             {
                 int FirstWeightValue = string.IsNullOrWhiteSpace(TotalFieldWeight.Text) ? 0 : int.Parse(TotalFieldWeight.Text);
 
-                var RainResult = (RainPercentage * FirstWeightValue) / 100; // Example calculation
-                var LongResult = (longLeafPercentage * FirstWeightValue) / 100; // Example calculation
+                //var RainResult = (RainPercentage * FirstWeightValue) / 100; // Example calculation
+                //var LongResult = (longLeafPercentage * FirstWeightValue) / 100; // Example calculation
+                var RainResult = Math.Round((double)(RainPercentage * FirstWeightValue) / 100);
+                var LongResult = Math.Round((double)(longLeafPercentage * FirstWeightValue) / 100);
+
                 Deduction.Text = (RainResult + LongResult).ToString();
                 FinalWeight.Text = (FirstWeightValue - RainResult - LongResult).ToString();
 

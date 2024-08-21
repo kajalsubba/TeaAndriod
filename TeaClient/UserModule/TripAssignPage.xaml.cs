@@ -47,7 +47,7 @@ namespace TeaClient.UserModule
             conn.CreateTable<LocalGradeSaveModel>();
             conn.CreateTable<SaveLocalCollectionModel>();
             
-            DropAndRecreateTable();
+           DropAndRecreateTable();
             GetClient();
             GetGrade();
             CheckLockVehicle();
@@ -202,6 +202,7 @@ namespace TeaClient.UserModule
                     else
                     {
                         await DisplayAlert("Info", valueData.Message, "OK");
+                        ;
                     }
 
                 }
