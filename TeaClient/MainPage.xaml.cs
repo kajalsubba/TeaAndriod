@@ -6,6 +6,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TeaClient.CommonPage;
 using Xamarin.Forms;
 
 namespace TeaClient
@@ -19,11 +20,14 @@ namespace TeaClient
 
         private async void BtnSupplier_Clicked(object sender, EventArgs e)
         {
+          
             await Navigation.PushAsync(new LoginPage());
         }
   
         private async void BtnClient_Clicked(object sender, EventArgs e)
         {
+            //var loadingPage = new TransferPopUpPage();
+            //await Navigation.PushModalAsync(loadingPage);
             await Navigation.PushAsync(new UserModule.UserLoginPage());
         }
     }

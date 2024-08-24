@@ -8,12 +8,16 @@ namespace TeaClient.Model
     {
      
            
-            public long VehicleId { get; set; }
-            public int TripId { get; set; }
-            public DateTime LockDate { get; set; }
-            public long TenantId { get; set; }
-            public long CreatedBy { get; set; }
-        
+        public long VehicleId { get; set; }
+        public int TripId { get; set; }
+
+        public string VehicleNo { get; set; }
+
+        public string TripName { get; set; }    
+        public DateTime LockDate { get; set; }
+        public long TenantId { get; set; }
+        public long TransferTo { get; set; }
+        public string LoginUserName { get; set; }
     }
 
     public class SaveVehicleLockModel
@@ -23,6 +27,8 @@ namespace TeaClient.Model
         public string LockDate { get; set; }
         public long TenantId { get; set; }
         public long CreatedBy { get; set; }
+
+     
 
     }
 

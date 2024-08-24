@@ -32,7 +32,6 @@ namespace TeaClient.UserModule
         int TripId;
         int BagCount=0;
 
-   
         public IList<GradeModel> GradeList { get; set; }
         public SQLiteConnection conn;
         public LocalClientSaveModel _clientModel;
@@ -58,47 +57,32 @@ namespace TeaClient.UserModule
 
         void GetTotal()
         {
+            int tenantId = Convert.ToInt32(LoginData.LoginDetails[0].TenantId);
+            int userId = Convert.ToInt32(LoginData.LoginDetails[0].UserId);
+            DateTime collectionDate = DateTime.Now.Date;
 
-            var _recordTotal = GetTotalRecord();
+            var CollectionDetails = (from x in conn.Table<SaveLocalCollectionModel>()
+                                     where x.TenantId == tenantId
+                                      && x.CollectionDate == collectionDate
+                                      && x.CreatedBy == userId
+                                      && x.DataSendToServer == false
+                                      && x.CollectionType == "Self"
+                                     select x).ToList();
+
+            var _recordTotal = CollectionDetails.Count();
             TotalRecord.Text= "Total Record:" + _recordTotal;
 
-            var _firstWgtTotal = GetTotalFirstWeight();
+            var _firstWgtTotal = CollectionDetails.Sum(x => x.FirstWeight);
             TotalFirstWgt.Text = "Total Field:" + _firstWgtTotal;
 
-            var _deductionTotal = GetTotalDeduction();
+            var _deductionTotal = CollectionDetails.Sum(x => x.Deduction);
             TotalDeducttion.Text = "Total Deduct:" + _deductionTotal;
 
-
-            var _finalWgtTotal = GetTotalFinalWeight();
+            var _finalWgtTotal = CollectionDetails.Sum(x => x.FinalWeight);
             GrossTotalWgt.Text = "Total Final: " + _finalWgtTotal;
 
         }
-        public int GetTotalFirstWeight()
-        {
-            // Compute the sum of FinalWeight
-            var sum = conn.ExecuteScalar<int>("SELECT SUM(FirstWeight) FROM SaveLocalCollectionModel");
-            return sum;
-        }
-        public int GetTotalDeduction()
-        {
-            // Compute the sum of FinalWeight
-            var sum = conn.ExecuteScalar<int>("SELECT SUM(Deduction) FROM SaveLocalCollectionModel");
-            return sum;
-        }
-        public int GetTotalRecord()
-        {
-            // Compute the sum of FinalWeight
-            var count = conn.ExecuteScalar<int>("SELECT COUNT(*) FROM SaveLocalCollectionModel");
-            return count;
-        }
-        public int GetTotalFinalWeight()
-        {
-            // Compute the sum of FinalWeight
-            var sum = conn.ExecuteScalar<int>("SELECT SUM(FinalWeight) FROM SaveLocalCollectionModel");
-            return sum;
-        }
     
-   
         private async void OnNumberButtonClicked(object sender, EventArgs e)
         {
             string _ClientName = Client.Text;
@@ -145,32 +129,7 @@ namespace TeaClient.UserModule
         private void OnEqualsButtonClicked(object sender, EventArgs e)
         {
 
-            //if (EntryFieldWeight != null)
-            //{
-            //    string expression = EntryFieldWeight.Text;
-
-            //    // Remove trailing '+' if it exists
-            //    if (expression.EndsWith("+"))
-            //    {
-            //        expression = expression.Substring(0, expression.Length - 1);
-            //    }
-
-            //    try
-            //    {
-            //        // Calculate the result
-            //        double result = EvaluateExpression(expression);
-            //        TotalFieldWeight.Text = result.ToString();
-            //        FinalWeight.Text= result.ToString();
-            //    }
-            //    catch (Exception ex)
-            //    {
-            //        // Handle any errors that might occur during evaluation
-            //        DisplayAlert("Error", "Invalid Expression", "OK");
-            //    }
-
-            //    TotalBagCount();
-            //}
-
+           
             TotalCollectionOnType();
         }
 
@@ -373,43 +332,7 @@ namespace TeaClient.UserModule
             }
         }
 
-        public async void GetClient()
-        {
-
-            string url = _appSetting.ApiUrl + "Master/GetClientList";
-
-            //var selectedTenant = (TenantList)Tenant.SelectedItem;
-
-            // Create an object to be sent as JSON in the request body
-            var dataToSend = new
-            {
-                Category = "STG",
-                TenantId = Convert.ToInt32(LoginData.LoginDetails[0].TenantId)
-            };
-
-            using (HttpClient client = new HttpClient())
-            {
-                var json = JsonConvert.SerializeObject(dataToSend);
-                var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
-                var response = await client.PostAsync(url, content);
-                var results = await response.Content.ReadAsStringAsync();
-                if (response.IsSuccessStatusCode)
-                {
-                    var valueData = JsonConvert.DeserializeObject<ClientList>(results);
-                    foreach (var _client in valueData.ClientDetails)
-                    {
-                        clientData.Add(new ClientModel {ClientId= _client.ClientId,ClientName= _client.ClientName });
-
-                    }
-
-                }
-
-            }
-
-
-        }
-
-        private void ListView_OnItemTapped(Object sender, ItemTappedEventArgs e)
+           private void ListView_OnItemTapped(Object sender, ItemTappedEventArgs e)
         {
             //EmployeeListView.IsVisible = false;  
 
@@ -496,7 +419,8 @@ namespace TeaClient.UserModule
                     await DisplayAlert("Validation", "Please Select Grade", "OK");
                     return;
                 }
-
+                
+              
                 int FirstValue = string.IsNullOrWhiteSpace(TotalFieldWeight.Text) ? 0 : int.Parse(TotalFieldWeight.Text);
                 int RainValue = string.IsNullOrWhiteSpace(RainLeaf.Text) ? 0 : int.Parse(RainLeaf.Text);
                 int LongValue = string.IsNullOrWhiteSpace(LongLeaf.Text) ? 0 : int.Parse(LongLeaf.Text);
@@ -506,7 +430,7 @@ namespace TeaClient.UserModule
                 Decimal FinalAmountValue = string.IsNullOrWhiteSpace(FinalAmount.Text) ? 0 : Decimal.Parse(FinalAmount.Text);
 
                 SaveLocalCollectionModel _collect = new SaveLocalCollectionModel();
-                _collect.CollectionDate = DateTime.Now;
+                _collect.CollectionDate = DateTime.Now.Date;
                 _collect.TripId = TripId;
                 _collect.VehicleNo = lblVehicle.Text;
                 _collect.ClientId = ClientId;
@@ -524,7 +448,19 @@ namespace TeaClient.UserModule
                 _collect.Remarks = Remarks.Text;
                 _collect.TenantId = Convert.ToInt32(LoginData.LoginDetails[0].TenantId);
                 _collect.Status = "Pending";
-                _collect.CollectionBreakList = EntryFieldWeight.Text;
+                _collect.DataSendToServer = false;
+                if (EntryFieldWeight != null)
+                {
+                    string expression = EntryFieldWeight.Text;
+
+                    // Remove trailing '+' if it exists
+                    if (expression.EndsWith("+"))
+                    {
+                        expression = expression.Substring(0, expression.Length - 1);
+                    }
+                    _collect.BagList = expression;
+                }
+              
                 _collect.CreatedBy = Convert.ToInt32(LoginData.LoginDetails[0].UserId);
 
                 try
@@ -638,18 +574,11 @@ namespace TeaClient.UserModule
             Client.Focus();
         }
 
-        void cleanClientForm()
+        private async void OnHomeClicked(object sender, EventArgs e)
         {
-            BagCount = 0;
-            txtBagCount.Text = "";
-            EntryFieldWeight.Text = "";
-            EntryFieldWeight.Text = "";
-            InitialVal = 0;
-            TotalFieldWeight.Text = "";
-            EntryFieldWeight.Focus();
+            await Navigation.PushAsync(new UserModule.UserDashboardPage());
         }
-
-
+            
 
     }
 }

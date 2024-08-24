@@ -1,44 +1,56 @@
-﻿using Microsoft.Net.Http.Headers;
+﻿using Android.Telephony.Data;
+using Android.Webkit;
+using Java.Util.Streams;
+using Microsoft.Net.Http.Headers;
+using Newtonsoft.Json;
 using SQLite;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using TeaClient.CommonPage;
 using TeaClient.Model;
+using TeaClient.Services;
+using TeaClient.SessionHelper;
 using TeaClient.SQLLite;
+using TeaClient.UserModule;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using static Android.Content.ClipData;
+using static Android.Provider.Telephony.Mms;
 
 namespace TeaClient.LocalDataShow
 {
-	[XamlCompilation(XamlCompilationOptions.Compile)]
-	public partial class DailyCollectionView : ContentPage
-	{
+    [XamlCompilation(XamlCompilationOptions.Compile)]
+    public partial class DailyCollectionView : ContentPage
+    {
         public SQLiteConnection conn;
         public SaveLocalCollectionModel _CollectionModel;
-        readonly string VehicleNo=string.Empty;
+        readonly string VehicleNo = string.Empty;
         readonly int TripId;
-        public IList<SaveLocalCollectionModel> dataItems { get; set; }
-        public DailyCollectionView (string _VehicleNo,int _Trip)
-		{
-			InitializeComponent ();
-            dataItems = new ObservableCollection<SaveLocalCollectionModel>();
+        UserModel LoginData = new UserModel();
+        readonly AppSettings _appSetting = AppConfigService.GetConfig();
+        IList<SaveLocalCollectionModel> CollectionList = new List<SaveLocalCollectionModel>();
+        public IList<SaveLocalCollectionModel> collectionData { get; set; }
+        public DailyCollectionView(string _VehicleNo, int _Trip)
+        {
+            InitializeComponent();
+            collectionData = new ObservableCollection<SaveLocalCollectionModel>();
+            LoginData = SessionManager.GetSessionValue<UserModel>("UserDetails");
             BindingContext = this;
             VehicleNo = _VehicleNo;
             TripId = _Trip;
             NavigationPage.SetHasBackButton(this, false);
             conn = DependencyService.Get<ISqlLite>().GetConnection();
             conn.CreateTable<SaveLocalCollectionModel>();
-            // CollectionData();
             HeaderName.Text = DateTime.Now.ToString("dd/MM/yyyy");
-            DisplayDetails();
-            //var _finalWgtTotal = GetTotalFinalWeight();
-            //FinalTotal.Text = "Total Final Wgt: " + _finalWgtTotal;
-            GetTotal();
+            TransferData();
+       
+
         }
         protected override bool OnBackButtonPressed()
         {
@@ -52,74 +64,172 @@ namespace TeaClient.LocalDataShow
 
 
         }
-        public void CollectionData()
+
+        public async void TransferData()
         {
-
-            var CollectionDetails = (from x in conn.Table<SaveLocalCollectionModel>() select x).ToList();
-
-            foreach (var _collect in CollectionDetails)
+            try
             {
 
-                dataItems.Add(new SaveLocalCollectionModel
+                string url = _appSetting.ApiUrl + "Collection/GetTransferStgData";
+
+                GetTransferDataModel dataToSend = new GetTransferDataModel
                 {
-                    ClientName = _collect.ClientName,
-                    GradeName=_collect.GradeName,
-                    FirstWeight = _collect.FinalWeight,
-                    Deduction = _collect.Deduction,
-                    FinalWeight = _collect.FinalWeight,
-                    Rate = _collect.Rate,
-                    GrossAmount = _collect.GrossAmount,
-                    Remarks = _collect.Remarks,
-                   
-                });
+                    CollectionDate = DateTime.Now.ToString("yyyy-MM-dd"),
+                    TripId = TripId,
+                    VehicleNo = VehicleNo,
+                    TenantId = Convert.ToInt32(LoginData.LoginDetails[0].TenantId),
+                    CreatedBy = Convert.ToInt32(LoginData.LoginDetails[0].UserId),
+                };
+                using (HttpClient client = new HttpClient())
+                {
+                    var json = JsonConvert.SerializeObject(dataToSend);
+                    var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
+                    var response = await client.PostAsync(url, content);
+                    var results = await response.Content.ReadAsStringAsync();
+                    if (response.IsSuccessStatusCode)
+                    {
+                        var valueData = JsonConvert.DeserializeObject<TransferDataList>(results);
+
+                        if (valueData.TransferData.Count > 0)
+                        {
+                            foreach (var item in valueData.TransferData)
+                            {
+                              await  MergeTransferCollection(item.ClientId, item.ClientName, item.FinalWeight,
+                                    item.WetLeaf, item.LongLeaf, item.Deduction, item.FinalWeight, item.Rate,
+                                    item.GrossAmount, item.GradeId, item.GradeName, item.Remarks, item.BagList);
+                            }
+                          var result= await UpdateTransferStatusInServer();
+                           
+                           await DisplayAlert("Success", result.Message, "OK");
+
+                           
+                        }
+
+                       await CollectionDetails();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                await DisplayAlert("Error", ex.Message, "Ok");
+
             }
         }
-        void GetTotal()
-        {
 
-            var _recordTotal = GetTotalRecord();
+        private async Task<SaveReturn> UpdateTransferStatusInServer()
+        {
+            try
+            {
+                string url = _appSetting.ApiUrl + "Collection/UpdateTransferStatus";
+
+                GetTransferDataModel dataToSend = new GetTransferDataModel
+                {
+                    CollectionDate = DateTime.Now.ToString("yyyy-MM-dd"),
+                    TripId = TripId,
+                    VehicleNo = VehicleNo,
+                    TenantId = Convert.ToInt32(LoginData.LoginDetails[0].TenantId),
+                    CreatedBy = Convert.ToInt32(LoginData.LoginDetails[0].UserId),
+                };
+                using (HttpClient client = new HttpClient())
+                {
+                    var json = JsonConvert.SerializeObject(dataToSend);
+                    var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
+                    var response = await client.PostAsync(url, content);
+                    var results = await response.Content.ReadAsStringAsync();
+                    if (response.IsSuccessStatusCode)
+                    {
+                        var valueData = JsonConvert.DeserializeObject<SaveReturn>(results);
+                        return valueData;
+                    }
+                    return null;
+                }
+               
+            }
+            catch (Exception ex)
+            {
+                await DisplayAlert("Error", ex.Message, "Ok");
+                return null;
+            }
+
+        }
+        private async Task MergeTransferCollection(long ClientId,string ClientName,int FirstWgt,
+            int WetLeaf,int LongLeaf,int Deduction,int FinalWgt,decimal Rate,decimal grossAmt,
+            int GradeId,string GradeName,string Remarks,string Bagslist)
+        {
+            try
+            {
+               
+                SaveLocalCollectionModel _collect = new SaveLocalCollectionModel();
+                _collect.CollectionDate = DateTime.Now.Date;
+                _collect.TripId = TripId;
+                _collect.VehicleNo = VehicleNo;
+                _collect.ClientId = ClientId;
+                _collect.ClientName = ClientName;
+                _collect.FirstWeight = FirstWgt;
+                _collect.WetLeaf = WetLeaf;
+                _collect.LongLeaf = LongLeaf;
+                _collect.Deduction = Deduction;
+                _collect.FinalWeight = FinalWgt;
+                _collect.Rate = Rate;
+                _collect.GrossAmount = grossAmt;
+                _collect.GradeId = GradeId;
+                _collect.GradeName = GradeName;
+                _collect.Remarks = Remarks??"";
+                _collect.TenantId = Convert.ToInt32(LoginData.LoginDetails[0].TenantId);
+                _collect.Status = "Pending";
+                _collect.DataSendToServer = false;
+                _collect.CollectionType = "Transfer";
+                _collect.BagList = Bagslist;
+                 _collect.CreatedBy = Convert.ToInt32(LoginData.LoginDetails[0].UserId);
+                conn.Insert(_collect);
+                  
+            }
+            catch (Exception ex)
+            {
+                //  throw ex;
+                await DisplayAlert("Error", ex.Message, "Ok");
+
+            }
+
+            finally
+            {
+
+            }
+
+        }
+        public async Task CollectionDetails()
+        {
+        
+            int tenantId = Convert.ToInt32(LoginData.LoginDetails[0].TenantId);
+            int userId = Convert.ToInt32(LoginData.LoginDetails[0].UserId);
+            DateTime collectionDate = DateTime.Now.Date;
+
+         //    var CollectionDetails1 = (from x in conn.Table<SaveLocalCollectionModel>() select x).ToList();
+
+            CollectionList = (from x in conn.Table<SaveLocalCollectionModel>()
+                                     where x.TenantId ==tenantId
+                                      && x.CollectionDate == collectionDate
+                                      && x.CreatedBy == userId
+                                      && x.DataSendToServer==false
+                                    //  && x.CollectionType=="Self"
+                              select x).ToList();
+
+
+            myListView.ItemsSource = CollectionList;
+
+            var _recordTotal = CollectionList.Count();
             TotalRecord.Text = "Total Record:" + _recordTotal;
 
-            var _firstWgtTotal = GetTotalFirstWeight();
+
+            var _firstWgtTotal = CollectionList.Sum(x => x.FirstWeight);
             TotalFirstWgt.Text = "Total Field:" + _firstWgtTotal;
 
-            var _deductionTotal = GetTotalDeduction();
+            var _deductionTotal = CollectionList.Sum(x => x.Deduction);
             TotalDeducttion.Text = "Total Deduct:" + _deductionTotal;
 
-
-            var _finalWgtTotal = GetTotalFinalWeight();
+            var _finalWgtTotal = CollectionList.Sum(x => x.FinalWeight);
             FinalTotal.Text = "Total Final: " + _finalWgtTotal;
-
-        }
-        public int GetTotalFirstWeight()
-        {
-            // Compute the sum of FinalWeight
-            var sum = conn.ExecuteScalar<int>("SELECT SUM(FirstWeight) FROM SaveLocalCollectionModel");
-            return sum;
-        }
-        public int GetTotalDeduction()
-        {
-            // Compute the sum of FinalWeight
-            var sum = conn.ExecuteScalar<int>("SELECT SUM(Deduction) FROM SaveLocalCollectionModel");
-            return sum;
-        }
-        public int GetTotalRecord()
-        {
-            // Compute the sum of FinalWeight
-            var count = conn.ExecuteScalar<int>("SELECT COUNT(*) FROM SaveLocalCollectionModel");
-            return count;
-        }
-        public int GetTotalFinalWeight()
-        {
-            // Compute the sum of FinalWeight
-            var sum = conn.ExecuteScalar<int>("SELECT SUM(FinalWeight) FROM SaveLocalCollectionModel");
-            return sum;
-        }
-        public void DisplayDetails()
-        {
-
-            var CollectionDetails = (from x in conn.Table<SaveLocalCollectionModel>() select x).ToList();
-            myListView.ItemsSource = CollectionDetails;
+            
         }
         private async void OnEditButtonClicked(object sender, EventArgs e)
         {
@@ -144,14 +254,111 @@ namespace TeaClient.LocalDataShow
 
             }
         }
- 
-        
+
+        public async Task SaveSTGUsingMQ()
+        {
+            try
+            {
+
+                string _comment = ServerComment.Text;
+                if (string.IsNullOrWhiteSpace(_comment))
+                {
+                    await DisplayAlert("Validation", "Please Enter Comment Before sending to Server!", "OK");
+                    return ;
+                }
+                List<StgSaveModel> _stgData = new List<StgSaveModel>();
+
+                foreach (SaveLocalCollectionModel item in myListView.ItemsSource)
+                {
+                    var objStg = new StgSaveModel
+                    {
+                        CollectionDate = item.CollectionDate,
+                        TripId = item.TripId,
+                        ClientId = item.ClientId,
+                        FirstWeight = item.FirstWeight,
+                        WetLeaf = item.WetLeaf,
+                        LongLeaf = item.LongLeaf,
+                        Deduction = item.Deduction,
+                        FinalWeight = item.FinalWeight,
+                        Rate = item.Rate,
+                        GradeId = item.GradeId,
+                        Remarks = item.Remarks,
+                        BagList = item.BagList
+                    };
+                    _stgData.Add(objStg);
+                }
+
+                string url = _appSetting.ApiUrl + "MessageBroker/ProduceStgList";
+
+                STGModelList dataToSend = new STGModelList
+                {
+                    Source = "Mobile",
+                    Category = "STG",
+                    ServerComment=ServerComment.Text,
+                    VehicleNo = VehicleNo,
+                    TenantId = Convert.ToInt32(LoginData.LoginDetails[0].TenantId),
+                    CreatedBy = Convert.ToInt32(LoginData.LoginDetails[0].UserId),
+                    StgListData = _stgData
+                };
+                using (HttpClient client = new HttpClient())
+                {
+                    var json = JsonConvert.SerializeObject(dataToSend);
+                    var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
+                    var response = await client.PostAsync(url, content);
+                    var results = await response.Content.ReadAsStringAsync();
+                    if (response.IsSuccessStatusCode)
+                    {
+                        var valueData = JsonConvert.DeserializeObject<SaveReturn>(results);
+
+                        if (valueData.Id != 0)
+                        {
+                            foreach (SaveLocalCollectionModel item in myListView.ItemsSource)
+                            {
+                                UpdateSendServerStatus(item.Id);
+                            }
+
+                            await DisplayAlert("Success", valueData.Message, "OK");
+                            ServerComment.Text = string.Empty;
+                            CollectionDetails();
+                        }
+                        else
+                        {
+                            await DisplayAlert("Info", valueData.Message, "OK");
+                        }
+
+                    }
+                }
+            }
+            catch(Exception ex)
+            {
+                await DisplayAlert("Error",ex.Message, "Ok");
+
+            }
+        }
 
         private async void OnSendToServerClicked(object sender, EventArgs e)
         {
-            await DisplayAlert("Info", "This page is under construction. ", "Ok");
+            // await DisplayAlert("Info", "This page is under construction. ", "Ok");
+           await SaveSTGUsingMQ();
+        } 
+        private async void OnTransferClicked(object sender, EventArgs e)
+        {
+            //var transferPage = new TransferPopUpPage(VehicleNo, TripId, CollectionList);
+            //await Navigation.PushModalAsync(transferPage);
+            var transferPage = new TransferPopUpPage(VehicleNo, TripId, CollectionList)
+            {
+                OnDismissed = async () =>
+                {
+                    // Refresh the parent page
+                   CollectionDetails();
+                }
+            };
+
+            await Navigation.PushModalAsync(transferPage);
 
         }
+
+
 
         private async void OnBackClicked(object sender, EventArgs e)
         {
@@ -159,6 +366,19 @@ namespace TeaClient.LocalDataShow
 
         }
         
+        void UpdateSendServerStatus(long Id)
+        {
+            var existingCollect = conn.Find<SaveLocalCollectionModel>(Id);
+            existingCollect.DataSendToServer = true;
+            conn.Update(existingCollect);
+     
+        }
 
+        protected override void OnDisappearing()
+        {
+            base.OnDisappearing();
+            // Unsubscribe to avoid memory leaks
+          //  MessagingCenter.Unsubscribe<TransferPopUpPage>(this, "RefreshParentPage");
+        }
     }
 }

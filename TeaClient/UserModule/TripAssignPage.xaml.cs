@@ -39,6 +39,7 @@ namespace TeaClient.UserModule
         public TripAssignPage()
         {
             InitializeComponent();
+            VehicleList = new ObservableCollection<VehicleLockModel>();
             LoginData = SessionManager.GetSessionValue<UserModel>("UserDetails");
             GetVehicle();
             var dbPath = Path.Combine(FileSystem.AppDataDirectory, "TeaCollection.db3");
@@ -51,6 +52,7 @@ namespace TeaClient.UserModule
             GetClient();
             GetGrade();
             CheckLockVehicle();
+           
         }
 
      
@@ -157,12 +159,21 @@ namespace TeaClient.UserModule
             if (_lock)
             {
                 var selectedTrip = (TripModel)Trip.SelectedItem;
-                await SaveVehicleLockGlobally(selectedTrip.TripId);
-                await Navigation.PushAsync(new UserModule.CollectionPage(VehicleNo.Text,Convert.ToInt16(selectedTrip.TripId)));
+                var result= await SaveVehicleLockGlobally(selectedTrip.TripId);
+                if (result.Id != 0)
+                {
+                    await DisplayAlert("Success", result.Message, "OK");
+                    await Navigation.PushAsync(new UserModule.CollectionPage(VehicleNo.Text, Convert.ToInt16(selectedTrip.TripId)));
+                }
+                else
+                {
+                    await DisplayAlert("Info", result.Message, "OK");
+                    
+                }
             }
         }
 
-        private async Task SaveVehicleLockGlobally(int _TripId)
+        private async Task<SaveReturn> SaveVehicleLockGlobally(int _TripId)
         {
             string url = _appSetting.ApiUrl + "Collection/VehicleLockSaveMobile";
 
@@ -170,7 +181,7 @@ namespace TeaClient.UserModule
             if (string.IsNullOrWhiteSpace(_vehicle))
             {
                 await DisplayAlert("Validation", "Please Enter Vehicle", "OK");
-                return;
+                return null;
             }
             SaveVehicleLockModel dataToSend = new SaveVehicleLockModel
             {
@@ -192,20 +203,10 @@ namespace TeaClient.UserModule
                 {
                     var valueData = JsonConvert.DeserializeObject<SaveReturn>(results);
 
-                    if (valueData.Id != 0)
-                    {
-
-
-                        await DisplayAlert("Success", valueData.Message, "OK");
-
-                    }
-                    else
-                    {
-                        await DisplayAlert("Info", valueData.Message, "OK");
-                        ;
-                    }
+                    return valueData;
 
                 }
+                return null;
 
             }
         }
@@ -294,8 +295,8 @@ namespace TeaClient.UserModule
             conn.Execute("DROP TABLE IF EXISTS LocalGradeSaveModel");
             conn.CreateTable<LocalGradeSaveModel>();
 
-            conn.Execute("DROP TABLE IF EXISTS SaveLocalCollectionModel");
-            conn.CreateTable<SaveLocalCollectionModel>();
+            //conn.Execute("DROP TABLE IF EXISTS SaveLocalCollectionModel");
+            //conn.CreateTable<SaveLocalCollectionModel>();
 
         }
         void DeleteClientData()
@@ -373,9 +374,15 @@ namespace TeaClient.UserModule
                         foreach (var _vehicle in data.LockDetails)
                         {
           
-                           // VehicleList.Add(new VehicleLockModel { VehicleId = _vehicle.VehicleId, TripId = _vehicle.TripId });
+                            VehicleList.Add(new VehicleLockModel { VehicleNo = _vehicle.VehicleNo, TripName = _vehicle.TripName,TripId=_vehicle.TripId });
                         }
 
+                    }
+
+                    if (VehicleList.Count > 0)
+                    {
+                        await Navigation.PushAsync(new UserModule.LokVehicleListViewPage(VehicleList));
+                        return;
                     }
                 }
             }

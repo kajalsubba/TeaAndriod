@@ -201,7 +201,6 @@ namespace TeaClient
                        
                       await UploadChallan(valueData.Id);
                       await DisplayAlert("Success", valueData.Message, "OK");
-                   //   _selectedImageFile.Dispose();
                        ChallanImage.Source = null;
 
                         clearFormControl();

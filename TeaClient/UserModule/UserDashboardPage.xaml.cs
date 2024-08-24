@@ -17,11 +17,12 @@ namespace TeaClient.UserModule
     public partial class UserDashboardPage : ContentPage
     {
         public IList<DashboardModel> MySource { get; set; }
-
+        UserModel LoginData = new UserModel();
         public UserDashboardPage()
         {
             InitializeComponent();
             NavigationPage.SetHasBackButton(this, false);
+            LoginData = SessionManager.GetSessionValue<UserModel>("UserDetails");
             MySource = new ObservableCollection<DashboardModel>()
             {
                 new DashboardModel(){Title ="STG Entry" ,BgImageSource="addStg.png"},
@@ -33,7 +34,7 @@ namespace TeaClient.UserModule
             };
 
             BindingContext = this;
-            HeaderName.Text = "Welcome";
+            HeaderName.Text = "Welcome " + LoginData.LoginDetails[0].UserFirstName;
         }
 
         protected override bool OnBackButtonPressed()

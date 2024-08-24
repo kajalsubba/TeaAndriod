@@ -5,7 +5,8 @@
              x:Class="TeaClient.LocalDataShow.DailyCollectionView">
     <ContentPage.Content>
         <StackLayout Padding="10" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
-            <Grid>
+            <StackLayout>
+                <Grid Margin="0,4,0,0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <!-- Column for Back Button -->
@@ -19,7 +20,7 @@
                 <Button x:Name="BackBtn"
             Grid.Column="0"
             VerticalOptions="Center"
-            IsVisible="true"
+            HeightRequest="60"
             Text="Back"
             TextColor="White"
             BackgroundColor="#008CBA"
@@ -45,7 +46,7 @@
            FontAttributes="Bold"
            TextColor="#006a55" />
             </Grid>
-
+           
             <!-- Final Total Label -->
             <!--<Label x:Name="FinalTotal"  FontSize="24" HorizontalOptions="Center" />-->
 
@@ -61,8 +62,9 @@
 
                 <Label x:Name="TotalFirstWgt"
        Text="Total First Wgt"
-       FontSize="14"
+       FontSize="12"
        TextColor="#006a55"
+                         HeightRequest="40"
        FontAttributes="Bold"
        HorizontalOptions="Start"
        VerticalOptions="Center"
@@ -70,16 +72,18 @@
 
                 <Label x:Name="TotalDeducttion"
        Text="Total Deducttion"
-       FontSize="14"
+       FontSize="12"
        TextColor="#006a55"
        FontAttributes="Bold"
        HorizontalOptions="Center"
        VerticalOptions="Center"
+                       HeightRequest="40"
        Grid.Column="1" />
 
                 <Label x:Name="FinalTotal"
        Text="Final Total"
-       FontSize="14"
+       FontSize="12"
+                         HeightRequest="40"
        TextColor="#006a55"
        FontAttributes="Bold"
        HorizontalOptions="End"
@@ -87,8 +91,9 @@
        Grid.Column="2" />
 
             </Grid>
-
-            <Frame BorderColor="LightBlue" Margin="0,5,0,0" BackgroundColor="#F8F8FF" CornerRadius="10" Padding="8" HasShadow="True" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
+            </StackLayout>
+        
+            <Frame BorderColor="LightBlue"  BackgroundColor="#F8F8FF" CornerRadius="10" Padding="8" HasShadow="True" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
                 <ScrollView >
                     <ListView x:Name="myListView" HasUnevenRows="True">
                         <ListView.ItemTemplate>
@@ -102,7 +107,45 @@
                                         <StackLayout Orientation="Horizontal" Padding="10">
                                             <!-- Client Name and Details -->
                                             <StackLayout Orientation="Vertical" HorizontalOptions="FillAndExpand">
-                                                <Label Text="{Binding ClientName}" FontSize="16" FontAttributes="Bold" TextColor="Black" />
+                                         
+                                                <Grid>
+                                                    <!-- Define two columns with equal width -->
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="*" />
+                                                        <ColumnDefinition Width="*" />
+                                                    </Grid.ColumnDefinitions>
+
+                                                    <!-- First Label in the first column -->
+                                                    <Label
+                                                    Text="{Binding ClientName}"
+                                                    FontSize="16"
+                                                    FontAttributes="Bold"
+                                                    TextColor="Black"
+                                                    Grid.Column="0" />
+
+                                                    <!-- Second Label in the second column -->
+                                                    <Label
+                                                Text="{Binding CollectionType,StringFormat='Type : {0}'}"
+                                                FontSize="16"
+                                                FontAttributes="Bold"
+                                                TextColor="Black"
+                                                Grid.Column="1" >
+                                                        <Label.Style>
+                                                            <Style TargetType="Label" >
+                                                                <Setter Property="TextColor" Value="Black" />
+                                                                <!-- Default color -->
+                                                                <Style.Triggers>
+                                                                    <DataTrigger TargetType="Label" Binding="{Binding CollectionType}" Value="Transfer">
+                                                                        <Setter Property="TextColor" Value="#ff5c33" />
+                                                                    </DataTrigger>
+
+                                                                    <!-- Add more DataTriggers for other status conditions if needed -->
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </Label.Style>
+                                                    </Label>
+                                                </Grid>
+
                                                 <Label Text="{Binding FirstWeight,StringFormat='Field Wgt. : {0}'}" TextColor="#006a55"  FontSize="14" FontAttributes="Bold" >
                                                     <Label.Style>
                                                         <Style TargetType="Label" >
@@ -168,13 +211,78 @@
                     </ListView>
                 </ScrollView>
             </Frame>
-            <Button x:Name="BtnSentToServer" Grid.Column="2" VerticalOptions="Center" IsVisible="true" 
-                    Text="Send To Server" TextColor="White" 
-      BackgroundColor="#008CBA"
-      BorderColor="Gray"
+           
+            <Grid>
+                <!-- Define two columns with equal width -->
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <!-- Label on the left -->
+                <Label
+        Grid.Column="0"
+        FontAttributes="Bold"
+        Text="Enter Comment"
+        VerticalOptions="Center"
+        HorizontalOptions="Start" />
+
+                <!-- Editor on the right -->
+                <Editor
+        x:Name="ServerComment"
+        Grid.Column="1"
+         BackgroundColor="#f9f9f9"
+        TextColor="Black"
+        FontSize="14"
+                    FontAttributes="Bold"
+         Placeholder="Enter Comment"
+        PlaceholderColor="#646b7a"
+   
+        HeightRequest="80" />
+                <!-- Optional: Set height if needed -->
+            </Grid>
+
+            <Grid>
+                <!-- Define two columns with fixed widths -->
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <!-- Adjust width as needed -->
+                    <ColumnDefinition Width="*"/>
+                    <!-- Adjust width as needed -->
+                </Grid.ColumnDefinitions>
+
+                <!-- First Button -->
+                <Button
+        x:Name="BtnSentToServer"
+        Grid.Column="0"
+        VerticalOptions="Center"
+        IsVisible="true"
+        Text="Transfer"
+        TextColor="White"
+        BackgroundColor="#008CBA"
+        BorderColor="Gray"
+        BorderWidth="1.5"
+        CornerRadius="10"
+                    HeightRequest="60"
+        Clicked="OnTransferClicked" />
+
+                <!-- Second Button -->
+                <Button
+        x:Name="BtnTransfer"
+        Grid.Column="1"
+        VerticalOptions="Center"
+        IsVisible="true"
+        Text="Sent To Server"
+        TextColor="White"
+        BackgroundColor="#008CBA"
+        BorderColor="Gray"
+                      HeightRequest="60"
+        BorderWidth="1.5"
+        CornerRadius="10"
+        Clicked="OnSendToServerClicked" />
+            </Grid>
             
-      BorderWidth="1.5"
-      CornerRadius="10" Clicked="OnSendToServerClicked" />
+
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

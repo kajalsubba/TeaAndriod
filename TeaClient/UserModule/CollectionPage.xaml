@@ -170,8 +170,8 @@
                         <Button Text="0" Grid.Row="3" Grid.Column="0"  Clicked="OnNumberButtonClicked" />
                         <Button Text="C" Grid.Row="3" Grid.Column="1"  Clicked="OnStepCleanButtonClicked" />
 
-                        <Button Text="AC" Grid.Row="3" Grid.Column="2" Clicked="OnClearButtonClicked" />
-                        <Button Text="=" Grid.Row="3" Grid.Column="3" Grid.ColumnSpan="1" Clicked="OnEqualsButtonClicked" />
+                        <!--<Button Text="AC" Grid.Row="3" Grid.Column="2" Clicked="OnClearButtonClicked" />-->
+                        <Button Text="=" Grid.Row="3" Grid.Column="2" Grid.ColumnSpan="2" Clicked="OnEqualsButtonClicked" />
                     </Grid>
 
                 </StackLayout>
@@ -289,7 +289,11 @@
                     BorderWidth="1.5"
                     CornerRadius="10" Clicked="OnViewCollectionClicked"/>
 
-
+                <Button Grid.Column="0" VerticalOptions="Center" Text="Home" TextColor="White" 
+      BackgroundColor="#008CBA"
+      BorderColor="Gray"
+      BorderWidth="1.5"
+      CornerRadius="10" Clicked="OnHomeClicked"/>
             </StackLayout>
         </ScrollView>
     </ContentPage.Content>
