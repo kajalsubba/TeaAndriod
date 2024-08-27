@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Xamarin.CommunityToolkit.Converters;
 
 namespace TeaClient.Model
 {
@@ -17,6 +18,9 @@ namespace TeaClient.Model
         public DateTime LockDate { get; set; }
         public long TenantId { get; set; }
         public long TransferTo { get; set; }
+        public long TransferFrom { get; set; }
+        public long VehicleFrom { get; set; }
+
         public string LoginUserName { get; set; }
     }
 

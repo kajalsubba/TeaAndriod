@@ -26,10 +26,10 @@
                     BackgroundColor="#008CBA"
                     BorderColor="Gray"
             BorderWidth="1.5"
-            CornerRadius="10" Clicked="Button_Clicked">
+            CornerRadius="10" Clicked="UserLogin_Clicked">
 
                     </Button>
-                    <Label Text="Version 1.1.0" FontAttributes="Bold" TextColor="#008CBA" HorizontalOptions="Center" />
+                    <Label Text="Version 2.0.0" FontAttributes="Bold" TextColor="#008CBA" HorizontalOptions="Center" />
                 </StackLayout>
             </Frame>
 

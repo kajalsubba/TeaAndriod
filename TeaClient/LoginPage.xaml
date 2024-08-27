@@ -57,7 +57,7 @@
             CornerRadius="10" Clicked="Button_Clicked">
                 
             </Button>
-                    <Label Text="Version 1.1.0" FontAttributes="Bold" TextColor="#008CBA" HorizontalOptions="Center" />
+                    <Label Text="Version 2.0.0" FontAttributes="Bold" TextColor="#008CBA" HorizontalOptions="Center" />
                 </StackLayout>
            </Frame>
           

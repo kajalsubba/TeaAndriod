@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using TeaClient.CommonPage;
 using TeaClient.Model;
 using TeaClient.Services;
 using TeaClient.SessionHelper;
@@ -58,7 +59,7 @@ namespace TeaClient.UserModule
 
         //    ((ListView)sender).SelectedItem = null;
         //}
-        private async void Button_Clicked(object sender, EventArgs e)
+        private async void UserLogin_Clicked(object sender, EventArgs e)
         {
 
             try
@@ -85,6 +86,8 @@ namespace TeaClient.UserModule
                     Password = txtPassword.Text
                
                 };
+                var loadingPage = new LoadingPage();
+                await Navigation.PushModalAsync(loadingPage);
 
                 using (HttpClient client = new HttpClient())
                 {
@@ -114,10 +117,12 @@ namespace TeaClient.UserModule
                         }
                     }
                 }
+                await Navigation.PopModalAsync();
             }
             catch (Exception ex)
             {
                 await DisplayAlert("Error", ex.Message.ToString(), "OK");
+                await Navigation.PopModalAsync();
             }
           
         }

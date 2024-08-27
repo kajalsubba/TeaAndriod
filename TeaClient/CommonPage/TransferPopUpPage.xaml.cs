@@ -108,7 +108,7 @@ namespace TeaClient.CommonPage
                 {
                     if (CollectionList.Count > 0)
                     {
-                        await TransferSTGUsingMQ(item.TransferTo,item.VehicleNo);
+                        await TransferSTGUsingMQ(item.TransferTo, item.VehicleNo, CollectionList[0].VehicleFrom, CollectionList[0].TransferFrom);
                     }
                     else
                     {
@@ -137,7 +137,7 @@ namespace TeaClient.CommonPage
             }
         }
 
-        public async Task TransferSTGUsingMQ(long TransferTo,string VehicleTo)
+        public async Task TransferSTGUsingMQ(long TransferTo,string VehicleTo,long _VehicleFrom,long _TransferFrom)
         {
             try
             {
@@ -160,7 +160,10 @@ namespace TeaClient.CommonPage
                         Rate = item.Rate,
                         GradeId = item.GradeId,
                         Remarks = item.Remarks,
-                        BagList = item.BagList
+                        BagList = item.BagList,
+                        CollectionType="Transfer",
+                        VehicleFrom= _VehicleFrom,
+                        TransferFrom=_TransferFrom
                     };
                     _stgData.Add(objStg);
                 }
@@ -189,10 +192,7 @@ namespace TeaClient.CommonPage
 
                         if (valueData.Id != 0)
                         {
-                            //foreach (SaveLocalCollectionModel item in CollectionList)
-                            //{
-                            //    UpdateSendServerStatus(item.Id);
-                            //}
+                            
                             bool _submit = await DisplayAlert("Confirm", "Do you want to transfer.", "Yes", "No");
                             if (_submit)
                             {
@@ -225,13 +225,7 @@ namespace TeaClient.CommonPage
             base.OnDisappearing();
          
         }
-        void UpdateSendServerStatus(long Id)
-        {
-            var existingCollect = conn.Find<SaveLocalCollectionModel>(Id);
-            existingCollect.CollectionType = "Transfer";
-            conn.Update(existingCollect);
-
-        }
+       
 
 
     }

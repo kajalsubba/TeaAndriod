@@ -37,6 +37,8 @@ namespace TeaClient.Model
 
         public bool IsEdit { get; set; } = false;
         public string CollectionType { get; set; } = "Self";
+        public long TransferFrom { get; set; }
+        public long VehicleFrom { get; set; }
 
         public bool DataSendToServer { get; set; }=false;
 

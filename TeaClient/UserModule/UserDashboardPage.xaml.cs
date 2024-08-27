@@ -25,8 +25,8 @@ namespace TeaClient.UserModule
             LoginData = SessionManager.GetSessionValue<UserModel>("UserDetails");
             MySource = new ObservableCollection<DashboardModel>()
             {
-                new DashboardModel(){Title ="STG Entry" ,BgImageSource="addStg.png"},
-                new DashboardModel(){Title ="Leaf History" ,BgImageSource="leaf.png"},
+                new DashboardModel(){Title ="Leaf Collection" ,BgImageSource="addStg.png"},
+                new DashboardModel(){Title ="Collection History" ,BgImageSource="leaf.png"},
                 new DashboardModel(){Title ="Payment History" ,BgImageSource="smart.png"},
                 //new DashboardModel(){Title ="Bill History" ,BgImageSource="bill.png"},
                 new DashboardModel(){Title ="Change Password" ,BgImageSource="password.png"},
@@ -57,8 +57,7 @@ namespace TeaClient.UserModule
                         await Navigation.PushAsync(new TripAssignPage());
                         break;
                     case "File: leaf.png":
-                        // await Navigation.PushAsync(new SupplierHistory());
-                        await DisplayAlert("Info", "This Page is under construction. ", "Ok");
+                        await Navigation.PushAsync(new UserHistory.StgHistory());
                         break;
 
                     case "File: smart.png":

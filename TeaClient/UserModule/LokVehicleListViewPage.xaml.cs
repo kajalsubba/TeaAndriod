@@ -42,7 +42,7 @@ namespace TeaClient.UserModule
                 // Handle the edit action (e.g., navigate to an edit page or display a form)
                 if (item != null)
                 {
-                    await Navigation.PushAsync(new UserModule.CollectionPage(item.VehicleNo, Convert.ToInt16(item.TripId)));
+                    await Navigation.PushAsync(new UserModule.CollectionPage(item.VehicleNo, Convert.ToInt16(item.TripId),item.VehicleId));
                 }
             }
             catch (Exception ex)

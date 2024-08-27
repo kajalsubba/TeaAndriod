@@ -108,8 +108,7 @@ namespace TeaClient
                     var loadingPage = new LoadingPage();
                     await Navigation.PushModalAsync(loadingPage);
 
-                    //LoadingIndicator.IsRunning = true;
-                    //LoadingIndicator.IsVisible = true;
+                   
                     var pdfBytes = await PostDataAndGetPdfAsync(url, data);
                     var filePath = Path.Combine(FileSystem.CacheDirectory, "SupplierBill_"+DateTime.Now.ToString("HH:mm:ss") + ".pdf");
                     await SavePdfAsync(filePath, pdfBytes);

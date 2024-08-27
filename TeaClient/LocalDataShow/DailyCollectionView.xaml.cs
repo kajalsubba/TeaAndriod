@@ -36,7 +36,9 @@ namespace TeaClient.LocalDataShow
         readonly AppSettings _appSetting = AppConfigService.GetConfig();
         IList<SaveLocalCollectionModel> CollectionList = new List<SaveLocalCollectionModel>();
         public IList<SaveLocalCollectionModel> collectionData { get; set; }
-        public DailyCollectionView(string _VehicleNo, int _Trip)
+
+        long VehicleFrom;
+        public DailyCollectionView(string _VehicleNo, int _Trip,long _VehicleFrom)
         {
             InitializeComponent();
             collectionData = new ObservableCollection<SaveLocalCollectionModel>();
@@ -44,12 +46,14 @@ namespace TeaClient.LocalDataShow
             BindingContext = this;
             VehicleNo = _VehicleNo;
             TripId = _Trip;
+            VehicleFrom = _VehicleFrom;
+
             NavigationPage.SetHasBackButton(this, false);
             conn = DependencyService.Get<ISqlLite>().GetConnection();
             conn.CreateTable<SaveLocalCollectionModel>();
             HeaderName.Text = DateTime.Now.ToString("dd/MM/yyyy");
-            TransferData();
-       
+            //TransferData();
+            CollectionDetails();
 
         }
         protected override bool OnBackButtonPressed()
@@ -60,7 +64,7 @@ namespace TeaClient.LocalDataShow
         async void DisplayConfirmation()
         {
 
-            await Navigation.PushAsync(new UserModule.CollectionPage(VehicleNo, TripId));
+            await Navigation.PushAsync(new UserModule.CollectionPage(VehicleNo, TripId,VehicleFrom));
 
 
         }
@@ -96,7 +100,7 @@ namespace TeaClient.LocalDataShow
                             {
                               await  MergeTransferCollection(item.ClientId, item.ClientName, item.FinalWeight,
                                     item.WetLeaf, item.LongLeaf, item.Deduction, item.FinalWeight, item.Rate,
-                                    item.GrossAmount, item.GradeId, item.GradeName, item.Remarks, item.BagList);
+                                    item.GrossAmount, item.GradeId, item.GradeName, item.Remarks, item.BagList, item.TransferFrom,item.VehicleFrom);
                             }
                           var result= await UpdateTransferStatusInServer();
                            
@@ -154,7 +158,7 @@ namespace TeaClient.LocalDataShow
         }
         private async Task MergeTransferCollection(long ClientId,string ClientName,int FirstWgt,
             int WetLeaf,int LongLeaf,int Deduction,int FinalWgt,decimal Rate,decimal grossAmt,
-            int GradeId,string GradeName,string Remarks,string Bagslist)
+            int GradeId,string GradeName,string Remarks,string Bagslist,long TransferFrom,long VehicleFrom)
         {
             try
             {
@@ -181,12 +185,16 @@ namespace TeaClient.LocalDataShow
                 _collect.CollectionType = "Transfer";
                 _collect.BagList = Bagslist;
                  _collect.CreatedBy = Convert.ToInt32(LoginData.LoginDetails[0].UserId);
+                _collect.CollectionType = "Transfer";
+                _collect.TransferFrom = TransferFrom;
+                _collect.VehicleFrom = VehicleFrom;
+
                 conn.Insert(_collect);
                   
             }
             catch (Exception ex)
             {
-                //  throw ex;
+               
                 await DisplayAlert("Error", ex.Message, "Ok");
 
             }
@@ -218,14 +226,14 @@ namespace TeaClient.LocalDataShow
             myListView.ItemsSource = CollectionList;
 
             var _recordTotal = CollectionList.Count();
-            TotalRecord.Text = "Total Record:" + _recordTotal;
+            TotalRecord.Text = "Count:" + _recordTotal;
 
 
             var _firstWgtTotal = CollectionList.Sum(x => x.FirstWeight);
             TotalFirstWgt.Text = "Total Field:" + _firstWgtTotal;
 
             var _deductionTotal = CollectionList.Sum(x => x.Deduction);
-            TotalDeducttion.Text = "Total Deduct:" + _deductionTotal;
+            TotalDeducttion.Text = "Deduct:" + _deductionTotal;
 
             var _finalWgtTotal = CollectionList.Sum(x => x.FinalWeight);
             FinalTotal.Text = "Total Final: " + _finalWgtTotal;
@@ -255,6 +263,11 @@ namespace TeaClient.LocalDataShow
             }
         }
 
+        
+        private async void OnRefreshBtnClicked(object sender, EventArgs e)
+        {
+            TransferData();
+        }
         public async Task SaveSTGUsingMQ()
         {
             try
@@ -283,7 +296,10 @@ namespace TeaClient.LocalDataShow
                         Rate = item.Rate,
                         GradeId = item.GradeId,
                         Remarks = item.Remarks,
-                        BagList = item.BagList
+                        BagList = item.BagList,
+                        CollectionType = item.CollectionType,
+                        TransferFrom= item.TransferFrom,
+                        VehicleFrom=item.VehicleFrom
                     };
                     _stgData.Add(objStg);
                 }
@@ -317,7 +333,7 @@ namespace TeaClient.LocalDataShow
                                 UpdateSendServerStatus(item.Id);
                             }
 
-                            await DisplayAlert("Success", valueData.Message, "OK");
+                            await DisplayAlert("Success", "Data is send to server successfully!", "OK");
                             ServerComment.Text = string.Empty;
                             CollectionDetails();
                         }
@@ -338,23 +354,32 @@ namespace TeaClient.LocalDataShow
 
         private async void OnSendToServerClicked(object sender, EventArgs e)
         {
-            // await DisplayAlert("Info", "This page is under construction. ", "Ok");
-           await SaveSTGUsingMQ();
+            var _submit = await DisplayAlert("Save", "Do you want to send to server! ", "Yes","No");
+            if (_submit)
+            {
+                await SaveSTGUsingMQ();
+            }
+         
         } 
         private async void OnTransferClicked(object sender, EventArgs e)
         {
-            //var transferPage = new TransferPopUpPage(VehicleNo, TripId, CollectionList);
-            //await Navigation.PushModalAsync(transferPage);
-            var transferPage = new TransferPopUpPage(VehicleNo, TripId, CollectionList)
+            try
             {
-                OnDismissed = async () =>
+                var transferPage = new TransferPopUpPage(VehicleNo, TripId, CollectionList)
                 {
-                    // Refresh the parent page
-                   CollectionDetails();
-                }
-            };
+                    OnDismissed = async () =>
+                    {
+                       
+                        CollectionDetails();
+                    }
+                };
 
-            await Navigation.PushModalAsync(transferPage);
+                await Navigation.PushModalAsync(transferPage);
+            }
+            catch(Exception ex)
+            {
+                await DisplayAlert("Error", ex.Message, "Ok");
+            }
 
         }
 
@@ -362,15 +387,22 @@ namespace TeaClient.LocalDataShow
 
         private async void OnBackClicked(object sender, EventArgs e)
         {
-            await Navigation.PushAsync(new UserModule.CollectionPage(VehicleNo,TripId));
+            await Navigation.PushAsync(new UserModule.CollectionPage(VehicleNo,TripId, VehicleFrom));
 
         }
         
         void UpdateSendServerStatus(long Id)
         {
-            var existingCollect = conn.Find<SaveLocalCollectionModel>(Id);
-            existingCollect.DataSendToServer = true;
-            conn.Update(existingCollect);
+            try
+            {
+                var existingCollect = conn.Find<SaveLocalCollectionModel>(Id);
+                existingCollect.DataSendToServer = true;
+                conn.Update(existingCollect);
+            }
+            catch(Exception ex)
+            {
+                 DisplayAlert("Error", ex.Message, "Ok");
+            }
      
         }
 

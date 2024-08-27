@@ -30,16 +30,20 @@ namespace TeaClient.UserModule
         public IList<TripModel> Triplists { get; set; }
 
         public IList<GradeModel> GradeList { get; set; }
-        readonly ObservableCollection<string> vehicleData = new ObservableCollection<string>();
+        readonly ObservableCollection<VehicleModel> vehicleData = new ObservableCollection<VehicleModel>();
+       // public IList<VehicleModel> vehicleData { get; set; }
+
         UserModel LoginData = new UserModel();
-        
+
+        long VehicleFromId;
         public IList<VehicleLockModel> VehicleList { get; set; }
         public SQLiteConnection conn;
         public LocalClientSaveModel _clientModel;
         public TripAssignPage()
         {
             InitializeComponent();
-            VehicleList = new ObservableCollection<VehicleLockModel>();
+             VehicleList = new ObservableCollection<VehicleLockModel>();
+            //vehicleData = new ObservableCollection<VehicleModel>();
             LoginData = SessionManager.GetSessionValue<UserModel>("UserDetails");
             GetVehicle();
             var dbPath = Path.Combine(FileSystem.AppDataDirectory, "TeaCollection.db3");
@@ -102,7 +106,8 @@ namespace TeaClient.UserModule
                     var valueData = JsonConvert.DeserializeObject<VehicleList>(results);
                     foreach (var vehicle in valueData.VehicleDetails)
                     {
-                        vehicleData.Add(vehicle.VehicleNo);
+                        // vehicleData.Add(vehicle);
+                        vehicleData.Add(new VehicleModel { VehicleId = vehicle.VehicleId, VehicleNo = vehicle.VehicleNo });
 
                     }
 
@@ -114,33 +119,48 @@ namespace TeaClient.UserModule
         }
         private void ListView_OnItemTapped(Object sender, ItemTappedEventArgs e)
         {
-            //EmployeeListView.IsVisible = false;  
+            try
+            {
+                VehicleModel listsd = e.Item as VehicleModel;
+                VehicleNo.Text = listsd.VehicleNo;
+                VehicleFromId = listsd.VehicleId;
+                VehicleListView.IsVisible = false;
 
-            String listsd = e.Item as string;
-            VehicleNo.Text = listsd;
-            VehicleListView.IsVisible = false;
+                ((ListView)sender).SelectedItem = null;
+            }
+            catch(Exception ex)
+            {
+               // await DisplayAlert("Error", ex.Message, "OK");
 
-            ((ListView)sender).SelectedItem = null;
+            }
         }
-        private void SearchBar_OnTextChanged(object sender, TextChangedEventArgs e)
+        private async void SearchBar_OnTextChanged(object sender, TextChangedEventArgs e)
         {
             VehicleListView.IsVisible = true;
             VehicleListView.BeginRefresh();
 
             try
             {
-                var dataEmpty = vehicleData.Where(i => i.ToLower().Contains(e.NewTextValue.ToLower()));
+              
+                var dataEmpty = vehicleData.Where(i => i.VehicleNo.ToLower().Contains(e.NewTextValue.ToLower())).ToList();
 
-                if (string.IsNullOrWhiteSpace(e.NewTextValue))
+                if (string.IsNullOrWhiteSpace(e.NewTextValue) || dataEmpty.Count == 0)
+                {
                     VehicleListView.IsVisible = false;
-                else if (dataEmpty.Max().Length == 0)
-                    VehicleListView.IsVisible = false;
+                }
                 else
-                    VehicleListView.ItemsSource = vehicleData.Where(i => i.ToLower().Contains(e.NewTextValue.ToLower()));
+                {
+                    // If there are results, show the ListView and bind the filtered data
+                    VehicleListView.IsVisible = true;
+                    VehicleListView.ItemsSource = dataEmpty;
+                }
+
             }
             catch (Exception ex)
             {
                 VehicleListView.IsVisible = false;
+                await DisplayAlert("Error", ex.Message, "Ok");
+
 
             }
             VehicleListView.EndRefresh();
@@ -163,7 +183,7 @@ namespace TeaClient.UserModule
                 if (result.Id != 0)
                 {
                     await DisplayAlert("Success", result.Message, "OK");
-                    await Navigation.PushAsync(new UserModule.CollectionPage(VehicleNo.Text, Convert.ToInt16(selectedTrip.TripId)));
+                    await Navigation.PushAsync(new UserModule.CollectionPage(VehicleNo.Text, Convert.ToInt16(selectedTrip.TripId), VehicleFromId));
                 }
                 else
                 {
@@ -175,76 +195,86 @@ namespace TeaClient.UserModule
 
         private async Task<SaveReturn> SaveVehicleLockGlobally(int _TripId)
         {
-            string url = _appSetting.ApiUrl + "Collection/VehicleLockSaveMobile";
-
-            string _vehicle = VehicleNo.Text;
-            if (string.IsNullOrWhiteSpace(_vehicle))
+            try
             {
-                await DisplayAlert("Validation", "Please Enter Vehicle", "OK");
-                return null;
-            }
-            SaveVehicleLockModel dataToSend = new SaveVehicleLockModel
-            {
+                string url = _appSetting.ApiUrl + "Collection/VehicleLockSaveMobile";
 
-                LockDate = DateTime.Now.ToString("yyyy-MM-dd"),
-                VehicleNo = VehicleNo.Text,
-                TripId = _TripId,
-                TenantId = Convert.ToInt32(LoginData.LoginDetails[0].TenantId),
-                CreatedBy = Convert.ToInt32(LoginData.LoginDetails[0].UserId)
-            };
-
-            using (HttpClient client = new HttpClient())
-            {
-                var json = JsonConvert.SerializeObject(dataToSend);
-                var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
-                var response = await client.PostAsync(url, content);
-                var results = await response.Content.ReadAsStringAsync();
-                if (response.IsSuccessStatusCode)
+                string _vehicle = VehicleNo.Text;
+                if (string.IsNullOrWhiteSpace(_vehicle))
                 {
-                    var valueData = JsonConvert.DeserializeObject<SaveReturn>(results);
+                    await DisplayAlert("Validation", "Please Enter Vehicle", "OK");
+                    return null;
+                }
+                SaveVehicleLockModel dataToSend = new SaveVehicleLockModel
+                {
 
-                    return valueData;
+                    LockDate = DateTime.Now.ToString("yyyy-MM-dd"),
+                    VehicleNo = VehicleNo.Text,
+                    TripId = _TripId,
+                    TenantId = Convert.ToInt32(LoginData.LoginDetails[0].TenantId),
+                    CreatedBy = Convert.ToInt32(LoginData.LoginDetails[0].UserId)
+                };
+
+                using (HttpClient client = new HttpClient())
+                {
+                    var json = JsonConvert.SerializeObject(dataToSend);
+                    var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
+                    var response = await client.PostAsync(url, content);
+                    var results = await response.Content.ReadAsStringAsync();
+                    if (response.IsSuccessStatusCode)
+                    {
+                        var valueData = JsonConvert.DeserializeObject<SaveReturn>(results);
+
+                        return valueData;
+
+                    }
+                    return null;
 
                 }
+            }
+            catch(Exception ex)
+            {
+                await DisplayAlert("Error", ex.Message, "Ok");
                 return null;
-
             }
         }
 
         public async void GetClient()
         {
-
-            string url = _appSetting.ApiUrl + "Master/GetClientList";
-
-            //var selectedTenant = (TenantList)Tenant.SelectedItem;
-
-            // Create an object to be sent as JSON in the request body
-            var dataToSend = new
+            try
             {
-                Category = "STG",
-                TenantId = Convert.ToInt32(LoginData.LoginDetails[0].TenantId)
-            };
-
-            using (HttpClient client = new HttpClient())
-            {
-                var json = JsonConvert.SerializeObject(dataToSend);
-                var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
-                var response = await client.PostAsync(url, content);
-                var results = await response.Content.ReadAsStringAsync();
-                if (response.IsSuccessStatusCode)
+                string url = _appSetting.ApiUrl + "Master/GetClientList";
+                var dataToSend = new
                 {
-                    var valueData = JsonConvert.DeserializeObject<ClientList>(results);
-                    foreach (var _client in valueData.ClientDetails)
+                    Category = "STG",
+                    TenantId = Convert.ToInt32(LoginData.LoginDetails[0].TenantId)
+                };
+
+                using (HttpClient client = new HttpClient())
+                {
+                    var json = JsonConvert.SerializeObject(dataToSend);
+                    var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
+                    var response = await client.PostAsync(url, content);
+                    var results = await response.Content.ReadAsStringAsync();
+                    if (response.IsSuccessStatusCode)
                     {
-                        SaveClientLocally(_client.ClientId, _client.ClientName);
-                        
+                        var valueData = JsonConvert.DeserializeObject<ClientList>(results);
+                        foreach (var _client in valueData.ClientDetails)
+                        {
+                            SaveClientLocally(_client.ClientId, _client.ClientName);
+
+                        }
+
                     }
 
                 }
 
             }
+            catch(Exception ex)
+            {
+                await DisplayAlert("Error", ex.Message, "Ok");
 
-            
+            }
 
 
         }

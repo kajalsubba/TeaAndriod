@@ -80,7 +80,7 @@ namespace TeaClient.UserModule
                 {
                     conn.Update(existingCollect);
                     await DisplayAlert("Info", "Data is updated Successfully ", "Ok");
-                    await Navigation.PushAsync(new LocalDataShow.DailyCollectionView(collect.VehicleNo,collect.TripId));
+                    await Navigation.PushAsync(new LocalDataShow.DailyCollectionView(collect.VehicleNo,collect.TripId,collect.VehicleFrom));
 
                 }
 

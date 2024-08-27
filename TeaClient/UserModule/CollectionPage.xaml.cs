@@ -31,19 +31,19 @@ namespace TeaClient.UserModule
         int ClientId;
         int TripId;
         int BagCount=0;
-
+        long VehicleFromId;
         public IList<GradeModel> GradeList { get; set; }
         public SQLiteConnection conn;
         public LocalClientSaveModel _clientModel;
 
-        public CollectionPage(string _VehicleNo,int _TripId)
+        public CollectionPage(string _VehicleNo,int _TripId,long _VehicleFromId)
         {
             InitializeComponent();
             NavigationPage.SetHasBackButton(this, false);
             clientData = new ObservableCollection<ClientModel>();
           
             LoginData = SessionManager.GetSessionValue<UserModel>("UserDetails");
-
+            VehicleFromId = _VehicleFromId;
             lblVehicle.Text = _VehicleNo;
             TripId = _TripId;
             conn = DependencyService.Get<ISqlLite>().GetConnection();
@@ -379,7 +379,7 @@ namespace TeaClient.UserModule
             //bool _back = await DisplayAlert("Info", "Do you want to logout", "Yes", "No");
             //if (_back)
             //{
-                await Navigation.PushAsync(new LocalDataShow.DailyCollectionView(lblVehicle.Text,TripId));
+                await Navigation.PushAsync(new LocalDataShow.DailyCollectionView(lblVehicle.Text,TripId,VehicleFromId));
                 //SessionManager.ClearSession();
                 //await Navigation.PushAsync(new MainPage());
            // }
@@ -449,6 +449,9 @@ namespace TeaClient.UserModule
                 _collect.TenantId = Convert.ToInt32(LoginData.LoginDetails[0].TenantId);
                 _collect.Status = "Pending";
                 _collect.DataSendToServer = false;
+                _collect.CreatedBy= Convert.ToInt32(LoginData.LoginDetails[0].UserId);
+                _collect.TransferFrom = 0;
+                _collect.VehicleFrom= VehicleFromId;
                 if (EntryFieldWeight != null)
                 {
                     string expression = EntryFieldWeight.Text;
