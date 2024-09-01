@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
+             xmlns:local="clr-namespace:TeaClient.ViewModel"
+             x:Class="TeaClient.DeviceSettings.DevicesSettingsPage">
+
+    <!--<ContentPage.BindingContext>
+        <local:DeviceViewModel></local:DeviceViewModel>
+    </ContentPage.BindingContext>-->
+    
+    <ContentPage.Content>
+        <StackLayout Padding="40" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
+            <Label x:Name="HeaderName" Text="Add Device" FontSize="24" HorizontalOptions="Center" />
+
+            <Frame Padding="0" HasShadow="False" BorderColor="Transparent" BackgroundColor="Transparent">
+                <Picker ItemDisplayBinding="{Binding DeviceName}" 
+             x:Name="Devices" 
+             TitleColor="#6c757d" 
+             Title="Select Device" 
+              
+             TextColor="Black" />
+            </Frame>
+            <Editor x:Name="DeviceDesc"  
+                    
+                    BackgroundColor="#f9f9f9" TextColor="Black" FontSize="16" PlaceholderColor="#646b7a"  Placeholder="Description" AbsoluteLayout.LayoutBounds="0,0,285,38"  AbsoluteLayout.LayoutFlags="None"/>
+
+            <Button VerticalOptions="Center" Text="Save Device " TextColor="White" 
+                                BackgroundColor="#008CBA"
+                                BorderColor="Gray"
+                                BorderWidth="1.5"
+                                CornerRadius="10" Clicked="OnSaveDeviceClicked"/>
+            <!--<Button VerticalOptions="Center" Text="Print " TextColor="White" 
+                      BackgroundColor="#008CBA"
+                      BorderColor="Gray"
+                      BorderWidth="1.5"
+                      CornerRadius="10" Clicked="OnPrintClicked"/>-->
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

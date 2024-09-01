@@ -38,7 +38,7 @@ namespace TeaClient.LocalDataShow
         public IList<SaveLocalCollectionModel> collectionData { get; set; }
 
         long VehicleFrom;
-        public DailyCollectionView(string _VehicleNo, int _Trip,long _VehicleFrom)
+        public DailyCollectionView(string _VehicleNo, int _Trip, long _VehicleFrom)
         {
             InitializeComponent();
             collectionData = new ObservableCollection<SaveLocalCollectionModel>();
@@ -52,7 +52,6 @@ namespace TeaClient.LocalDataShow
             conn = DependencyService.Get<ISqlLite>().GetConnection();
             conn.CreateTable<SaveLocalCollectionModel>();
             HeaderName.Text = DateTime.Now.ToString("dd/MM/yyyy");
-            //TransferData();
             CollectionDetails();
 
         }
@@ -64,7 +63,7 @@ namespace TeaClient.LocalDataShow
         async void DisplayConfirmation()
         {
 
-            await Navigation.PushAsync(new UserModule.CollectionPage(VehicleNo, TripId,VehicleFrom));
+            await Navigation.PushAsync(new UserModule.CollectionPage(VehicleNo, TripId, VehicleFrom));
 
 
         }
@@ -98,18 +97,18 @@ namespace TeaClient.LocalDataShow
                         {
                             foreach (var item in valueData.TransferData)
                             {
-                              await  MergeTransferCollection(item.ClientId, item.ClientName, item.FinalWeight,
-                                    item.WetLeaf, item.LongLeaf, item.Deduction, item.FinalWeight, item.Rate,
-                                    item.GrossAmount, item.GradeId, item.GradeName, item.Remarks, item.BagList, item.TransferFrom,item.VehicleFrom);
+                                await MergeTransferCollection(item.ClientId, item.ClientName, item.FinalWeight,
+                                      item.WetLeaf, item.LongLeaf, item.Deduction, item.FinalWeight, item.Rate,
+                                      item.GrossAmount, item.GradeId, item.GradeName, item.Remarks, item.BagList, item.TransferFrom, item.VehicleFrom);
                             }
-                          var result= await UpdateTransferStatusInServer();
-                           
-                           await DisplayAlert("Success", result.Message, "OK");
+                            var result = await UpdateTransferStatusInServer();
 
-                           
+                            await DisplayAlert("Success", result.Message, "OK");
+
+
                         }
 
-                       await CollectionDetails();
+                        await CollectionDetails();
                     }
                 }
             }
@@ -147,7 +146,7 @@ namespace TeaClient.LocalDataShow
                     }
                     return null;
                 }
-               
+
             }
             catch (Exception ex)
             {
@@ -156,13 +155,13 @@ namespace TeaClient.LocalDataShow
             }
 
         }
-        private async Task MergeTransferCollection(long ClientId,string ClientName,int FirstWgt,
-            int WetLeaf,int LongLeaf,int Deduction,int FinalWgt,decimal Rate,decimal grossAmt,
-            int GradeId,string GradeName,string Remarks,string Bagslist,long TransferFrom,long VehicleFrom)
+        private async Task MergeTransferCollection(long ClientId, string ClientName, int FirstWgt,
+            int WetLeaf, int LongLeaf, int Deduction, int FinalWgt, decimal Rate, decimal grossAmt,
+            int GradeId, string GradeName, string Remarks, string Bagslist, long TransferFrom, long VehicleFrom)
         {
             try
             {
-               
+
                 SaveLocalCollectionModel _collect = new SaveLocalCollectionModel();
                 _collect.CollectionDate = DateTime.Now.Date;
                 _collect.TripId = TripId;
@@ -178,23 +177,23 @@ namespace TeaClient.LocalDataShow
                 _collect.GrossAmount = grossAmt;
                 _collect.GradeId = GradeId;
                 _collect.GradeName = GradeName;
-                _collect.Remarks = Remarks??"";
+                _collect.Remarks = Remarks ?? "";
                 _collect.TenantId = Convert.ToInt32(LoginData.LoginDetails[0].TenantId);
                 _collect.Status = "Pending";
                 _collect.DataSendToServer = false;
                 _collect.CollectionType = "Transfer";
                 _collect.BagList = Bagslist;
-                 _collect.CreatedBy = Convert.ToInt32(LoginData.LoginDetails[0].UserId);
+                _collect.CreatedBy = Convert.ToInt32(LoginData.LoginDetails[0].UserId);
                 _collect.CollectionType = "Transfer";
                 _collect.TransferFrom = TransferFrom;
                 _collect.VehicleFrom = VehicleFrom;
 
                 conn.Insert(_collect);
-                  
+
             }
             catch (Exception ex)
             {
-               
+
                 await DisplayAlert("Error", ex.Message, "Ok");
 
             }
@@ -207,19 +206,19 @@ namespace TeaClient.LocalDataShow
         }
         public async Task CollectionDetails()
         {
-        
+
             int tenantId = Convert.ToInt32(LoginData.LoginDetails[0].TenantId);
             int userId = Convert.ToInt32(LoginData.LoginDetails[0].UserId);
             DateTime collectionDate = DateTime.Now.Date;
 
-         //    var CollectionDetails1 = (from x in conn.Table<SaveLocalCollectionModel>() select x).ToList();
+            //    var CollectionDetails1 = (from x in conn.Table<SaveLocalCollectionModel>() select x).ToList();
 
             CollectionList = (from x in conn.Table<SaveLocalCollectionModel>()
-                                     where x.TenantId ==tenantId
-                                      && x.CollectionDate == collectionDate
-                                      && x.CreatedBy == userId
-                                      && x.DataSendToServer==false
-                                    //  && x.CollectionType=="Self"
+                              where x.TenantId == tenantId
+                               && x.CollectionDate == collectionDate
+                               && x.CreatedBy == userId
+                               && x.DataSendToServer == false
+                              //  && x.CollectionType=="Self"
                               select x).ToList();
 
 
@@ -237,9 +236,11 @@ namespace TeaClient.LocalDataShow
 
             var _finalWgtTotal = CollectionList.Sum(x => x.FinalWeight);
             FinalTotal.Text = "Total Final: " + _finalWgtTotal;
-            
+
         }
-        private async void OnEditButtonClicked(object sender, EventArgs e)
+
+
+        private async void OnAddButtonClicked(object sender, EventArgs e)
         {
             try
             {
@@ -252,18 +253,84 @@ namespace TeaClient.LocalDataShow
                 // Handle the edit action (e.g., navigate to an edit page or display a form)
                 if (item != null)
                 {
-                    await Navigation.PushAsync(new UserModule.EditCollectionPage(item));
+                    await Navigation.PushAsync(new UserModule.LateralCollectionEntryPage(item));
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 // throw ex;
                 await DisplayAlert("Error", ex.Message, "Ok");
 
             }
         }
+        private async void OnEditButtonClicked(object sender, EventArgs e)
+        {
+            try
+            {
+                Button button = sender as Button;
 
-        
+                var item = button?.CommandParameter as SaveLocalCollectionModel;
+
+                if (item != null)
+                {
+                    await Navigation.PushAsync(new UserModule.EditCollectionPage(item));
+                }
+            }
+            catch (Exception ex)
+            {
+                await DisplayAlert("Error", ex.Message, "Ok");
+
+            }
+        }
+
+
+        private async void OnPrintButtonClicked(object sender, EventArgs e)
+        {
+            try
+            {
+                ImageButton button = sender as ImageButton;
+
+                var item = button?.CommandParameter as SaveLocalCollectionModel;
+
+                if (item != null)
+                {
+                    PrintService prt = new PrintService();
+                    var deduct = item.Deduction.ToString() == "0" ? "Pending" : item.Deduction.ToString();
+                    var result = await prt.PrintParameters(LoginData.LoginDetails[0].CompanyName.ToString().Trim(), item.ClientName, item.GradeName, item.BagList, deduct, item.FirstWeight.ToString(),
+                        item.FinalWeight.ToString(), item.GrossAmount.ToString(), item.Remarks, LoginData.LoginDetails[0].UserFirstName + " " + LoginData.LoginDetails[0].UserLastName);
+                    await DisplayAlert("Info", result, "Ok");
+                }
+            }
+            catch (Exception ex)
+            {
+                await DisplayAlert("Error", ex.Message, "Ok");
+
+            }
+        }
+
+        //public async Task PrintParameters(string ClientName, string Grade, string BagList, string deduct, string First,
+        //    string Final, string GrossAmt, string remarks)
+        //{
+        //    StringBuilder sb = new StringBuilder();
+
+        //    sb.Append(LoginData.LoginDetails[0].CompanyName.ToString().Trim());
+        //    sb.AppendLine();
+        //    sb.AppendLine("GreenLeaf collect on " + DateTime.Now.ToString("dd/MM/yyyy"));
+        //    sb.AppendLine(ClientName);
+        //    sb.AppendLine("Grade :" + Grade);
+        //    sb.AppendLine("Field :" + BagList + "=" + First);
+        //    sb.AppendLine("Deduction :" + deduct);
+        //    sb.AppendLine("Final :" + Final);
+        //    sb.AppendLine("Amount :" + GrossAmt);
+        //    sb.AppendLine("Remarks :" + remarks);
+        //    sb.AppendLine();
+        //    sb.AppendLine("Collected By " + LoginData.LoginDetails[0].UserFirstName + " " + LoginData.LoginDetails[0].UserLastName);
+        //    sb.AppendLine("Print Time " + DateTime.Now.ToString("dd/MM/yyyy hh:mm tt"));
+
+        //    PrintService prt = new PrintService();
+        //    var result = await prt.Print(sb);
+        //    await DisplayAlert("Info", result, "Ok");
+        //}
         private async void OnRefreshBtnClicked(object sender, EventArgs e)
         {
             TransferData();
@@ -277,7 +344,7 @@ namespace TeaClient.LocalDataShow
                 if (string.IsNullOrWhiteSpace(_comment))
                 {
                     await DisplayAlert("Validation", "Please Enter Comment Before sending to Server!", "OK");
-                    return ;
+                    return;
                 }
                 List<StgSaveModel> _stgData = new List<StgSaveModel>();
 
@@ -298,8 +365,8 @@ namespace TeaClient.LocalDataShow
                         Remarks = item.Remarks,
                         BagList = item.BagList,
                         CollectionType = item.CollectionType,
-                        TransferFrom= item.TransferFrom,
-                        VehicleFrom=item.VehicleFrom
+                        TransferFrom = item.TransferFrom,
+                        VehicleFrom = item.VehicleFrom
                     };
                     _stgData.Add(objStg);
                 }
@@ -310,7 +377,7 @@ namespace TeaClient.LocalDataShow
                 {
                     Source = "Mobile",
                     Category = "STG",
-                    ServerComment=ServerComment.Text,
+                    ServerComment = ServerComment.Text,
                     VehicleNo = VehicleNo,
                     TenantId = Convert.ToInt32(LoginData.LoginDetails[0].TenantId),
                     CreatedBy = Convert.ToInt32(LoginData.LoginDetails[0].UserId),
@@ -345,22 +412,22 @@ namespace TeaClient.LocalDataShow
                     }
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                await DisplayAlert("Error",ex.Message, "Ok");
+                await DisplayAlert("Error", ex.Message, "Ok");
 
             }
         }
 
         private async void OnSendToServerClicked(object sender, EventArgs e)
         {
-            var _submit = await DisplayAlert("Save", "Do you want to send to server! ", "Yes","No");
+            var _submit = await DisplayAlert("Save", "Do you want to send to server! ", "Yes", "No");
             if (_submit)
             {
                 await SaveSTGUsingMQ();
             }
-         
-        } 
+
+        }
         private async void OnTransferClicked(object sender, EventArgs e)
         {
             try
@@ -369,14 +436,14 @@ namespace TeaClient.LocalDataShow
                 {
                     OnDismissed = async () =>
                     {
-                       
+
                         CollectionDetails();
                     }
                 };
 
                 await Navigation.PushModalAsync(transferPage);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 await DisplayAlert("Error", ex.Message, "Ok");
             }
@@ -387,10 +454,10 @@ namespace TeaClient.LocalDataShow
 
         private async void OnBackClicked(object sender, EventArgs e)
         {
-            await Navigation.PushAsync(new UserModule.CollectionPage(VehicleNo,TripId, VehicleFrom));
+            await Navigation.PushAsync(new UserModule.CollectionPage(VehicleNo, TripId, VehicleFrom));
 
         }
-        
+
         void UpdateSendServerStatus(long Id)
         {
             try
@@ -399,18 +466,18 @@ namespace TeaClient.LocalDataShow
                 existingCollect.DataSendToServer = true;
                 conn.Update(existingCollect);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                 DisplayAlert("Error", ex.Message, "Ok");
+                DisplayAlert("Error", ex.Message, "Ok");
             }
-     
+
         }
 
         protected override void OnDisappearing()
         {
             base.OnDisappearing();
             // Unsubscribe to avoid memory leaks
-          //  MessagingCenter.Unsubscribe<TransferPopUpPage>(this, "RefreshParentPage");
+            //  MessagingCenter.Unsubscribe<TransferPopUpPage>(this, "RefreshParentPage");
         }
     }
 }

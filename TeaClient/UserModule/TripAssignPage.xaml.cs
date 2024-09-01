@@ -31,7 +31,6 @@ namespace TeaClient.UserModule
 
         public IList<GradeModel> GradeList { get; set; }
         readonly ObservableCollection<VehicleModel> vehicleData = new ObservableCollection<VehicleModel>();
-       // public IList<VehicleModel> vehicleData { get; set; }
 
         UserModel LoginData = new UserModel();
 
@@ -43,7 +42,6 @@ namespace TeaClient.UserModule
         {
             InitializeComponent();
              VehicleList = new ObservableCollection<VehicleLockModel>();
-            //vehicleData = new ObservableCollection<VehicleModel>();
             LoginData = SessionManager.GetSessionValue<UserModel>("UserDetails");
             GetVehicle();
             var dbPath = Path.Combine(FileSystem.AppDataDirectory, "TeaCollection.db3");
@@ -106,7 +104,6 @@ namespace TeaClient.UserModule
                     var valueData = JsonConvert.DeserializeObject<VehicleList>(results);
                     foreach (var vehicle in valueData.VehicleDetails)
                     {
-                        // vehicleData.Add(vehicle);
                         vehicleData.Add(new VehicleModel { VehicleId = vehicle.VehicleId, VehicleNo = vehicle.VehicleNo });
 
                     }

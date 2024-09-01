@@ -1,15 +1,8 @@
-﻿using Android.Accounts;
-using Android.Locations;
-using Javax.Xml.Transform.Sax;
-using Newtonsoft.Json;
-using Org.Apache.Http.Client.Params;
-using SQLite;
+﻿using SQLite;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using TeaClient.Model;
@@ -18,18 +11,18 @@ using TeaClient.SessionHelper;
 using TeaClient.SQLLite;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
-using static Android.Content.ClipData;
 
 namespace TeaClient.UserModule
 {
-    [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class CollectionPage : ContentPage
-    {
+	[XamlCompilation(XamlCompilationOptions.Compile)]
+	public partial class LateralCollectionEntryPage : ContentPage
+	{
         AppSettings _appSetting = AppConfigService.GetConfig();
         public IList<ClientModel> clientData { get; set; }
         int InitialVal = 0;
         UserModel LoginData = new UserModel();
-        int ClientId;
+        readonly SaveLocalCollectionModel collect;
+
         int TripId;
         int BagCount = 0;
         long VehicleFromId;
@@ -37,22 +30,46 @@ namespace TeaClient.UserModule
         public SQLiteConnection conn;
         public LocalClientSaveModel _clientModel;
 
-        public CollectionPage(string _VehicleNo, int _TripId, long _VehicleFromId)
-        {
-            InitializeComponent();
+        public LateralCollectionEntryPage (SaveLocalCollectionModel _collect)
+		{
+			InitializeComponent ();
             NavigationPage.SetHasBackButton(this, false);
             clientData = new ObservableCollection<ClientModel>();
 
             LoginData = SessionManager.GetSessionValue<UserModel>("UserDetails");
-            VehicleFromId = _VehicleFromId;
-            lblVehicle.Text = _VehicleNo;
-            TripId = _TripId;
+            collect = _collect;
+            VehicleFromId = _collect.VehicleFrom;
+            lblVehicle.Text = _collect.VehicleNo;
+            Client.Text = _collect.ClientName;
+         //   ClientId.Text =_collect.ClientId.ToString();
+            TripId = _collect.TripId;
             conn = DependencyService.Get<ISqlLite>().GetConnection();
             conn.CreateTable<LocalClientSaveModel>();
             conn.CreateTable<SaveLocalCollectionModel>();
 
-            GetClientFromLocalDB();
+           // GetClientFromLocalDB();
             GetTotal();
+        }
+
+        void PatchCollection()
+        {
+            int FirstValue = string.IsNullOrWhiteSpace(collect.FinalWeight.ToString()) ? 0 : int.Parse(collect.FinalWeight.ToString());
+            int RainValue = string.IsNullOrWhiteSpace(collect.WetLeaf.ToString()) ? 0 : int.Parse(collect.WetLeaf.ToString());
+            int LongValue = string.IsNullOrWhiteSpace(collect.LongLeaf.ToString()) ? 0 : int.Parse(collect.LongLeaf.ToString());
+            int DeductValue = string.IsNullOrWhiteSpace(collect.Deduction.ToString()) ? 0 : int.Parse(collect.Deduction.ToString());
+            int FinalValue = string.IsNullOrWhiteSpace(collect.FinalWeight.ToString()) ? 0 : int.Parse(collect.FinalWeight.ToString());
+            Decimal RateValue = string.IsNullOrWhiteSpace(collect.Rate.ToString()) ? 0 : Decimal.Parse(collect.Rate.ToString());
+            Decimal FinalAmountValue = string.IsNullOrWhiteSpace(collect.GrossAmount.ToString()) ? 0 : Decimal.Parse(collect.GrossAmount.ToString());
+
+            Client.Text = collect.ClientName;
+            TotalFieldWeight.Text = FirstValue.ToString();
+            RainLeaf.Text = RainValue.ToString();
+            LongLeaf.Text = LongValue.ToString();
+            Deduction.Text = DeductValue.ToString();
+            FinalWeight.Text = FinalValue.ToString();
+            Rate.Text = RateValue.ToString();
+            FinalAmount.Text = FinalAmountValue.ToString();
+            Remarks.Text = collect.Remarks ?? "";
 
         }
 
@@ -83,11 +100,10 @@ namespace TeaClient.UserModule
             GrossTotalWgt.Text = "Total Final: " + _finalWgtTotal;
 
         }
-
         private async void OnNumberButtonClicked(object sender, EventArgs e)
         {
             string _ClientName = Client.Text;
-            if (string.IsNullOrWhiteSpace(_ClientName) || ClientId == 0)
+            if (string.IsNullOrWhiteSpace(_ClientName) )
             {
                 await DisplayAlert("Validation", "Please Enter Client", "OK");
                 return;
@@ -162,15 +178,6 @@ namespace TeaClient.UserModule
                 TotalBagCount();
             }
         }
-
-        private void OnClearButtonClicked(object sender, EventArgs e)
-        {
-            // Clear the entry
-            EntryFieldWeight.Text = string.Empty;
-            TotalFieldWeight.Text = string.Empty;
-            FinalWeight.Text = string.Empty;
-            txtBagCount.Text = string.Empty;
-        }
         private async void OnStepCleanButtonClicked(object sender, EventArgs e)
         {
             if (EntryFieldWeight != null)
@@ -210,7 +217,55 @@ namespace TeaClient.UserModule
 
 
         }
+        private async void TotalBagCount()
+        {
+            try
+            {
+                string StrWgtSum = EntryFieldWeight.Text;
 
+                // Remove trailing '+' if it exists
+                if (StrWgtSum.EndsWith("+"))
+                {
+                    StrWgtSum = StrWgtSum.Substring(0, StrWgtSum.Length - 1);
+                }
+                //   string StrWgtSum = EntryFieldWeight.Text;// "12+33+44+55+66+77+88+66+77+88+99+99+90";
+                var numbers = StrWgtSum.Split('+');
+
+                // Convert the array of strings to an array of integers
+                var intNumbers = numbers.Select(int.Parse).ToArray();
+
+                // Calculate the count
+                int count = intNumbers.Length;
+
+
+                txtBagCount.Text = "Total Bag :" + count;
+
+            }
+            catch (Exception ex)
+            {
+                // throw ex;
+                await DisplayAlert("Error", ex.Message, "Ok");
+
+            }
+            finally
+            {
+
+            }
+        }
+
+        private async void OnBtnFinishClicked(object sender, EventArgs e)
+        {
+            string _totalWgt = TotalFieldWeight.Text;
+            if (string.IsNullOrWhiteSpace(_totalWgt))
+            {
+                await DisplayAlert("Validation", "Please enter total field weight.", "OK");
+                return;
+            }
+            TotalCollectionOnType();
+            FieldEntryLaout.IsVisible = true;
+            BtnFinish.IsVisible = false;
+            CalculateView.IsVisible = false;
+        }
 
         private double EvaluateExpression(string expression)
         {
@@ -317,83 +372,6 @@ namespace TeaClient.UserModule
             }
         }
 
-
-        public void GetClientFromLocalDB()
-        {
-            // var ClientDetails = (from x in conn.Table<LocalClientSaveModel>() select x).ToList();
-            var ClientDetails = conn.Table<LocalClientSaveModel>()
-                            .Select(x => new { x.ClientId, x.ClientName }) // Select the columns you want to be unique
-                            .Distinct()
-                            .ToList();
-
-            foreach (var _client in ClientDetails)
-            {
-                clientData.Add(new ClientModel { ClientId = _client.ClientId, ClientName = _client.ClientName });
-
-            }
-        }
-
-        private void ListView_OnItemTapped(Object sender, ItemTappedEventArgs e)
-        {
-            //EmployeeListView.IsVisible = false;  
-
-            ClientModel listed = e.Item as ClientModel;
-            Client.Text = listed.ClientName;
-            ClientId = listed.ClientId;
-            ClientListView.IsVisible = false;
-
-            ((ListView)sender).SelectedItem = null;
-        }
-        private async void SearchBar_OnTextChanged(object sender, TextChangedEventArgs e)
-        {
-            ClientListView.IsVisible = true;
-            ClientListView.BeginRefresh();
-
-            try
-            {
-                var dataEmpty = clientData.Where(i => i.ClientName.ToLower().Contains(e.NewTextValue.ToLower())).ToList();
-
-                if (string.IsNullOrWhiteSpace(e.NewTextValue) || dataEmpty.Count == 0)
-                {
-                    ClientListView.IsVisible = false;
-                }
-                else
-                {
-                    // If there are results, show the ListView and bind the filtered data
-                    ClientListView.IsVisible = true;
-                    ClientListView.ItemsSource = dataEmpty;
-                }
-            }
-            catch (Exception ex)
-            {
-                ClientListView.IsVisible = false;
-                //  throw ex;
-                await DisplayAlert("Error", ex.Message, "Ok");
-
-            }
-            ClientListView.EndRefresh();
-
-        }
-
-        private async void OnViewCollectionClicked(object sender, EventArgs e)
-        {
-
-            await Navigation.PushAsync(new LocalDataShow.DailyCollectionView(lblVehicle.Text, TripId, VehicleFromId));
-
-        }
-        protected override bool OnBackButtonPressed()
-        {
-            DisplayConfirmation();
-            return true; // Do not continue processing the back button
-        }
-        async void DisplayConfirmation()
-        {
-
-            //  await Navigation.PushAsync(new UserModule.CollectionPage(VehicleNo, TripId));
-
-
-        }
-
         private async void OnSubmitClicked(object sender, EventArgs e)
         {
             try
@@ -406,7 +384,7 @@ namespace TeaClient.UserModule
                     return;
                 }
 
-                if (string.IsNullOrWhiteSpace(_ClientName) || ClientId == 0)
+                if (string.IsNullOrWhiteSpace(_ClientName))
                 {
                     await DisplayAlert("Validation", "Please Enter Client", "OK");
                     return;
@@ -426,29 +404,29 @@ namespace TeaClient.UserModule
                 Decimal RateValue = string.IsNullOrWhiteSpace(Rate.Text) ? 0 : Decimal.Parse(Rate.Text);
                 Decimal FinalAmountValue = string.IsNullOrWhiteSpace(FinalAmount.Text) ? 0 : Decimal.Parse(FinalAmount.Text);
 
-                SaveLocalCollectionModel _collect = new SaveLocalCollectionModel();
-                _collect.CollectionDate = DateTime.Now.Date;
-                _collect.TripId = TripId;
-                _collect.VehicleNo = lblVehicle.Text;
-                _collect.ClientId = ClientId;
-                _collect.ClientName = Client.Text;
-                _collect.FirstWeight = FirstValue;
-                _collect.WetLeaf = RainValue;
-                _collect.LongLeaf = LongValue;
-                _collect.Deduction = DeductValue;
-                _collect.FinalWeight = FinalValue;
-                _collect.Rate = RateValue;
+                SaveLocalCollectionModel _collectNew = new SaveLocalCollectionModel();
+                _collectNew.CollectionDate = DateTime.Now.Date;
+                _collectNew.TripId = TripId;
+                _collectNew.VehicleNo = lblVehicle.Text;
+                _collectNew.ClientId =collect.ClientId;
+                _collectNew.ClientName = Client.Text;
+                _collectNew.FirstWeight = FirstValue;
+                _collectNew.WetLeaf = RainValue;
+                _collectNew.LongLeaf = LongValue;
+                _collectNew.Deduction = DeductValue;
+                _collectNew.FinalWeight = FinalValue;
+                _collectNew.Rate = RateValue;
                 var selectedGrade = (GradeModel)Grade.SelectedItem;
-                _collect.GrossAmount = FinalAmountValue;
-                _collect.GradeId = selectedGrade.GradeId;
-                _collect.GradeName = selectedGrade.GradeName;
-                _collect.Remarks = Remarks.Text;
-                _collect.TenantId = Convert.ToInt32(LoginData.LoginDetails[0].TenantId);
-                _collect.Status = "Pending";
-                _collect.DataSendToServer = false;
-                _collect.CreatedBy = Convert.ToInt32(LoginData.LoginDetails[0].UserId);
-                _collect.TransferFrom = 0;
-                _collect.VehicleFrom = VehicleFromId;
+                _collectNew.GrossAmount = FinalAmountValue;
+                _collectNew.GradeId = selectedGrade.GradeId;
+                _collectNew.GradeName = selectedGrade.GradeName;
+                _collectNew.Remarks = Remarks.Text;
+                _collectNew.TenantId = Convert.ToInt32(LoginData.LoginDetails[0].TenantId);
+                _collectNew.Status = "Pending";
+                _collectNew.DataSendToServer = false;
+                _collectNew.CreatedBy = Convert.ToInt32(LoginData.LoginDetails[0].UserId);
+                _collectNew.TransferFrom = 0;
+                _collectNew.VehicleFrom = VehicleFromId;
                 if (EntryFieldWeight != null)
                 {
                     string expression = EntryFieldWeight.Text;
@@ -458,33 +436,28 @@ namespace TeaClient.UserModule
                     {
                         expression = expression.Substring(0, expression.Length - 1);
                     }
-                    _collect.BagList = expression;
+                    _collectNew.BagList = expression;
                 }
 
-                _collect.CreatedBy = Convert.ToInt32(LoginData.LoginDetails[0].UserId);
+                _collectNew.CreatedBy = Convert.ToInt32(LoginData.LoginDetails[0].UserId);
 
                 try
                 {
-                    conn.Insert(_collect);
-                    bool _submit = await DisplayAlert("Print", "Do you want to Print.", "Yes", "No");
+                    bool _submit = await DisplayAlert("Confirm", "Do you want to submit.", "Yes", "No");
                     if (_submit)
                     {
-                        PrintService prt = new PrintService();
-                        var deduct = DeductValue.ToString() == "0" ? "Pending" : DeductValue.ToString();
-                        var result = await prt.PrintParameters(LoginData.LoginDetails[0].CompanyName.ToString().Trim(), _collect.ClientName, _collect.GradeName, _collect.BagList, deduct, _collect.FirstWeight.ToString(),
-                       _collect.FinalWeight.ToString(), _collect.GrossAmount.ToString(), _collect.Remarks, LoginData.LoginDetails[0].UserFirstName + " " + LoginData.LoginDetails[0].UserLastName);
-
-                        await DisplayAlert("Info", result, "Ok");
-
-
-                        //   await DisplayAlert("Info", "Data is added Successfully. ", "Yes");
-                        cleanForm();
+                        conn.Insert(_collectNew);
+                        await DisplayAlert("Info", "Data is added Successfully. ", "Yes");
+                 
                         Grade.SelectedItem = null;
-
+                        //var _finalWgtTotal = GetTotalFinalWeight();
+                        //GrossTotalWgt.Text = "Total Final Wgt: " + _finalWgtTotal;
                         GetTotal();
                         FieldEntryLaout.IsVisible = false;
                         BtnFinish.IsVisible = true;
                         CalculateView.IsVisible = true;
+                        await Navigation.PushAsync(new LocalDataShow.DailyCollectionView(collect.VehicleNo, collect.TripId, collect.VehicleFrom));
+
                     }
 
                 }
@@ -511,81 +484,17 @@ namespace TeaClient.UserModule
             }
 
         }
-
-        private async void TotalBagCount()
+        private async void OnViewCollectionClicked(object sender, EventArgs e)
         {
-            try
-            {
-                string StrWgtSum = EntryFieldWeight.Text;
 
-                // Remove trailing '+' if it exists
-                if (StrWgtSum.EndsWith("+"))
-                {
-                    StrWgtSum = StrWgtSum.Substring(0, StrWgtSum.Length - 1);
-                }
-                //   string StrWgtSum = EntryFieldWeight.Text;// "12+33+44+55+66+77+88+66+77+88+99+99+90";
-                var numbers = StrWgtSum.Split('+');
+            await Navigation.PushAsync(new LocalDataShow.DailyCollectionView(lblVehicle.Text, TripId, VehicleFromId));
 
-                // Convert the array of strings to an array of integers
-                var intNumbers = numbers.Select(int.Parse).ToArray();
-
-                // Calculate the count
-                int count = intNumbers.Length;
-
-
-                txtBagCount.Text = "Total Bag :" + count;
-
-            }
-            catch (Exception ex)
-            {
-                // throw ex;
-                await DisplayAlert("Error", ex.Message, "Ok");
-
-            }
-            finally
-            {
-
-            }
-        }
-
-        private async void OnBtnFinishClicked(object sender, EventArgs e)
-        {
-            string _totalWgt = TotalFieldWeight.Text;
-            if (string.IsNullOrWhiteSpace(_totalWgt))
-            {
-                await DisplayAlert("Validation", "Please enter total field weight.", "OK");
-                return;
-            }
-            TotalCollectionOnType();
-            FieldEntryLaout.IsVisible = true;
-            BtnFinish.IsVisible = false;
-            CalculateView.IsVisible = false;
-        }
-
-        void cleanForm()
-        {
-            BagCount = 0;
-            txtBagCount.Text = "";
-            Client.Text = "";
-            ClientId = 0;
-            InitialVal = 0;
-            TotalFieldWeight.Text = "";
-            RainLeaf.Text = "";
-            LongLeaf.Text = "";
-            Deduction.Text = "";
-            FinalWeight.Text = "";
-            EntryFieldWeight.Text = "";
-            Rate.Text = "";
-            FinalAmount.Text = "";
-            Remarks.Text = "";
-            Client.Focus();
         }
 
         private async void OnHomeClicked(object sender, EventArgs e)
         {
             await Navigation.PushAsync(new UserModule.UserDashboardPage());
         }
-
 
     }
 }

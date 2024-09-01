@@ -28,7 +28,9 @@ namespace TeaClient.UserModule
                 new DashboardModel(){Title ="Leaf Collection" ,BgImageSource="addStg.png"},
                 new DashboardModel(){Title ="Collection History" ,BgImageSource="leaf.png"},
                 new DashboardModel(){Title ="Payment History" ,BgImageSource="smart.png"},
-                //new DashboardModel(){Title ="Bill History" ,BgImageSource="bill.png"},
+                new DashboardModel(){Title ="Add Vehicle" ,BgImageSource="addVehicle.png"},
+               new DashboardModel(){Title ="Save Printer" ,BgImageSource="print.png"},
+
                 new DashboardModel(){Title ="Change Password" ,BgImageSource="password.png"},
                 new DashboardModel(){Title ="Logout" ,BgImageSource="logout.png"},
             };
@@ -65,9 +67,12 @@ namespace TeaClient.UserModule
                         await DisplayAlert("Info", "This Page is under construction. ", "Ok");
 
                         break;
-                    //case "File: bill.png":
-                    //    await Navigation.PushAsync(new BillHistoryPage());
-                    //    break;
+                    case "File: addVehicle.png":
+                        await Navigation.PushAsync(new UserModule.AddVehiclePage());
+                        break;
+                    case "File: print.png":
+                        await Navigation.PushAsync(new DeviceSettings.DevicesSettingsPage());
+                        break;
                     case "File: password.png":
                         //    await Navigation.PushAsync(new PasswordChangePage());
                         await DisplayAlert("Info", "This Page is under construction. ", "Ok");

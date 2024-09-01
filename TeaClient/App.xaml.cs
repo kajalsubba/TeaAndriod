@@ -1,4 +1,5 @@
 ﻿using System;
+using TeaClient.DeviceSettings;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 

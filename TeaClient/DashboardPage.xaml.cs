@@ -33,6 +33,7 @@ namespace TeaClient
                 new DashboardModel(){Title ="Leaf History" ,BgImageSource="leaf.png"},
                 new DashboardModel(){Title ="Smart History" ,BgImageSource="smart.png"},
                 new DashboardModel(){Title ="Bill History" ,BgImageSource="bill.png"},
+                //new DashboardModel(){Title ="Save Printer" ,BgImageSource="print.png"},
                 new DashboardModel(){Title ="Change Password" ,BgImageSource="password.png"},
                 new DashboardModel(){Title ="Logout" ,BgImageSource="logout.png"},
             };
@@ -84,6 +85,7 @@ namespace TeaClient
                     case "File: bill.png":
                         await Navigation.PushAsync(new BillHistoryPage());
                         break;
+                 
                     case "File: password.png":
                         await Navigation.PushAsync(new PasswordChangePage());
                         break;

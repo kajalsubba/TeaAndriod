@@ -18,7 +18,7 @@
 
                 <DataTemplate>
 
-                    <Frame Padding="10" WidthRequest="150" HeightRequest="170"  BackgroundColor="AliceBlue">
+                    <Frame Padding="10" WidthRequest="100" HeightRequest="140"  BackgroundColor="AliceBlue">
                         <Frame BorderColor="LightBlue" BackgroundColor="#F8F8FF" CornerRadius="2"  Padding="8"  HasShadow="True" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
                             <ContentView >
                                 <Grid >
@@ -27,7 +27,7 @@
                                         <RowDefinition Height="*" />
                                     </Grid.RowDefinitions>
 
-                                    <Image Grid.Row="0" Source="{Binding BgImageSource}"  WidthRequest="100" HeightRequest="100" >
+                                    <Image Grid.Row="0" Source="{Binding BgImageSource}"  WidthRequest="80" HeightRequest="80" >
                                         <Image.GestureRecognizers>
                                             <TapGestureRecognizer Tapped="OnImageTapped" />
                                         </Image.GestureRecognizers>

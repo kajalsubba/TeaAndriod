@@ -22,7 +22,11 @@ namespace TeaClient.UserModule
             DisplayDetails();
             HeaderName.Text ="Vehicle Lock On :"+ DateTime.Now.ToString("dd/MM/yyyy");
         }
-
+        protected override bool OnBackButtonPressed()
+        {
+            //  DisplayConfirmation();
+            return true; // Do not continue processing the back button
+        }
         public void DisplayDetails()
         {
 

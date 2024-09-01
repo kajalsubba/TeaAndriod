@@ -20,10 +20,17 @@ namespace TeaClient
 
         private async void BtnSupplier_Clicked(object sender, EventArgs e)
         {
-          
-            await Navigation.PushAsync(new LoginPage());
+
+             await Navigation.PushAsync(new LoginPage());
+
+           // await Navigation.PushAsync(new DeviceSettings.DevicesSettingsPage());
         }
-  
+        protected override bool OnBackButtonPressed()
+        {
+            //  DisplayConfirmation();
+            return true; // Do not continue processing the back button
+        }
+
         private async void BtnClient_Clicked(object sender, EventArgs e)
         {
             //var loadingPage = new TransferPopUpPage();

@@ -6,21 +6,37 @@ using Android.Runtime;
 using Android.OS;
 using Android.Content;
 using Plugin.CurrentActivity;
+using Xamarin.Forms.PlatformConfiguration;
+using AndroidX.Core.Content;
+using Android;
+using Android.Support.V4;
+using Android.Support.V4.App;
+using Xamarin.Essentials;
 
 namespace TeaClient.Droid
 {
     [Activity(Label = "TeaClient", Icon = "@drawable/logo", Theme = "@style/MainTheme", MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation | ConfigChanges.UiMode | ConfigChanges.ScreenLayout | ConfigChanges.SmallestScreenSize )]
     public class MainActivity : global::Xamarin.Forms.Platform.Android.FormsAppCompatActivity
     {
-      
-        protected override void OnCreate(Bundle savedInstanceState)
+        private const int RequestBluetoothConnectId = 1001;
+        protected override async void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
+           // SetContentView(Resource.Layout.);
+
             CrossCurrentActivity.Current.Init(this, savedInstanceState);
             Stormlion.ImageCropper.Droid.Platform.Init();
             Xamarin.Essentials.Platform.Init(this, savedInstanceState);
             global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
+            int requestCode = 1;
+            // Check for permissions
+            if (ContextCompat.CheckSelfPermission(this, Manifest.Permission.BluetoothConnect) != Permission.Granted)
+            {
+                ActivityCompat.RequestPermissions(this, new string[] { Manifest.Permission.BluetoothConnect }, RequestBluetoothConnectId);
+            }
             LoadApplication(new App());
+           // await Permissions.RequestAsync<BLEPermission>();
+
         }
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Android.Content.PM.Permission[] grantResults)
         {

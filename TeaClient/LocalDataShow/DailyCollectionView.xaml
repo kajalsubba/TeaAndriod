@@ -55,7 +55,7 @@
                 </Grid>
 
                 <!-- Final Total Label -->
-            <!--<Label x:Name="FinalTotal"  FontSize="24" HorizontalOptions="Center" />-->
+                <!--<Label x:Name="FinalTotal"  FontSize="24" HorizontalOptions="Center" />-->
 
                 <Grid Margin="0,10,15,0">
                     <Grid.ColumnDefinitions>
@@ -112,9 +112,9 @@
 
 
             </StackLayout>
-        
+
             <Frame BorderColor="LightBlue"  BackgroundColor="#F8F8FF" CornerRadius="10" Padding="8" HasShadow="True" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
-                <ScrollView >
+                <!--<ScrollView >
                     <ListView x:Name="myListView" HasUnevenRows="True">
                         <ListView.ItemTemplate>
                             <DataTemplate>
@@ -125,17 +125,15 @@
                        BorderColor="#006a55" 
                        CornerRadius="5">
                                         <StackLayout Orientation="Horizontal" Padding="10">
-                                            <!-- Client Name and Details -->
                                             <StackLayout Orientation="Vertical" HorizontalOptions="FillAndExpand">
-                                         
                                                 <Grid>
-                                                    <!-- Define two columns with equal width -->
+
                                                     <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="*" />
                                                         <ColumnDefinition Width="*" />
                                                         <ColumnDefinition Width="*" />
                                                     </Grid.ColumnDefinitions>
 
-                                                    <!-- First Label in the first column -->
                                                     <Label
                                                     Text="{Binding ClientName}"
                                                     FontSize="16"
@@ -143,7 +141,6 @@
                                                     TextColor="Black"
                                                     Grid.Column="0" />
 
-                                                    <!-- Second Label in the second column -->
                                                     <Label
                                                 Text="{Binding CollectionType,StringFormat='Type : {0}'}"
                                                 FontSize="16"
@@ -153,112 +150,342 @@
                                                         <Label.Style>
                                                             <Style TargetType="Label" >
                                                                 <Setter Property="TextColor" Value="Black" />
-                                                                <!-- Default color -->
                                                                 <Style.Triggers>
                                                                     <DataTrigger TargetType="Label" Binding="{Binding CollectionType}" Value="Transfer">
                                                                         <Setter Property="TextColor" Value="#ff5c33" />
                                                                     </DataTrigger>
 
-                                                                    <!-- Add more DataTriggers for other status conditions if needed -->
                                                                 </Style.Triggers>
                                                             </Style>
                                                         </Label.Style>
                                                     </Label>
+                                                    <ImageButton
+                                                Source="print.png"
+                                                Grid.Column="2"
+                                                HeightRequest="20"
+                                                Margin="0,0,0,15"
+                                                WidthRequest="20"
+                                                HorizontalOptions="End"
+                                                VerticalOptions="End"
+                                                Clicked="OnPrintButtonClicked"
+                                                        CommandParameter="{Binding .}"/>
+
                                                 </Grid>
 
-                                                <Label Text="{Binding FirstWeight,StringFormat='Field Wgt. : {0}'}" TextColor="#006a55"  FontSize="14" FontAttributes="Bold" >
-                                                    <Label.Style>
-                                                        <Style TargetType="Label" >
-                                                            <Setter Property="TextColor" Value="Black" />
-                                                            <!-- Default color -->
-                                                            <Style.Triggers>
-                                                                <DataTrigger TargetType="Label" Binding="{Binding IsEdit}" Value="True">
-                                                                    <Setter Property="TextColor" Value="#ff5c33" />
-                                                                </DataTrigger>
-                                                         
-                                                                <!-- Add more DataTriggers for other status conditions if needed -->
-                                                            </Style.Triggers>
-                                                        </Style>
-                                                    </Label.Style>
-                                                </Label>
-                                                <Label Text="{Binding Deduction,StringFormat='Deduction : {0}'}" TextColor="#006a55" FontSize="14" FontAttributes="Bold">
-                                                    <Label.Style>
-                                                        <Style TargetType="Label" >
-                                                            <Setter Property="TextColor" Value="Black" />
-                                                            <!-- Default color -->
-                                                            <Style.Triggers>
-                                                                <DataTrigger TargetType="Label" Binding="{Binding IsEdit}" Value="True">
-                                                                    <Setter Property="TextColor" Value="#ff5c33" />
-                                                                </DataTrigger>
-
-                                                                <!-- Add more DataTriggers for other status conditions if needed -->
-                                                            </Style.Triggers>
-                                                        </Style>
-                                                    </Label.Style>
-                                                </Label>
-                                                <Grid Margin="0,4,0,0">
+                                                <Grid Padding="10">
                                                     <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="auto" />
+                                                        <ColumnDefinition Width="auto" />
                                                         <ColumnDefinition Width="*" />
-                                                        <!-- Column for left label -->
-                                                        <ColumnDefinition Width="Auto" />
-                                                        <!-- Column for right label -->
                                                     </Grid.ColumnDefinitions>
 
-                                                    <!-- Left Label -->
-                                                    <Label Text="{Binding FinalWeight, StringFormat='Final Wgt. : {0}'}"
-           Grid.Column="0"
-           TextColor="#006a55"
-           FontSize="14"
-           FontAttributes="Bold"
-           HorizontalOptions="Start">
-                                                        <Label.Style>
-                                                            <Style TargetType="Label">
-                                                                <Setter Property="TextColor" Value="Black" />
-                                                                <!-- Default color -->
-                                                                <Style.Triggers>
-                                                                    <DataTrigger TargetType="Label" Binding="{Binding IsEdit}" Value="True">
-                                                                        <Setter Property="TextColor" Value="#ff5c33" />
-                                                                    </DataTrigger>
-                                                                    <!-- Add more DataTriggers for other status conditions if needed -->
-                                                                </Style.Triggers>
-                                                            </Style>
-                                                        </Label.Style>
-                                                    </Label>
-
-                                                    <!-- Right Label -->
+                                                    <Grid.RowDefinitions>
+                                                        <RowDefinition Height="auto" />
+                                                        <RowDefinition Height="auto" />
+                                                        <RowDefinition Height="auto" />
+                                                        <RowDefinition Height="auto"/>
+                                                    </Grid.RowDefinitions>
                                                     <Label Text="{Binding BagList, StringFormat='Bags: {0}'}"
-                                                       Grid.Column="1"
-                                                       TextColor="#006a55"
-                                                       FontSize="10"
-                                                       FontAttributes="Bold"
-                                                       HorizontalOptions="End">
+      
+                            Grid.Row="0"                                                   
+                             Grid.Column="0"
+                            TextColor="#006a55"
+                            FontSize="12"
+                            FontAttributes="Bold"
+                                                             VerticalOptions="CenterAndExpand"
+                                                            LineBreakMode="WordWrap" 
+                            HorizontalOptions="Start">
+                            <Label.Style>
+                            <Style TargetType="Label">
+                            <Setter Property="TextColor" Value="Black" />
+                            <Style.Triggers>
+                            <DataTrigger TargetType="Label" Binding="{Binding IsEdit}" Value="True">
+                            <Setter Property="TextColor" Value="#ff5c33" />
+                            </DataTrigger>
+                            </Style.Triggers>
+                            </Style>
+                            </Label.Style>
+                            </Label>
+                                                    <Label
+                                                Text="{Binding FirstWeight, StringFormat='Fisrt :{0}'}"
+                                                TextColor="#006a55"
+                                                FontSize="14"
+                                                FontAttributes="Bold"
+                                                Grid.Row="1"
+                                                Grid.Column="0">
                                                         <Label.Style>
                                                             <Style TargetType="Label">
                                                                 <Setter Property="TextColor" Value="Black" />
-                                                                <!-- Default color -->
                                                                 <Style.Triggers>
                                                                     <DataTrigger TargetType="Label" Binding="{Binding IsEdit}" Value="True">
                                                                         <Setter Property="TextColor" Value="#ff5c33" />
                                                                     </DataTrigger>
-                                                                    <!-- Add more DataTriggers for other status conditions if needed -->
                                                                 </Style.Triggers>
                                                             </Style>
                                                         </Label.Style>
                                                     </Label>
-                                                </Grid>
 
+                                                    <Label
+                                                Text="{Binding Deduction, StringFormat='Deduction : {0}'}"
+                                                TextColor="#006a55"
+                                                FontSize="14"
+                                                FontAttributes="Bold"
+                                                Grid.Row="2"
+                                                Grid.Column="0">
+                                                        <Label.Style>
+                                                            <Style TargetType="Label">
+                                                                <Setter Property="TextColor" Value="Black" />
+                                                                <Style.Triggers>
+                                                                    <DataTrigger TargetType="Label" Binding="{Binding IsEdit}" Value="True">
+                                                                        <Setter Property="TextColor" Value="#ff5c33" />
+                                                                    </DataTrigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </Label.Style>
+                                                    </Label>
+
+                                                    <Label Text="{Binding FinalWeight, StringFormat='Final Wgt. : {0}'}"
+                                                                Grid.Column="0"
+                                                                                                           Grid.Row="3"
+                                                                TextColor="#006a55"
+                                                                FontSize="14"
+                                                                FontAttributes="Bold"
+                                                                HorizontalOptions="Start">
+                                                        <Label.Style>
+                                                            <Style TargetType="Label">
+                                                                <Setter Property="TextColor" Value="Black" />
+                                                                <Style.Triggers>
+                                                                    <DataTrigger TargetType="Label" Binding="{Binding IsEdit}" Value="True">
+                                                                        <Setter Property="TextColor" Value="#ff5c33" />
+                                                                    </DataTrigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </Label.Style>
+                                                    </Label>
+
+                                                    <Button Text="Edit" 
+                                                    BackgroundColor="#008CBA"
+                                                    Grid.Row="0"
+                                                    Grid.RowSpan="2"    
+                                                    Grid.Column="2"      
+                                                    BorderColor="Gray" 
+                                                    BorderWidth="1.5" 
+                                                    CornerRadius="10" 
+                                                    TextColor="White"
+                                                    HorizontalOptions="End"
+                                                    VerticalOptions="End"
+                                                    Clicked="OnEditButtonClicked" 
+                                                    CommandParameter="{Binding .}"/>
+
+                                                    <Button Text="Add" 
+                                                    BackgroundColor="#008CBA"
+                                                    Grid.Row="2"
+                                                    Grid.RowSpan="2"    
+                                                    Grid.Column="2"      
+                                                    BorderColor="Gray" 
+                                                    BorderWidth="1.5" 
+                                                    CornerRadius="10" 
+                                                    TextColor="White"
+                                                    HorizontalOptions="End"
+                                                    VerticalOptions="End"
+                                                    Clicked="OnAddButtonClicked" 
+                                                    CommandParameter="{Binding .}"/>
+                                                </Grid>
+                                                
+                                                
+                                            
                                             </StackLayout>
 
-                                            <!-- Edit Button -->
-                                            <Button Text="Edit" 
-                            VerticalOptions="Center"   
-                                           BackgroundColor="#008CBA"
-                                            BorderColor="Gray" 
-                                            BorderWidth="1.5" 
-                                            CornerRadius="10" 
+
+
+                                        </StackLayout>
+                                    </Frame>
+                                </ViewCell>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </ScrollView>-->
+                <ScrollView>
+                    <ListView x:Name="myListView" HasUnevenRows="True">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <ViewCell>
+                                    <Frame HasShadow="True" 
+                           Padding="5" 
+                           Margin="3" 
+                           BorderColor="#006a55" 
+                           CornerRadius="5">
+                                        <StackLayout Orientation="Horizontal" Padding="10">
+                                            <StackLayout Orientation="Vertical" HorizontalOptions="FillAndExpand">
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="*" />
+                                                        <ColumnDefinition Width="*" />
+                                                        <ColumnDefinition Width="*" />
+                                                    </Grid.ColumnDefinitions>
+
+                                                    <Label
+                                        Text="{Binding ClientName}"
+                                        FontSize="16"
+                                        FontAttributes="Bold"
+                                        TextColor="Black"
+                                        Grid.Column="0" />
+
+                                                    <Label
+                                        Text="{Binding CollectionType, StringFormat='Type : {0}'}"
+                                        FontSize="16"
+                                        FontAttributes="Bold"
+                                        TextColor="Black"
+                                        Grid.Column="1">
+                                                        <Label.Style>
+                                                            <Style TargetType="Label">
+                                                                <Setter Property="TextColor" Value="Black" />
+                                                                <Style.Triggers>
+                                                                    <DataTrigger TargetType="Label" Binding="{Binding CollectionType}" Value="Transfer">
+                                                                        <Setter Property="TextColor" Value="#ff5c33" />
+                                                                    </DataTrigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </Label.Style>
+                                                    </Label>
+
+                                                    <ImageButton
+                                        Source="print.png"
+                                        Grid.Column="2"
+                                        HeightRequest="20"
+                                        Margin="0,0,0,15"
+                                        WidthRequest="20"
+                                        HorizontalOptions="End"
+                                        VerticalOptions="End"
+                                        Clicked="OnPrintButtonClicked"
+                                        CommandParameter="{Binding .}" />
+                                                </Grid>
+
+                                                <Grid Padding="10">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="auto" />
+                                                        <ColumnDefinition Width="auto" />
+                                                        <ColumnDefinition Width="*" />
+                                                    </Grid.ColumnDefinitions>
+
+                                                    <Grid.RowDefinitions>
+                                                        <RowDefinition Height="auto" />
+                                                        <RowDefinition Height="auto" />
+                                                        <RowDefinition Height="auto" />
+                                                        <RowDefinition Height="auto"/>
+                                                    </Grid.RowDefinitions>
+
+                                                    <Label
+                                        Text="{Binding BagList, StringFormat='Bags: {0}'}"
+                                        Grid.Row="0"
+                                        Grid.Column="0"
+                                        TextColor="#006a55"
+                                        FontSize="12"
+                                        FontAttributes="Bold"
+                                        VerticalOptions="CenterAndExpand"
+                                        LineBreakMode="WordWrap"
+                                        HorizontalOptions="Start"
+                                        WidthRequest="150">
+                                                        <!-- Adjust width if needed -->
+                                                        <Label.Style>
+                                                            <Style TargetType="Label">
+                                                                <Setter Property="TextColor" Value="Black" />
+                                                                <Style.Triggers>
+                                                                    <DataTrigger TargetType="Label" Binding="{Binding IsEdit}" Value="True">
+                                                                        <Setter Property="TextColor" Value="#ff5c33" />
+                                                                    </DataTrigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </Label.Style>
+                                                    </Label>
+
+                                                    <Label
+                                        Text="{Binding FirstWeight, StringFormat='First :{0}'}"
+                                        TextColor="#006a55"
+                                        FontSize="14"
+                                        FontAttributes="Bold"
+                                        Grid.Row="1"
+                                        Grid.Column="0">
+                                                        <Label.Style>
+                                                            <Style TargetType="Label">
+                                                                <Setter Property="TextColor" Value="Black" />
+                                                                <Style.Triggers>
+                                                                    <DataTrigger TargetType="Label" Binding="{Binding IsEdit}" Value="True">
+                                                                        <Setter Property="TextColor" Value="#ff5c33" />
+                                                                    </DataTrigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </Label.Style>
+                                                    </Label>
+
+                                                    <Label
+                                        Text="{Binding Deduction, StringFormat='Deduction : {0}'}"
+                                        TextColor="#006a55"
+                                        FontSize="14"
+                                        FontAttributes="Bold"
+                                        Grid.Row="2"
+                                        Grid.Column="0">
+                                                        <Label.Style>
+                                                            <Style TargetType="Label">
+                                                                <Setter Property="TextColor" Value="Black" />
+                                                                <Style.Triggers>
+                                                                    <DataTrigger TargetType="Label" Binding="{Binding IsEdit}" Value="True">
+                                                                        <Setter Property="TextColor" Value="#ff5c33" />
+                                                                    </DataTrigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </Label.Style>
+                                                    </Label>
+
+                                                    <Label
+                                        Text="{Binding FinalWeight, StringFormat='Final Wgt. : {0}'}"
+                                        Grid.Row="3"
+                                        Grid.Column="0"
+                                        TextColor="#006a55"
+                                        FontSize="14"
+                                        FontAttributes="Bold"
+                                        HorizontalOptions="Start">
+                                                        <Label.Style>
+                                                            <Style TargetType="Label">
+                                                                <Setter Property="TextColor" Value="Black" />
+                                                                <Style.Triggers>
+                                                                    <DataTrigger TargetType="Label" Binding="{Binding IsEdit}" Value="True">
+                                                                        <Setter Property="TextColor" Value="#ff5c33" />
+                                                                    </DataTrigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </Label.Style>
+                                                    </Label>
+
+                                                    <Button Text="Edit" 
+                                            BackgroundColor="#008CBA"
+                                            Grid.Row="0"
+                                            Grid.RowSpan="2"
+                                            Grid.Column="2"
+                                            BorderColor="Gray"
+                                            BorderWidth="1.5"
+                                            CornerRadius="10"
                                             TextColor="White"
-                                                    Clicked="OnEditButtonClicked" 
-                            CommandParameter="{Binding .}"/>
+                                            HorizontalOptions="End"
+                                            VerticalOptions="End"
+                                            Clicked="OnEditButtonClicked"
+                                            CommandParameter="{Binding .}" />
+
+                                                    <Button Text="Add" 
+                                            BackgroundColor="#008CBA"
+                                            Grid.Row="2"
+                                            Grid.RowSpan="2"
+                                            Grid.Column="2"
+                                            BorderColor="Gray"
+                                            BorderWidth="1.5"
+                                            CornerRadius="10"
+                                            TextColor="White"
+                                            HorizontalOptions="End"
+                                            VerticalOptions="End"
+                                            Clicked="OnAddButtonClicked"
+                                            CommandParameter="{Binding .}" />
+                                                </Grid>
+                                            </StackLayout>
                                         </StackLayout>
                                     </Frame>
                                 </ViewCell>
@@ -266,8 +493,10 @@
                         </ListView.ItemTemplate>
                     </ListView>
                 </ScrollView>
+
+
             </Frame>
-           
+
             <Grid>
                 <!-- Define two columns with equal width -->
                 <Grid.ColumnDefinitions>
@@ -337,7 +566,7 @@
         CornerRadius="10"
         Clicked="OnSendToServerClicked" />
             </Grid>
-            
+
 
         </StackLayout>
     </ContentPage.Content>
