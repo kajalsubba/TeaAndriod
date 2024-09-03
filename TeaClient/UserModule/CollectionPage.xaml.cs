@@ -1,24 +1,17 @@
-﻿using Android.Accounts;
-using Android.Locations;
-using Javax.Xml.Transform.Sax;
-using Newtonsoft.Json;
-using Org.Apache.Http.Client.Params;
-using SQLite;
+﻿using SQLite;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
 using TeaClient.Model;
 using TeaClient.Services;
+using TeaClient.Services.VibrationService;
 using TeaClient.SessionHelper;
 using TeaClient.SQLLite;
+using Xamarin.Essentials;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
-using static Android.Content.ClipData;
+
 
 namespace TeaClient.UserModule
 {
@@ -86,6 +79,7 @@ namespace TeaClient.UserModule
 
         private async void OnNumberButtonClicked(object sender, EventArgs e)
         {
+            VibrationMethod();
             string _ClientName = Client.Text;
             if (string.IsNullOrWhiteSpace(_ClientName) || ClientId == 0)
             {
@@ -95,14 +89,13 @@ namespace TeaClient.UserModule
             var button = sender as Button;
             if (button != null)
             {
-                // Append the number or decimal point to the entry
                 EntryFieldWeight.Text += button.Text;
             }
         }
 
         private void OnOperatorButtonClicked(object sender, EventArgs e)
         {
-
+            VibrationMethod();
 
             Button button = sender as Button;
             if (button != null && EntryFieldWeight != null)
@@ -130,7 +123,7 @@ namespace TeaClient.UserModule
         private void OnEqualsButtonClicked(object sender, EventArgs e)
         {
 
-
+            VibrationMethod();
             TotalCollectionOnType();
         }
 
@@ -173,6 +166,7 @@ namespace TeaClient.UserModule
         }
         private async void OnStepCleanButtonClicked(object sender, EventArgs e)
         {
+            VibrationMethod();
             if (EntryFieldWeight != null)
             {
 
@@ -394,6 +388,27 @@ namespace TeaClient.UserModule
 
         }
 
+        public async void VibrationMethod()
+        {
+            try
+            {
+                // Use default vibration length
+                Vibration.Vibrate();
+
+                // Or use specified time
+                var duration = TimeSpan.FromMilliseconds(100);
+                Vibration.Vibrate(duration);
+            }
+            catch (FeatureNotSupportedException ex)
+            {
+                await DisplayAlert("Error", ex.Message, "OK");
+            }
+            catch (Exception ex)
+            {
+                await DisplayAlert("Error", ex.Message, "OK");
+            }
+        }
+
         private async void OnSubmitClicked(object sender, EventArgs e)
         {
             try
@@ -449,6 +464,7 @@ namespace TeaClient.UserModule
                 _collect.CreatedBy = Convert.ToInt32(LoginData.LoginDetails[0].UserId);
                 _collect.TransferFrom = 0;
                 _collect.VehicleFrom = VehicleFromId;
+                _collect.FinishTimeInApp = DateTime.Now;
                 if (EntryFieldWeight != null)
                 {
                     string expression = EntryFieldWeight.Text;
@@ -466,26 +482,18 @@ namespace TeaClient.UserModule
                 try
                 {
                     conn.Insert(_collect);
-                    bool _submit = await DisplayAlert("Print", "Do you want to Print.", "Yes", "No");
+                    bool _submit = await DisplayAlert("Save", "Data is saved successfully.Do you want to Print!", "Yes", "No");
                     if (_submit)
                     {
                         PrintService prt = new PrintService();
                         var deduct = DeductValue.ToString() == "0" ? "Pending" : DeductValue.ToString();
-                        var result = await prt.PrintParameters(LoginData.LoginDetails[0].CompanyName.ToString().Trim(), _collect.ClientName, _collect.GradeName, _collect.BagList, deduct, _collect.FirstWeight.ToString(),
+                        var result = await prt.PrintParameters(_collect.CollectionDate.ToString("dd/MM/yyyy"), LoginData.LoginDetails[0].CompanyName.ToString().Trim(), _collect.ClientName, _collect.GradeName, _collect.BagList, deduct, _collect.FirstWeight.ToString(),
                        _collect.FinalWeight.ToString(), _collect.GrossAmount.ToString(), _collect.Remarks, LoginData.LoginDetails[0].UserFirstName + " " + LoginData.LoginDetails[0].UserLastName);
 
                         await DisplayAlert("Info", result, "Ok");
 
-
-                        //   await DisplayAlert("Info", "Data is added Successfully. ", "Yes");
-                        cleanForm();
-                        Grade.SelectedItem = null;
-
-                        GetTotal();
-                        FieldEntryLaout.IsVisible = false;
-                        BtnFinish.IsVisible = true;
-                        CalculateView.IsVisible = true;
                     }
+                   
 
                 }
                 catch (Exception ex)
@@ -496,6 +504,13 @@ namespace TeaClient.UserModule
                 }
                 finally
                 {
+                  //  await DisplayAlert("Info", "Data is added Successfully. ", "Ok");
+                    cleanForm();
+                    Grade.SelectedItem = null;
+                    GetTotal();
+                    FieldEntryLaout.IsVisible = false;
+                    BtnFinish.IsVisible = true;
+                    CalculateView.IsVisible = true;
                 }
             }
             catch (Exception ex)

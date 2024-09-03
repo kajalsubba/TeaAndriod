@@ -9,6 +9,7 @@ namespace TeaClient.Model
         public string CollectionDate { get; set; }
         public long FinalWeight { get; set; }
         public decimal Rate { get; set; }
+        public string RateStatus { get; set; }
         public decimal Amount { get; set; }
         public string Status { get; set; }
 

@@ -24,7 +24,7 @@ namespace TeaClient
         private decimal _totalGrossAmount;
         private decimal _avgRate;
 
-      //  public decimal AvgRate;
+        //  public decimal AvgRate;
         public IList<SupplierHistoryModel> dataItems { get; set; }
         readonly ClientLoginData LoginData = new ClientLoginData();
         readonly AppSettings _appSetting = AppConfigService.GetConfig();
@@ -34,6 +34,11 @@ namespace TeaClient
             LoginData = SessionManager.GetSessionValue<ClientLoginData>("loginDetails");
             dataItems = new ObservableCollection<SupplierHistoryModel>();
             BindingContext = this;
+        }
+        protected override bool OnBackButtonPressed()
+        {
+            //  DisplayConfirmation();
+            return true; // Do not continue processing the back button
         }
 
         private async void OnSearchClicked(object sender, EventArgs e)
@@ -45,8 +50,8 @@ namespace TeaClient
                                 .Sum(item => item.ChallanWeight);
                 TotalGrossAmount = dataItems.Where(item => item.Status != "Rejected")
                                 .Sum(item => item.GrossAmount);
-               
-                AvgRate =TotalGrossAmount / TotalChallanWeight;
+
+                AvgRate = TotalGrossAmount / TotalChallanWeight;
             }
             else
             {
@@ -139,12 +144,11 @@ namespace TeaClient
                                 CollectionDate = _supplier.CollectionDate,
                                 FactoryName = _supplier.FactoryName,
                                 VehicleNo = _supplier.VehicleNo,
-                                FineLeaf = _supplier
-                            .FineLeaf,
+                                FineLeaf = _supplier.FineLeaf,
                                 ChallanWeight = _supplier.ChallanWeight,
                                 Rate = _supplier.Rate,
-                                GrossAmount = _supplier
-                            .GrossAmount,
+                                RateStatus=_supplier.RateStatus,
+                                GrossAmount = _supplier.GrossAmount,
                                 Remarks = _supplier.Remarks,
                                 Status = _supplier.Status,
                                 CreatedBy = _supplier.CreatedBy

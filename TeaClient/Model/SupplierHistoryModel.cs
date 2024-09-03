@@ -9,9 +9,10 @@ namespace TeaClient.Model
         public string CollectionDate { get; set; }
         public string FactoryName { get; set; }
         public string VehicleNo { get; set; }
-        public string FineLeaf { get; set; }
-        public decimal ChallanWeight { get; set; }
+        public long FineLeaf { get; set; }
+        public long ChallanWeight { get; set; }
         public decimal Rate { get; set; }
+        public string RateStatus { get; set; }
         public decimal GrossAmount { get; set; }
         public string Remarks { get; set; }
         public string Status { get; set; }

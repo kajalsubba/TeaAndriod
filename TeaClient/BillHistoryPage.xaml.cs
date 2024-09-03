@@ -38,6 +38,11 @@ namespace TeaClient
             dataItems = new ObservableCollection<SupplierBillHistoryModel>();
             BindingContext = this;
         }
+        protected override bool OnBackButtonPressed()
+        {
+            //  DisplayConfirmation();
+            return true; // Do not continue processing the back button
+        }
 
         private async void OnSearchClicked(object sender, EventArgs e)
         {

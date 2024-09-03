@@ -23,14 +23,14 @@ namespace TeaClient.UserModule
         public EditCollectionPage(SaveLocalCollectionModel _collect)
         {
             InitializeComponent();
-            collect= _collect;
+            collect = _collect;
             var dbPath = Path.Combine(FileSystem.AppDataDirectory, "TeaCollection.db3");
             conn = DependencyService.Get<ISqlLite>().GetConnection();
             conn.CreateTable<SaveLocalCollectionModel>();
             PatchCollection();
         }
 
-       void PatchCollection()
+        void PatchCollection()
         {
             int FirstValue = string.IsNullOrWhiteSpace(collect.FinalWeight.ToString()) ? 0 : int.Parse(collect.FinalWeight.ToString());
             int RainValue = string.IsNullOrWhiteSpace(collect.WetLeaf.ToString()) ? 0 : int.Parse(collect.WetLeaf.ToString());
@@ -39,16 +39,16 @@ namespace TeaClient.UserModule
             int FinalValue = string.IsNullOrWhiteSpace(collect.FinalWeight.ToString()) ? 0 : int.Parse(collect.FinalWeight.ToString());
             Decimal RateValue = string.IsNullOrWhiteSpace(collect.Rate.ToString()) ? 0 : Decimal.Parse(collect.Rate.ToString());
             Decimal FinalAmountValue = string.IsNullOrWhiteSpace(collect.GrossAmount.ToString()) ? 0 : Decimal.Parse(collect.GrossAmount.ToString());
-           
+
             Client.Text = collect.ClientName;
             TotalFieldWeight.Text = FirstValue.ToString();
-            RainLeaf.Text= RainValue.ToString();
+            RainLeaf.Text = RainValue.ToString();
             LongLeaf.Text = LongValue.ToString();
-            Deduction.Text= DeductValue.ToString();
-            FinalWeight.Text= FinalValue.ToString();
+            Deduction.Text = DeductValue.ToString();
+            FinalWeight.Text = FinalValue.ToString();
             Rate.Text = RateValue.ToString();
-            FinalAmount.Text= FinalAmountValue.ToString();
-            Remarks.Text=collect.Remarks??"";
+            FinalAmount.Text = FinalAmountValue.ToString();
+            Remarks.Text = collect.Remarks ?? "";
 
         }
 
@@ -56,31 +56,32 @@ namespace TeaClient.UserModule
         {
             try
             {
-            int FirstValue = string.IsNullOrWhiteSpace(TotalFieldWeight.Text) ? 0 : int.Parse(TotalFieldWeight.Text);
-            int RainValue = string.IsNullOrWhiteSpace(RainLeaf.Text) ? 0 : int.Parse(RainLeaf.Text);
-            int LongValue = string.IsNullOrWhiteSpace(LongLeaf.Text) ? 0 : int.Parse(LongLeaf.Text);
-            int DeductValue = string.IsNullOrWhiteSpace(Deduction.Text) ? 0 : int.Parse(Deduction.Text);
-            int FinalValue = string.IsNullOrWhiteSpace(FinalWeight.Text) ? 0 : int.Parse(FinalWeight.Text);
-            Decimal RateValue = string.IsNullOrWhiteSpace(Rate.Text) ? 0 : Decimal.Parse(Rate.Text);
-            Decimal FinalAmountValue = string.IsNullOrWhiteSpace(FinalAmount.Text) ? 0 : Decimal.Parse(FinalAmount.Text);
+                int FirstValue = string.IsNullOrWhiteSpace(TotalFieldWeight.Text) ? 0 : int.Parse(TotalFieldWeight.Text);
+                int RainValue = string.IsNullOrWhiteSpace(RainLeaf.Text) ? 0 : int.Parse(RainLeaf.Text);
+                int LongValue = string.IsNullOrWhiteSpace(LongLeaf.Text) ? 0 : int.Parse(LongLeaf.Text);
+                int DeductValue = string.IsNullOrWhiteSpace(Deduction.Text) ? 0 : int.Parse(Deduction.Text);
+                int FinalValue = string.IsNullOrWhiteSpace(FinalWeight.Text) ? 0 : int.Parse(FinalWeight.Text);
+                Decimal RateValue = string.IsNullOrWhiteSpace(Rate.Text) ? 0 : Decimal.Parse(Rate.Text);
+                Decimal FinalAmountValue = string.IsNullOrWhiteSpace(FinalAmount.Text) ? 0 : Decimal.Parse(FinalAmount.Text);
 
-          
-            var existingCollect = conn.Find<SaveLocalCollectionModel>(collect.Id);
-            existingCollect.FirstWeight = FirstValue;
-            existingCollect.WetLeaf = RainValue;
-            existingCollect.LongLeaf = LongValue;
-            existingCollect.Deduction = DeductValue;
-            existingCollect.FinalWeight = FinalValue;
-            existingCollect.Rate = RateValue;
-            existingCollect.GrossAmount = FinalAmountValue;
-            existingCollect.Remarks = Remarks.Text;
-            existingCollect.IsEdit = true;
+
+                var existingCollect = conn.Find<SaveLocalCollectionModel>(collect.Id);
+                existingCollect.FirstWeight = FirstValue;
+                existingCollect.WetLeaf = RainValue;
+                existingCollect.LongLeaf = LongValue;
+                existingCollect.Deduction = DeductValue;
+                existingCollect.FinalWeight = FinalValue;
+                existingCollect.Rate = RateValue;
+                existingCollect.GrossAmount = FinalAmountValue;
+                existingCollect.Remarks = Remarks.Text;
+                existingCollect.UpdateTimeInApp = DateTime.Now;
+                existingCollect.IsEdit = true;
                 bool _submit = await DisplayAlert("Confirm", "Do you want to update!", "Yes", "No");
                 if (_submit)
                 {
                     conn.Update(existingCollect);
                     await DisplayAlert("Info", "Data is updated Successfully ", "Ok");
-                    await Navigation.PushAsync(new LocalDataShow.DailyCollectionView(collect.VehicleNo,collect.TripId,collect.VehicleFrom));
+                    await Navigation.PushAsync(new LocalDataShow.DailyCollectionView(collect.VehicleNo, collect.TripId, collect.VehicleFrom));
 
                 }
 
@@ -89,13 +90,13 @@ namespace TeaClient.UserModule
             {
                 await DisplayAlert("Error", ex.Message, "Ok");
 
-               // throw ex;
+                // throw ex;
             }
             finally
             {
             }
         }
-       
+
 
         private void RainLeaf_TextChanged(object sender, TextChangedEventArgs e)
         {

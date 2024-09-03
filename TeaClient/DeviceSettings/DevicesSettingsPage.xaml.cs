@@ -29,9 +29,37 @@ namespace TeaClient.DeviceSettings
             DevicesAll();
             conn = DependencyService.Get<ISqlLite>().GetConnection();
             conn.CreateTable<DevicesModel>();
+            GetDevice();
+        }
+
+        void GetDevice()
+        {
+            var CollectionDetails = (from x in conn.Table<DevicesModel>() select x).ToList();
+            DeviceListView.ItemsSource = CollectionDetails;
+
+        }
+
+        
+        private async void OnDeleteButtonClicked(object sender, EventArgs e)
+        {
+            try
+            {
+
+                bool result = await DisplayAlert("Delete", "Do you want to delete!", "Yes", "No");
+                if (result)
+                {
+                    conn.Execute("DROP TABLE IF EXISTS DevicesModel");
+                    conn.CreateTable<DevicesModel>();
+
+                    GetDevice();
+                }
+            }
+            catch(Exception ex)
+            {
+                await DisplayAlert("Error", ex.Message, "Ok");
+            }
           
         }
-        
         private async void OnPrintClicked(object sender, EventArgs e)
         {
             var selectedDevice = (DevicesModel)Devices.SelectedItem;
@@ -99,7 +127,7 @@ namespace TeaClient.DeviceSettings
               
                 conn.Insert(_device);
                 await DisplayAlert("Info", "Printer is added Successfully. ", "Yes");
-            
+                GetDevice();
             }
             catch(Exception ex)
             {

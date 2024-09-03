@@ -80,14 +80,14 @@ namespace TeaClient.Services
         }
 
 
-        public async Task<string> PrintParameters(string company, string ClientName, string Grade, string BagList, string deduct, string First,
+        public async Task<string> PrintParameters(string CollectDate,string company, string ClientName, string Grade, string BagList, string deduct, string First,
            string Final, string GrossAmt, string remarks, string CollectedBy)
         {
             StringBuilder sb = new StringBuilder();
 
             sb.Append(company.Trim());
             sb.AppendLine();
-            sb.AppendLine("GreenLeaf collect on " + DateTime.Now.ToString("dd/MM/yyyy"));
+            sb.AppendLine("GreenLeaf collect on " + CollectDate);
             sb.AppendLine(ClientName);
             sb.AppendLine("Grade :" + Grade);
             sb.AppendLine("Field :" + BagList + "=" + First);

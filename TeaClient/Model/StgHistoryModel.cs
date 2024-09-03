@@ -11,13 +11,14 @@ namespace TeaClient.Model
         public string CollectionDate { get; set; }
         public string VehicleNo { get; set; }
         public string ClientName { get; set; }
-        public decimal FirstWeight { get; set; }
-        public decimal Deduction { get; set; }
-        public decimal FinalWeight { get; set; }
+        public long FirstWeight { get; set; }
+        public long Deduction { get; set; }
+        public long FinalWeight { get; set; }
         public string GradeName { get; set; }
         public string Status { get; set; }
         public string ViewBag { get; set; }
-
+        public string Remarks { get; set; }
+        public decimal GrossAmount { get; set; }
         public string CollectionType { get; set; }
         public string TransferFrom { get; set; }
         public string VehicleFrom { get; set; }

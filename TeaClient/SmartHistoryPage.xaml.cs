@@ -30,8 +30,8 @@ namespace TeaClient
 
         public IList<OutstandingModel> outstandingItems { get; set; }
 
-       readonly ClientLoginData LoginData = new ClientLoginData();
-       readonly AppSettings _appSetting = AppConfigService.GetConfig();
+        readonly ClientLoginData LoginData = new ClientLoginData();
+        readonly AppSettings _appSetting = AppConfigService.GetConfig();
 
         public SmartHistoryPage()
         {
@@ -43,6 +43,10 @@ namespace TeaClient
             BindingContext = this;
             //HeaderName.Text = "Smart History for " + LoginData.ClientLoginDetails[0].ClientName;
         }
+        protected override bool OnBackButtonPressed()
+        {
+            return true; // Do not continue processing the back button
+        }
 
         private async void OnSearchClicked(object sender, EventArgs e)
         {
@@ -50,13 +54,13 @@ namespace TeaClient
             if (dataItems != null && dataItems.Any())
             {
                 TotalFinalWeight = dataItems.Where(item => item.Status != "Rejected")
-                                .Sum(item =>Convert.ToInt32(item.FinalWeight));
+                                .Sum(item => Convert.ToInt32(item.FinalWeight));
                 TotalGrossAmount = dataItems.Where(item => item.Status != "Rejected")
                                 .Sum(item => item.Amount);
                 AvgRate = TotalGrossAmount / TotalFinalWeight;
 
                 TotalDays = dataItems.Where(item => item.Status != "Rejected")
-                .Select(item =>item.CollectionDate).Distinct().Count();
+                .Select(item => item.CollectionDate).Distinct().Count();
             }
             else
             {
@@ -76,51 +80,14 @@ namespace TeaClient
             else
             {
                 TotalPaymentAmount = 0;
-               
-                paymentItems.Clear();
-              //  await DisplayAlert("Info", "Record is not found !", "OK");
-            }
-            //if (outstandingItems != null && outstandingItems.Any())
-            //{
-            //    PreviousBalance = outstandingItems.Sum(item => item.PreviousBalance);
-            //    TotalSeasonAdvance = outstandingItems.Sum(item => item.SeasonAdvance);
-            //}
-            //else
-            //{
-            //    TotalPaymentAmount = 0;
 
-            //    outstandingItems.Clear();
-            //    //  await DisplayAlert("Info", "Record is not found !", "OK");
-            //}
+                paymentItems.Clear();
+            }
+
 
         }
 
-        //public decimal TotalSeasonAdvance
-        //{
-        //    get { return _standingSeasonAdv; }
-        //    set
-        //    {
-        //        if (_standingSeasonAdv != value)
-        //        {
 
-        //            _standingSeasonAdv = Math.Round(value, 2);
-        //            OnPropertyChanged(nameof(TotalSeasonAdvance));
-        //        }
-        //    }
-        //}
-        //public decimal PreviousBalance
-        //{
-        //    get { return _previousBalance; }
-        //    set
-        //    {
-        //        if (_previousBalance != value)
-        //        {
-
-        //            _previousBalance = Math.Round(value, 2);
-        //            OnPropertyChanged(nameof(PreviousBalance));
-        //        }
-        //    }
-        //}
         public int TotalDays
         {
             get { return _totalDays; }
@@ -209,7 +176,7 @@ namespace TeaClient
             {
                 FromDate = Convert.ToDateTime(formattedfromDate),
                 ToDate = Convert.ToDateTime(formattedtoDate),
-                CategoryName= "Supplier",
+                CategoryName = "Supplier",
                 ClientId = Convert.ToInt32(LoginData.ClientLoginDetails[0].ClientId),
                 TenantId = Convert.ToInt32(LoginData.ClientLoginDetails[0].TenantId)
             };
@@ -233,9 +200,10 @@ namespace TeaClient
                                 CollectionDate = _supplier.CollectionDate,
                                 FinalWeight = _supplier.FinalWeight,
                                 Rate = _supplier.Rate,
+                                RateStatus = _supplier.RateStatus,
                                 Amount = _supplier.Amount,
                                 Status = _supplier.Status,
-                            
+
                             });
                         }
                     }
@@ -273,7 +241,7 @@ namespace TeaClient
                     else
                     {
                         txtPreviousBalance.Text = "0";
-                        txtStandingSeasonAdv.Text="0";
+                        txtStandingSeasonAdv.Text = "0";
 
                     }
 

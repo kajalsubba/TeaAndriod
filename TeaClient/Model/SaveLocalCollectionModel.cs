@@ -41,6 +41,10 @@ namespace TeaClient.Model
         public long VehicleFrom { get; set; }
 
         public bool DataSendToServer { get; set; }=false;
+        public DateTime? FinishTimeInApp { get; set; }
+        public DateTime? UpdateTimeInApp { get; set; }
+
+
 
     }
 

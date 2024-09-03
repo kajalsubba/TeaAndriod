@@ -39,18 +39,21 @@
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
                             <Label Grid.Column="0" Text="Date" FontAttributes="Bold" TextColor="White" />
                             <Label Grid.Column="1" Text="Factory" FontAttributes="Bold" TextColor="White" />
-                            <Label Grid.Column="2" Text="Vehicle No" FontAttributes="Bold" TextColor="White" />
-                            <Label Grid.Column="3" Text="Fine Leaf" FontAttributes="Bold" HorizontalOptions="Center" TextColor="White" />
-                            <Label Grid.Column="4" Text="Challan Wgt." FontAttributes="Bold" HorizontalOptions="Center" TextColor="White" />
+                            <Label Grid.Column="2" Text="Vehicle No" FontAttributes="Bold" TextColor="White" HorizontalOptions="Start" />
+                            <Label Grid.Column="3" Text="Fine(%)" FontAttributes="Bold" HorizontalOptions="Center" TextColor="White" />
+                            <Label Grid.Column="4" Text="Challan" FontAttributes="Bold" HorizontalOptions="Center" TextColor="White" />
                             <Label Grid.Column="5" Text="Rate" FontAttributes="Bold" HorizontalOptions="Center" TextColor="White" />
-                            <Label Grid.Column="6" Text="Amount" FontAttributes="Bold" HorizontalOptions="Center" TextColor="White" />
-                            <Label Grid.Column="7" Text="Remarks" FontAttributes="Bold" HorizontalOptions="Center" TextColor="White" />
+                            <Label Grid.Column="6" Text="Rate Status" FontAttributes="Bold" HorizontalOptions="Center" TextColor="White" />
 
-                            <Label Grid.Column="8" Text="Status" FontAttributes="Bold" />
-                            <Label Grid.Column="9" Text="Created By" FontAttributes="Bold" />
+                            <Label Grid.Column="7" Text="Amount" FontAttributes="Bold" HorizontalOptions="Center" TextColor="White" />
+                            <Label Grid.Column="8" Text="Remarks" FontAttributes="Bold" HorizontalOptions="Start" TextColor="White" />
+
+                            <Label Grid.Column="9" Text="Status" FontAttributes="Bold" />
+                            <Label Grid.Column="10" Text="Created By" FontAttributes="Bold" />
                         </Grid>
 
                         <!-- CollectionView with Data -->
@@ -71,19 +74,37 @@
                                             <ColumnDefinition Width="*" />
                                             <ColumnDefinition Width="*" />
                                             <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
                                         </Grid.ColumnDefinitions>
 
                                         <Label   Grid.Column="0" Text="{Binding CollectionDate}" >
 
                                         </Label>
                                         <Label   Grid.Column="1" Text="{Binding FactoryName}" />
-                                        <Label   Grid.Column="2" Text="{Binding VehicleNo}" />
-                                        <Label  Grid.Column="3" Text="{Binding FineLeaf}" HorizontalOptions="Center"/>
+                                        <Label   Grid.Column="2" Text="{Binding VehicleNo}" HorizontalOptions="Start" />
+                                        <Label  Grid.Column="3" Text="{Binding FineLeaf,StringFormat='{0}'}" HorizontalOptions="Center"/>
                                         <Label   Grid.Column="4" Text="{Binding ChallanWeight}" HorizontalOptions="Center"/>
                                         <Label   Grid.Column="5" Text="{Binding Rate}" HorizontalOptions="Center"/>
-                                        <Label  Grid.Column="6" Text="{Binding GrossAmount}" HorizontalOptions="Center"/>
-                                        <Label  Grid.Column="7" Text="{Binding Remarks}" HorizontalOptions="Center"/>
-                                        <Label   Grid.Column="8" Text="{Binding Status}" >
+                                        <Label   Grid.Column="6" Text="{Binding RateStatus}" HorizontalOptions="Center">
+                                            <Label.Style>
+                                                <Style TargetType="Label" >
+                                                    <Setter Property="TextColor" Value="Black" />
+                                                    <Style.Triggers>
+                                                        <DataTrigger TargetType="Label" Binding="{Binding RateStatus}" Value="Not Confirm">
+                                                            <Setter Property="TextColor" Value="Red" />
+                                                        </DataTrigger>
+                                                        <DataTrigger TargetType="Label" Binding="{Binding RateStatus}" Value="Confirm">
+                                                            <Setter Property="TextColor" Value="Green" />
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </Label.Style>
+
+                                        </Label>
+
+                                        <Label  Grid.Column="7" Text="{Binding GrossAmount}" HorizontalOptions="Center"/>
+                                        <Label  Grid.Column="8" Text="{Binding Remarks}" HorizontalOptions="Start"/>
+                                        <Label   Grid.Column="9" Text="{Binding Status}" >
                                             <Label.Style>
                                                 <Style TargetType="Label" >
                                                     <Setter Property="TextColor" Value="Black" />
@@ -103,9 +124,9 @@
                                             </Label.Style>
                                         </Label>
 
-                                        <Label   Grid.Column="9" Text="{Binding CreatedBy}" />
+                                        <Label   Grid.Column="10" Text="{Binding CreatedBy}" />
                                         <!-- Row Separator -->
-                                        <BoxView Grid.ColumnSpan="10" HeightRequest="1" BackgroundColor="LightGray" VerticalOptions="End" />
+                                        <BoxView Grid.ColumnSpan="11" HeightRequest="1" BackgroundColor="LightGray" VerticalOptions="End" />
 
 
                                     </Grid>
@@ -141,7 +162,7 @@
                             <!--<Label Grid.Column="0" Text="{Binding PreviousBalance, StringFormat='Previous Balance: {0:F2}'}" FontAttributes="Bold" />-->
 
                             <Label Grid.Column="0" Text="Total" FontAttributes="Bold" TextColor="White" />
-                            <Label Grid.Column="1" Text="{Binding TotalChallanWeight, StringFormat='Challan Wgt.: {0:0}'}" FontAttributes="Bold" TextColor="White" />
+                            <Label Grid.Column="1" Text="{Binding TotalChallanWeight, StringFormat='Challan Wgt.: {0}'}" FontAttributes="Bold" TextColor="White" />
                             <Label Grid.Column="2" Text="" FontAttributes="Bold" TextColor="White" />
 
                             <Label Grid.Column="3" Text="{Binding AvgRate, StringFormat='Avg.: {0:F2}'}" FontAttributes="Bold" TextColor="White" />
@@ -158,6 +179,6 @@
             </Frame>
 
         </StackLayout>
-  
+
     </ContentPage.Content>
 </ContentPage>

@@ -59,12 +59,15 @@ CornerRadius="10" Clicked="OnSearchClicked" />
                                                 <ColumnDefinition Width="*" />
                                                 <ColumnDefinition Width="*" />
                                                 <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="*" />
                                             </Grid.ColumnDefinitions>
                                             <Label Grid.Column="0" Text="Date" FontAttributes="Bold" TextColor="White"/>
                                             <Label Grid.Column="1" Text="Final Wgt" FontAttributes="Bold" HorizontalOptions="Center" TextColor="White"/>
                                             <Label Grid.Column="2" Text="Rate" FontAttributes="Bold" HorizontalOptions="Center" TextColor="White"/>
-                                            <Label Grid.Column="3" Text="Amount" FontAttributes="Bold" HorizontalOptions="Center" TextColor="White"/>
-                                            <Label Grid.Column="4" Text="Status" FontAttributes="Bold" HorizontalOptions="Center" TextColor="White"/>
+                                            <Label Grid.Column="3" Text="Rate Status" FontAttributes="Bold" HorizontalOptions="Center" TextColor="White"/>
+
+                                            <Label Grid.Column="4" Text="Amount" FontAttributes="Bold" HorizontalOptions="End" TextColor="White"/>
+                                            <Label Grid.Column="5" Text="Status" FontAttributes="Bold" HorizontalOptions="Center" TextColor="White"/>
 
                                         </Grid>
 
@@ -82,14 +85,30 @@ CornerRadius="10" Clicked="OnSearchClicked" />
                                                             <ColumnDefinition Width="*" />
                                                             <ColumnDefinition Width="*" />
                                                             <ColumnDefinition Width="*" />
-
+                                                            <ColumnDefinition Width="*" />
                                                         </Grid.ColumnDefinitions>
 
                                                         <Label   Grid.Column="0" Text="{Binding CollectionDate}"  />
                                                         <Label  Grid.Column="1" Text="{Binding FinalWeight, StringFormat='{0}'}" HorizontalOptions="Center"/>
                                                         <Label   Grid.Column="2" Text="{Binding Rate}" HorizontalOptions="Center"/>
-                                                        <Label  Grid.Column="3" Text="{Binding Amount}" HorizontalOptions="Center"/>
-                                                        <Label   Grid.Column="4" Text="{Binding Status}" HorizontalOptions="Center" >
+                                                        <Label   Grid.Column="3" Text="{Binding RateStatus}" HorizontalOptions="Center">
+                                                            <Label.Style>
+                                                                <Style TargetType="Label" >
+                                                                    <Setter Property="TextColor" Value="Black" />
+                                                                    <Style.Triggers>
+                                                                        <DataTrigger TargetType="Label" Binding="{Binding RateStatus}" Value="Not Confirm">
+                                                                            <Setter Property="TextColor" Value="Red" />
+                                                                        </DataTrigger>
+                                                                        <DataTrigger TargetType="Label" Binding="{Binding RateStatus}" Value="Confirm">
+                                                                            <Setter Property="TextColor" Value="Green" />
+                                                                        </DataTrigger>
+                                                                    </Style.Triggers>
+                                                                </Style>
+                                                            </Label.Style>
+                                                        </Label>
+
+                                                        <Label  Grid.Column="4" Text="{Binding Amount}" HorizontalOptions="End"/>
+                                                        <Label   Grid.Column="5" Text="{Binding Status}" HorizontalOptions="Center" >
                                                             <Label.Style>
                                                                 <Style TargetType="Label" >
                                                                     <Setter Property="TextColor" Value="Black" />
@@ -101,7 +120,7 @@ CornerRadius="10" Clicked="OnSearchClicked" />
                                                                         <DataTrigger  TargetType="Label" Binding="{Binding Status}" Value="Pending">
                                                                             <Setter Property="TextColor" Value="#018353" />
                                                                             <!--<Setter Property="FontAttributes" Value="Bold" />-->
-                                                                           
+
                                                                         </DataTrigger>
                                                                         <!--Add more DataTriggers for other status conditions if needed-->
                                                                     </Style.Triggers>
@@ -110,7 +129,7 @@ CornerRadius="10" Clicked="OnSearchClicked" />
                                                         </Label>
 
                                                         <!--Row Separator-->
-                                                        <BoxView Grid.ColumnSpan="5" HeightRequest="1" BackgroundColor="LightGray" VerticalOptions="End" />
+                                                        <BoxView Grid.ColumnSpan="6" HeightRequest="1" BackgroundColor="LightGray" VerticalOptions="End" />
 
 
                                                     </Grid>
@@ -180,8 +199,8 @@ CornerRadius="10" Clicked="OnSearchClicked" />
                                                 <ColumnDefinition Width="*" />
                                             </Grid.ColumnDefinitions>
                                             <Label Grid.Column="0" Text="Date" FontAttributes="Bold" TextColor="White" />
-                                            <Label Grid.Column="1" Text="Narration" FontAttributes="Bold" HorizontalOptions="Center" TextColor="White"/>
-                                            <Label Grid.Column="2" Text="Amount" FontAttributes="Bold" HorizontalOptions="Center" TextColor="White"/>
+                                            <Label Grid.Column="1" Text="Narration" FontAttributes="Bold" HorizontalOptions="Start" TextColor="White"/>
+                                            <Label Grid.Column="2" Text="Amount" FontAttributes="Bold" HorizontalOptions="End" TextColor="White"/>
 
                                         </Grid>
 
@@ -202,8 +221,8 @@ CornerRadius="10" Clicked="OnSearchClicked" />
                                                         </Grid.ColumnDefinitions>
 
                                                         <Label  Grid.Column="0" Text="{Binding PaymentDate}"  />
-                                                        <Label  Grid.Column="1" Text="{Binding Narration}" HorizontalOptions="Center"/>
-                                                        <Label  Grid.Column="2" Text="{Binding Amount}" HorizontalOptions="Center"/>
+                                                        <Label  Grid.Column="1" Text="{Binding Narration}" HorizontalOptions="Start"/>
+                                                        <Label  Grid.Column="2" Text="{Binding Amount}" HorizontalOptions="End"/>
 
                                                         <!-- Row Separator -->
                                                         <BoxView Grid.ColumnSpan="3" HeightRequest="1" BackgroundColor="LightGray" VerticalOptions="End" />

@@ -221,7 +221,9 @@ namespace TeaClient.UserHistory
                                     CreatedBy = _stg.CreatedBy,
                                     CollectionType=_stg.CollectionType,
                                     TransferFrom=_stg.TransferFrom,
-                                    VehicleFrom=_stg.VehicleFrom
+                                    VehicleFrom=_stg.VehicleFrom,
+                                    Remarks=_stg.Remarks,
+                                    GrossAmount=_stg.GrossAmount
                                 });
                             }
                         }
@@ -237,6 +239,30 @@ namespace TeaClient.UserHistory
             }
             }
 
+        
+
+         private async void OnPrintButtonClicked(object sender, EventArgs e)
+        {
+            try
+            {
+                Button button = sender as Button;
+                var item = button?.CommandParameter as StgHistoryModel;
+
+                if (item != null)
+                {
+                    PrintService prt = new PrintService();
+                    var deduct = item.Deduction.ToString() == "0" ? "Pending" : item.Deduction.ToString();
+                    var result = await prt.PrintParameters(item.CollectionDate, LoginData.LoginDetails[0].CompanyName.ToString().Trim(), item.ClientName, item.GradeName, item.ViewBag, deduct, item.FirstWeight.ToString(),
+                        item.FinalWeight.ToString(), item.GrossAmount.ToString(), item.Remarks, LoginData.LoginDetails[0].UserFirstName + " " + LoginData.LoginDetails[0].UserLastName);
+                    await DisplayAlert("Info", result, "Ok");
+                }
+            }
+            catch (Exception ex)
+            {
+                await DisplayAlert("Error", ex.Message, "Ok");
+
+            }
+        }
 
 
     }

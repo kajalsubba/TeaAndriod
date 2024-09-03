@@ -10,7 +10,7 @@
             <DatePicker x:Name="FromDate" Format="dd/MM/yyyy" MaximumDate="{x:Static sys:DateTime.Now}"/>
             <Label Text="To Date: (Mandatory)" />
             <DatePicker x:Name="ToDate" Format="dd/MM/yyyy" MaximumDate="{x:Static sys:DateTime.Now}"/>
-           
+
             <Entry  x:Name="Client" Placeholder="Select Client" TextChanged="SearchBar_OnTextChanged" BackgroundColor="#f9f9f9" TextColor="Black" FontSize="16" PlaceholderColor="#646b7a" />
 
             <!-- Ensure ListView is placed before other controls -->
@@ -36,14 +36,13 @@ CornerRadius="10" Clicked="OnSearchClicked" />
             <Frame BorderColor="LightBlue" BackgroundColor="#F8F8FF" CornerRadius="10" Padding="8" HasShadow="True" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
 
                 <ScrollView Orientation="Horizontal">
-                    <Grid>
+                    <!--<Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="*" />
 
                         </Grid.RowDefinitions>
 
-                        <!-- Column Headers -->
                         <Grid Grid.Row="0" BackgroundColor="#018353" Padding="5" HorizontalOptions="FillAndExpand">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
@@ -55,31 +54,24 @@ CornerRadius="10" Clicked="OnSearchClicked" />
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="*" />
-                                <!--<ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="*" />-->
+                                <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
-                            <Label Grid.Column="0" Text="SrlNo" FontAttributes="Bold" TextColor="White"   HorizontalOptions="Center" />
-
-                            <Label Grid.Column="1" Text="Date" FontAttributes="Bold" TextColor="White"  />
-                            <!--<Label Grid.Column="1" Text="Grade" FontAttributes="Bold" HorizontalOptions="Center" TextColor="White" />-->
-
+                            <Label Grid.Column="0" Text="Srl" FontAttributes="Bold" TextColor="White"   HorizontalOptions="Center" />
+                            <Label Grid.Column="1" Text="Date" FontAttributes="Bold" HorizontalOptions="Center" TextColor="White"  />
                             <Label Grid.Column="2" Text="Vehicle No" FontAttributes="Bold" TextColor="White" />
                             <Label Grid.Column="3" Text="Clinet" FontAttributes="Bold" HorizontalOptions="Start" TextColor="White" />
                             <Label Grid.Column="4" Text="Coll.(Kg)" FontAttributes="Bold" HorizontalOptions="Center" TextColor="White" />
-                            <!--<Label Grid.Column="5" Text="Deduction" FontAttributes="Bold" HorizontalOptions="Center" TextColor="White" />
-                            <Label Grid.Column="6" Text="Final Wgt" FontAttributes="Bold" HorizontalOptions="Center" TextColor="White" />-->
-                            <Label Grid.Column="5" Text="ViewBag" FontAttributes="Bold" HorizontalOptions="Start" TextColor="White" />
-                            <!--<Label Grid.Column="8" Text="Status" FontAttributes="Bold" HorizontalOptions="Center" TextColor="White" />-->
-                            <Label Grid.Column="6" Text="Collect By" FontAttributes="Bold" HorizontalOptions="Center" TextColor="White" />
-                            <Label Grid.Column="7" Text="Collect Type" FontAttributes="Bold" HorizontalOptions="Center" TextColor="White" />
-                            <Label Grid.Column="8" Text="Transfer From" FontAttributes="Bold" HorizontalOptions="Center" TextColor="White" />
-                            <!--<Label Grid.Column="12" Text="Vehicle From" FontAttributes="Bold" HorizontalOptions="Center" TextColor="White" />-->
+                            <Label Grid.Column="6" Text="Final Wgt" FontAttributes="Bold" HorizontalOptions="Center" TextColor="White" /> 
+                            <Label Grid.Column="7" Text="ViewBag" FontAttributes="Bold" HorizontalOptions="Start" TextColor="White" />
+                            <Label Grid.Column="8" Text="Collect By" FontAttributes="Bold" HorizontalOptions="Center" TextColor="White" />
+                            <Label Grid.Column="9" Text="Collect Type" FontAttributes="Bold" HorizontalOptions="Center" TextColor="White" />
+                            <Label Grid.Column="10" Text="Transfer From" FontAttributes="Bold" HorizontalOptions="Center" TextColor="White" />
+                            <Label Grid.Column="11" Text="Action" FontAttributes="Bold" HorizontalOptions="Center" TextColor="White" />
 
                         </Grid>
 
-                        <!-- CollectionView with Data -->
                         <CollectionView Grid.Row="1" ItemsSource="{Binding stgItems}">
                             <CollectionView.ItemsLayout>
                                 <GridItemsLayout Orientation="Vertical" Span="1" />
@@ -97,47 +89,32 @@ CornerRadius="10" Clicked="OnSearchClicked" />
                                             <ColumnDefinition Width="*" />
                                             <ColumnDefinition Width="*" />
                                             <ColumnDefinition Width="*" />
-                                            <!--<ColumnDefinition Width="*" />
                                             <ColumnDefinition Width="*" />
                                             <ColumnDefinition Width="*" />
-                                            <ColumnDefinition Width="*" />-->
+                                            <ColumnDefinition Width="*" />
                                         </Grid.ColumnDefinitions>
-                                        <Label   Grid.Column="0" Text="{Binding SrlNo}" HorizontalOptions="Center"/>
-                                        <Label   Grid.Column="1" Text="{Binding CollectionDate}"/>
-                                        <!--<Label  Grid.Column="1" Text="{Binding GradeName}" HorizontalOptions="Center"/>-->
-                                        <Label   Grid.Column="2" Text="{Binding VehicleNo}" />
-                                        <Label  Grid.Column="3" Text="{Binding ClientName}" HorizontalOptions="Start"/>
-                                        <Label   Grid.Column="4" Text="{Binding FirstWeight, StringFormat='{0:0}'}" HorizontalOptions="Center"/>
-                                        <!--<Label   Grid.Column="5" Text="{Binding Deduction, StringFormat='{0:0}'}" HorizontalOptions="Center"/>
-                                        <Label  Grid.Column="6" Text="{Binding FinalWeight, StringFormat='{0:0}'}" HorizontalOptions="Center"/>-->
-                                        <Label  Grid.Column="5" Text="{Binding ViewBag}" HorizontalOptions="Start"/>
-                                        <!--<Label   Grid.Column="8" Text="{Binding Status}"  HorizontalOptions="Center">
-                                            <Label.Style>
-                                                <Style TargetType="Label" >
-                                                    <Setter Property="TextColor" Value="Black" />
-                                                    --><!-- Default color --><!--
-                                                    <Style.Triggers>
-                                                        <DataTrigger TargetType="Label" Binding="{Binding Status}" Value="Rejected">
-                                                            <Setter Property="TextColor" Value="Red" />
-                                                        </DataTrigger>
-                                                        <DataTrigger  TargetType="Label" Binding="{Binding Status}" Value="Pending">
-                                                            <Setter Property="TextColor" Value="#018353" />
-                                                            <Setter Property="FontAttributes" Value="Bold" />
-                                                            --><!--<Setter Property="BackgroundColor" Value="#f7f25e" />--><!--
-                                                        </DataTrigger>
-                                                        --><!-- Add more DataTriggers for other status conditions if needed --><!--
-                                                    </Style.Triggers>
-                                                </Style>
-                                            </Label.Style>
-                                        </Label>-->
+                                        <Label Grid.Column="0" Text="{Binding SrlNo}" HorizontalOptions="Center"/>
+                                        <Label Grid.Column="1" Text="{Binding CollectionDate}" HorizontalOptions="Center"/>
+                                        <Label Grid.Column="2" Text="{Binding VehicleNo}" />
+                                        <Label Grid.Column="3" Text="{Binding ClientName}" HorizontalOptions="Start"/>
+                                        <Label Grid.Column="4" Text="{Binding FirstWeight, StringFormat='{0:0}'}" HorizontalOptions="Center"/>
+                                        <Label Grid.Column="6" Text="{Binding FinalWeight, StringFormat='{0:0}'}" HorizontalOptions="Center"/> 
+                                        <Label Grid.Column="7" Text="{Binding ViewBag}" HorizontalOptions="Start"/>
+                                        <Label Grid.Column="8" Text="{Binding CreatedBy}"  HorizontalOptions="Center"/>
+                                        <Label Grid.Column="9" Text="{Binding CollectionType}"  HorizontalOptions="Center" />
+                                        <Label Grid.Column="10" Text="{Binding TransferFrom}"   HorizontalOptions="Center" />
 
-                                        <Label Grid.Column="6" Text="{Binding CreatedBy}"  HorizontalOptions="Center"/>
-                                        <Label Grid.Column="7" Text="{Binding CollectionType}"  HorizontalOptions="Center" />
-                                        <Label Grid.Column="8" Text="{Binding TransferFrom}"   HorizontalOptions="Center" />
-                                        <!--<Label Grid.Column="12" Text="{Binding VehicleFrom}"   HorizontalOptions="Center" />-->
-
-                                        <!-- Row Separator -->
-                                        <BoxView Grid.ColumnSpan="9" HeightRequest="1" BackgroundColor="LightGray" VerticalOptions="End" />
+                                        <Button Grid.Column="11" Text="Print" HorizontalOptions="Start"
+                                        Clicked="OnPrintButtonClicked"  
+                                        TextColor="White" 
+                                        BackgroundColor="#008CBA"
+                                        BorderColor="Gray"
+                                        BorderWidth="1"
+        
+                                        CornerRadius="5"     
+                                                CommandParameter="{Binding .}"/>
+                                        
+                                        <BoxView Grid.ColumnSpan="12" HeightRequest="1" BackgroundColor="LightGray" VerticalOptions="End" />
 
 
                                     </Grid>
@@ -146,7 +123,86 @@ CornerRadius="10" Clicked="OnSearchClicked" />
                             </CollectionView.ItemTemplate>
                         </CollectionView>
 
+                    </Grid>-->
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+
+                        <!-- Header Row -->
+                        <Grid Grid.Row="0" BackgroundColor="#018353" Padding="5" HorizontalOptions="FillAndExpand">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                        
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Column="0" Text="Srl" FontAttributes="Bold" TextColor="White" HorizontalOptions="Center" />
+                            <Label Grid.Column="1" Text="Date" FontAttributes="Bold" HorizontalOptions="Center" TextColor="White" />
+                            <Label Grid.Column="2" Text="Client" FontAttributes="Bold" HorizontalOptions="Start" TextColor="White" />
+                            <Label Grid.Column="3" Text="Coll.(Kg)" FontAttributes="Bold" HorizontalOptions="Center" TextColor="White" />
+                            <Label Grid.Column="4" Text="ViewBag" FontAttributes="Bold" HorizontalOptions="Start" TextColor="White" />
+                            <Label Grid.Column="5" Text="Remarks" FontAttributes="Bold" HorizontalOptions="Start" TextColor="White" />
+                            <Label Grid.Column="6" Text="Collect By" FontAttributes="Bold" HorizontalOptions="Center" TextColor="White" />
+                            <Label Grid.Column="7" Text="Collect Type" FontAttributes="Bold" HorizontalOptions="Center" TextColor="White" />
+                            <Label Grid.Column="8" Text="Transfer From" FontAttributes="Bold" HorizontalOptions="Center" TextColor="White" />
+                            <Label Grid.Column="9" Text="Action" FontAttributes="Bold" HorizontalOptions="Center" TextColor="White" />
+                        </Grid>
+
+                        <!-- CollectionView for Data -->
+                        <CollectionView Grid.Row="1" ItemsSource="{Binding stgItems}">
+                            <CollectionView.ItemsLayout>
+                                <GridItemsLayout Orientation="Vertical" Span="1" />
+                            </CollectionView.ItemsLayout>
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid Margin="0,0,0,10">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
+                                         
+                                        </Grid.ColumnDefinitions>
+                                        <Label Grid.Column="0" Text="{Binding SrlNo}" HorizontalOptions="Center"/>
+                                        <Label Grid.Column="1" Text="{Binding CollectionDate}" HorizontalOptions="Center"/>
+                                        <Label Grid.Column="2" Text="{Binding ClientName}" HorizontalOptions="Start"/>
+                                        <Label Grid.Column="3" Text="{Binding FirstWeight, StringFormat='{0:0}'}" HorizontalOptions="Center"/>
+                                        <Label Grid.Column="4" Text="{Binding ViewBag}" HorizontalOptions="Start"/>
+                                        <Label Grid.Column="5" Text="{Binding Remarks}" HorizontalOptions="Start"/>
+
+                                        <Label Grid.Column="6" Text="{Binding CreatedBy}" HorizontalOptions="Center"/>
+                                        <Label Grid.Column="7" Text="{Binding CollectionType}" HorizontalOptions="Center"/>
+                                        <Label Grid.Column="8" Text="{Binding TransferFrom}" HorizontalOptions="Center"/>
+                                        <Button Grid.Column="9" Text="Print" HorizontalOptions="Start"
+                            Clicked="OnPrintButtonClicked"
+                            TextColor="White"
+                            BackgroundColor="#008CBA"
+                            BorderColor="Gray"
+                            BorderWidth="1"
+                            CornerRadius="5"
+                            CommandParameter="{Binding .}" />
+                                        <BoxView Grid.ColumnSpan="10" HeightRequest="1" BackgroundColor="LightGray" VerticalOptions="End"/>
+                                    </Grid>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
                     </Grid>
+
                 </ScrollView>
             </Frame>
 
@@ -165,17 +221,17 @@ CornerRadius="10" Clicked="OnSearchClicked" />
                                 <ColumnDefinition Width="*" />
                                 <!--<ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="*" />-->
-                              
+
                                 <!--<ColumnDefinition Width="*" />
                              <ColumnDefinition Width="*" />
                              <ColumnDefinition Width="*" />-->
                             </Grid.ColumnDefinitions>
-                         
+
                             <Label Grid.Column="0" Text="Total" FontAttributes="Bold" TextColor="White" />
                             <Label Grid.Column="1" Text="{Binding TotalFirstWeight, StringFormat='Coll.(KG): {0:0}'}" FontAttributes="Bold" TextColor="White" />
                             <!--<Label Grid.Column="2" Text="{Binding TotalDeduction, StringFormat='Deduction: {0:0}'}" FontAttributes="Bold" TextColor="White" />
                             <Label Grid.Column="3" Text="{Binding TotalFinalWeight, StringFormat='Final Wht: {0:0}'}" FontAttributes="Bold" TextColor="White" />-->
-                          
+
 
                         </Grid>
                     </Grid>

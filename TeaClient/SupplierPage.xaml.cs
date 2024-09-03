@@ -59,6 +59,13 @@ namespace TeaClient
             await Navigation.PopModalAsync();
 
         }
+        protected override bool OnBackButtonPressed()
+        {
+            //  DisplayConfirmation();
+            return true; // Do not continue processing the back button
+        }
+
+
         public async void ListOfStore() //List of Countries  
         {
             try

@@ -35,6 +35,11 @@ namespace TeaClient
             
           
         }
+        protected override bool OnBackButtonPressed()
+        {
+            //  DisplayConfirmation();
+            return true; // Do not continue processing the back button
+        }
 
         private async void Button_Clicked(object sender, EventArgs e)
         {

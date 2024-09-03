@@ -296,7 +296,7 @@ namespace TeaClient.LocalDataShow
                 {
                     PrintService prt = new PrintService();
                     var deduct = item.Deduction.ToString() == "0" ? "Pending" : item.Deduction.ToString();
-                    var result = await prt.PrintParameters(LoginData.LoginDetails[0].CompanyName.ToString().Trim(), item.ClientName, item.GradeName, item.BagList, deduct, item.FirstWeight.ToString(),
+                    var result = await prt.PrintParameters(item.CollectionDate.ToString("dd/MM/yyyy"),LoginData.LoginDetails[0].CompanyName.ToString().Trim(), item.ClientName, item.GradeName, item.BagList, deduct, item.FirstWeight.ToString(),
                         item.FinalWeight.ToString(), item.GrossAmount.ToString(), item.Remarks, LoginData.LoginDetails[0].UserFirstName + " " + LoginData.LoginDetails[0].UserLastName);
                     await DisplayAlert("Info", result, "Ok");
                 }
@@ -366,7 +366,9 @@ namespace TeaClient.LocalDataShow
                         BagList = item.BagList,
                         CollectionType = item.CollectionType,
                         TransferFrom = item.TransferFrom,
-                        VehicleFrom = item.VehicleFrom
+                        VehicleFrom = item.VehicleFrom,
+                        FinishTimeInApp=item.FinishTimeInApp,
+                        UpdateTimeInApp=item.UpdateTimeInApp
                     };
                     _stgData.Add(objStg);
                 }
