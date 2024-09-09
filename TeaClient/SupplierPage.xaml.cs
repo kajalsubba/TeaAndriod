@@ -37,7 +37,7 @@ namespace TeaClient
         readonly ObservableCollection<string> data = new ObservableCollection<string>();
         readonly ClientLoginData LoginData = new ClientLoginData();
 
-       // private MediaFile _selectedImageFile;
+        // private MediaFile _selectedImageFile;
 
         public IList<FactoryAccountModel> Accountlists { get; set; }
         public SupplierPage()
@@ -48,8 +48,8 @@ namespace TeaClient
             LoginData = SessionManager.GetSessionValue<ClientLoginData>("loginDetails");
             GetFactoryAccount();
             GetVehicle();
-          
-           // HeaderName.Text = "Welcome " + LoginData.ClientLoginDetails[0].ClientName;
+
+            // HeaderName.Text = "Welcome " + LoginData.ClientLoginDetails[0].ClientName;
         }
         private async void OnSubmitClicked(object sender, EventArgs e)
         {
@@ -135,12 +135,12 @@ namespace TeaClient
         }
         public async Task SaveSupplier()
         {
-           // await UploadChallan(0);
+            // await UploadChallan(0);
             string vehicle = VehicleNo.Text;
             string challan = ChallanWgt.Text;
             if (string.IsNullOrWhiteSpace(vehicle))
             {
-                await DisplayAlert("Validation","Please Enter Vehicle", "OK");
+                await DisplayAlert("Validation", "Please Enter Vehicle", "OK");
                 return;
             }
             else if (string.IsNullOrWhiteSpace(challan))
@@ -148,7 +148,7 @@ namespace TeaClient
                 await DisplayAlert("Validation", "Please Enter Challan Weight", "OK");
                 return;
             }
-            else if (FactoryName.SelectedIndex==-1)
+            else if (FactoryName.SelectedIndex == -1)
             {
                 await DisplayAlert("Validation", "Please Select Factory", "OK");
                 return;
@@ -168,7 +168,7 @@ namespace TeaClient
             }
 
 
-            string url = _appSetting.ApiUrl+"Collection/SaveSupplier";
+            string url = _appSetting.ApiUrl + "Collection/SaveSupplier";
 
             var selectedAccount = AccountName.SelectedItem as FactoryAccountModel;
             DateTime selectedDate = collectionDate.Date;
@@ -205,10 +205,10 @@ namespace TeaClient
 
                     if (valueData.Id != 0)
                     {
-                       
-                      await UploadChallan(valueData.Id);
-                      await DisplayAlert("Success", valueData.Message, "OK");
-                       ChallanImage.Source = null;
+
+                        await UploadChallan(valueData.Id);
+                        await DisplayAlert("Success", valueData.Message, "OK");
+                        ChallanImage.Source = null;
 
                         clearFormControl();
                     }
@@ -224,7 +224,7 @@ namespace TeaClient
 
         public async Task SaveSupplierUsingMQ()
         {
-            
+
             string vehicle = VehicleNo.Text;
             string challan = ChallanWgt.Text;
             if (string.IsNullOrWhiteSpace(vehicle))
@@ -257,8 +257,8 @@ namespace TeaClient
             }
 
 
-              string url = _appSetting.ApiUrl + "MessageBroker/ProduceSupplier";
-         
+            string url = _appSetting.ApiUrl + "MessageBroker/ProduceSupplier";
+
             var selectedAccount = AccountName.SelectedItem as FactoryAccountModel;
             DateTime selectedDate = collectionDate.Date;
             string formattedDate = selectedDate.ToString("yyyy-MM-dd");
@@ -267,28 +267,28 @@ namespace TeaClient
             {
                 using (MultipartFormDataContent formData = new MultipartFormDataContent())
                 {
-                    // Add image data
-                   // formData.Add(new IFormFile(ChallanImage), "ChallanImage", "your_image.png");
-
-                    // Add additional form data
-                    formData.Add(new StringContent("0"), "CollectionId");
-                    formData.Add(new StringContent(formattedDate), "CollectionDate");
-                    formData.Add(new StringContent(VehicleNo.Text), "VehicleNo");
-                    formData.Add(new StringContent(LoginData.ClientLoginDetails[0].ClientId.ToString()), "ClientId");
-                    formData.Add(new StringContent(selectedAccount.AccountId.ToString()), "AccountId");
-                    formData.Add(new StringContent(FineLeaf.Text), "FineLeaf");
-                    formData.Add(new StringContent(ChallanWgt.Text), "ChallanWeight");
-                    formData.Add(new StringContent("0"), "Rate");
-                    formData.Add(new StringContent("0"), "GrossAmount");
-                    formData.Add(new StringContent("1"), "TripId");
-                    formData.Add(new StringContent("Pending"), "Status");
-                    formData.Add(new StringContent(remarksEditor.Text??""), "Remarks");
-                    formData.Add(new StreamContent(imageStream), "ChallanImage", "your_image.png");
-                    formData.Add(new StringContent(LoginData.ClientLoginDetails[0].UserId.ToString()), "CreatedBy");
-                    formData.Add(new StringContent(LoginData.ClientLoginDetails[0].TenantId.ToString()), "TenantId");
-
                     try
                     {
+                       // string fineText = FineLeaf?.Text ?? string.Empty;
+
+                        // Add additional form data
+                        formData.Add(new StringContent("0"), "CollectionId");
+                        formData.Add(new StringContent(formattedDate), "CollectionDate");
+                        formData.Add(new StringContent(VehicleNo.Text), "VehicleNo");
+                        formData.Add(new StringContent(LoginData.ClientLoginDetails[0].ClientId.ToString()), "ClientId");
+                        formData.Add(new StringContent(selectedAccount.AccountId.ToString()), "AccountId");
+                        formData.Add(new StringContent(FineLeaf?.Text ?? string.Empty), "FineLeaf");
+                        formData.Add(new StringContent(ChallanWgt.Text), "ChallanWeight");
+                        formData.Add(new StringContent("0"), "Rate");
+                        formData.Add(new StringContent("0"), "GrossAmount");
+                        formData.Add(new StringContent("1"), "TripId");
+                        formData.Add(new StringContent("Pending"), "Status");
+                        formData.Add(new StringContent(remarksEditor.Text ?? ""), "Remarks");
+                        formData.Add(new StreamContent(imageStream), "ChallanImage", "your_image.png");
+                        formData.Add(new StringContent(LoginData.ClientLoginDetails[0].UserId.ToString()), "CreatedBy");
+                        formData.Add(new StringContent(LoginData.ClientLoginDetails[0].TenantId.ToString()), "TenantId");
+
+
 
                         HttpResponseMessage response = await httpClient.PostAsync(url, formData);
                         response.EnsureSuccessStatusCode();
@@ -301,10 +301,9 @@ namespace TeaClient
 
                             if (valueData.Id != 0)
                             {
-                                 await DisplayAlert("Success", valueData.Message, "OK");
-                              //  _selectedImageFile.Dispose();
-                                 ChallanImage.Source = null;
-                                 clearFormControl();
+                                await DisplayAlert("Success", valueData.Message, "OK");
+                                ChallanImage.Source = null;
+                                clearFormControl();
                             }
                             else
                             {
@@ -385,12 +384,12 @@ namespace TeaClient
                 return null;
             }
         }
-        private async Task  UploadChallan(long collId)
+        private async Task UploadChallan(long collId)
         {
-            string url = _appSetting.ApiUrl+"Collection/UploadSupplierChallan";
+            string url = _appSetting.ApiUrl + "Collection/UploadSupplierChallan";
             // Load the image from the embedded resource
             // string imagePath = "YourNamespace.Images.your_image.png";
-          //  ImageConverter imageConverter = new ImageConverter();
+            //  ImageConverter imageConverter = new ImageConverter();
 
             Stream imageStream = ConvertImagePathToStream(FilePath);
 
@@ -417,23 +416,23 @@ namespace TeaClient
 
                     try
                     {
-                   
+
                         HttpResponseMessage response = await httpClient.PostAsync(url, formData);
                         response.EnsureSuccessStatusCode();
 
                         // If needed, read the response content
                         string responseBody = await response.Content.ReadAsStringAsync();
-                       // Console.WriteLine("Response: " + responseBody);
+                        // Console.WriteLine("Response: " + responseBody);
                     }
                     catch (HttpRequestException ex)
                     {
                         // Console.WriteLine("HTTP Request Error: " + ex.Message);
-                        await DisplayAlert("Error",ex.Message, "ok");
+                        await DisplayAlert("Error", ex.Message, "ok");
                     }
                 }
             }
         }
-        
+
         public void clearFormControl()
         {
             VehicleNo.Text = "";
@@ -441,7 +440,7 @@ namespace TeaClient
             //{
             //    FactoryName.SelectedIndex = -1;
             //}
-           // FactoryName.SelectedItem = null;
+            // FactoryName.SelectedItem = null;
             //AccountName.SelectedIndex = -1;
             FineLeaf.Text = "";
             ChallanWgt.Text = "";
@@ -450,7 +449,7 @@ namespace TeaClient
         public async void GetFactoryAccount()
         {
 
-            string url = _appSetting.ApiUrl+"Master/GetFactoryAccount";
+            string url = _appSetting.ApiUrl + "Master/GetFactoryAccount";
 
             //var selectedTenant = (TenantList)Tenant.SelectedItem;
 
@@ -458,7 +457,7 @@ namespace TeaClient
             var dataToSend = new
             {
                 IsClientView = true,
-                TenantId =Convert.ToInt32(LoginData.ClientLoginDetails[0].TenantId)
+                TenantId = Convert.ToInt32(LoginData.ClientLoginDetails[0].TenantId)
             };
 
             using (HttpClient client = new HttpClient())
@@ -477,7 +476,7 @@ namespace TeaClient
                     }
 
                 }
-              
+
             }
 
 
@@ -486,7 +485,7 @@ namespace TeaClient
         public async void GetVehicle()
         {
 
-            string url =_appSetting.ApiUrl+ "Master/GetVehicle";
+            string url = _appSetting.ApiUrl + "Master/GetVehicle";
 
             //var selectedTenant = (TenantList)Tenant.SelectedItem;
 
@@ -510,11 +509,11 @@ namespace TeaClient
                     {
                         data.Add(vehicle.VehicleNo);
 
-                      //  Vehiclelists.Add(new VehicleModel { VehicleId = vehicle.VehicleId, VehicleNo = vehicle.VehicleNoe });
+                        //  Vehiclelists.Add(new VehicleModel { VehicleId = vehicle.VehicleId, VehicleNo = vehicle.VehicleNoe });
                     }
 
                 }
-        
+
             }
 
 
@@ -522,7 +521,7 @@ namespace TeaClient
         string imagefile;
         private async void OnCaptureClicked(object sender, EventArgs e)
         {
-         //   var status = await Permissions.RequestAsync<Permissions.Camera>();
+            //   var status = await Permissions.RequestAsync<Permissions.Camera>();
 
             if (!CrossMedia.Current.IsTakePhotoSupported && !CrossMedia.Current.IsPickPhotoSupported)
             {
@@ -533,26 +532,6 @@ namespace TeaClient
             {
                 try
                 {
-                    //var action = await DisplayActionSheet("Select Source", "Cancel", null, "Take Photo", "Pick Photo");
-
-                    //switch (action)
-                    //{
-                    //    case "Take Photo":
-                    //        _selectedImageFile = await CrossMedia.Current.TakePhotoAsync(new StoreCameraMediaOptions
-                    //        {
-                    //            Directory = "TeaImages",
-                    //            Name = DateTime.Now.ToString() + ".jpg",
-                    //            CompressionQuality = 92,
-                    //            SaveToAlbum = true,
-                    //            PhotoSize = PhotoSize.Medium
-                    //        });
-                    //        break;
-                    //    case "Pick Photo":
-                    //_selectedImageFile = await CrossMedia.Current.PickPhotoAsync(new PickMediaOptions
-                    //{
-                    //    PhotoSize = PhotoSize.Medium,
-                    //    CompressionQuality = 92
-                    //});
 
 
                     await CrossMedia.Current.Initialize();
@@ -579,34 +558,11 @@ namespace TeaClient
                 }
                 catch (Exception ex)
                 {
-                    System.Diagnostics.Debug.WriteLine("GalleryException:" + ex);
+                    // System.Diagnostics.Debug.WriteLine("GalleryException:" + ex);
+                    await DisplayAlert("Error", ex.Message, "ok");
                 }
 
-                //        break;
 
-                //    default:
-                //        return;
-                //}
-
-                //var file = await CrossMedia.Current.TakePhotoAsync(new StoreCameraMediaOptions
-                //{
-                //    Directory = "TeaImages",
-                //    Name = DateTime.Now.ToString() + ".jpg",
-                //    CompressionQuality=92,
-                //    SaveToAlbum = true,
-                //}) ; 
-                //if (_selectedImageFile == null)
-                //{
-                //    return;
-
-
-                //}
-                //FilePath = _selectedImageFile.Path;
-                //ChallanImage.Source = ImageSource.FromStream(() =>
-                //{
-                //    var stream = _selectedImageFile.GetStream();
-                //    return stream;
-                //});
 
             }
         }
