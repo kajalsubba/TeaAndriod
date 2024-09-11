@@ -56,7 +56,7 @@ namespace TeaClient
             var loadingPage = new LoadingPage();
             await Navigation.PushModalAsync(loadingPage);
             await SaveSupplierUsingMQ();
-            await Navigation.PopModalAsync();
+           // await Navigation.PopModalAsync();
 
         }
         protected override bool OnBackButtonPressed()
@@ -317,6 +317,10 @@ namespace TeaClient
                         await Navigation.PopModalAsync();
                         await DisplayAlert("Error", ex.Message, "ok");
                     }
+                    finally
+                    {
+                        await Navigation.PopModalAsync();
+                    }
                 }
 
             }
@@ -433,18 +437,23 @@ namespace TeaClient
             }
         }
 
-        public void clearFormControl()
+        public async void clearFormControl()
         {
-            VehicleNo.Text = "";
-            //if (FactoryName != null)
-            //{
-            //    FactoryName.SelectedIndex = -1;
-            //}
-            // FactoryName.SelectedItem = null;
-            //AccountName.SelectedIndex = -1;
-            FineLeaf.Text = "";
-            ChallanWgt.Text = "";
-            remarksEditor.Text = "";
+            try
+            {
+                VehicleNo.Text = "";
+                FineLeaf.Text = "";
+                ChallanWgt.Text = "";
+                remarksEditor.Text = ""; 
+                //FactoryName.ItemsSource = null;
+                //AccountName.ItemsSource = null;
+            }
+            catch ( Exception ex )
+            {
+                await DisplayAlert("Error", ex.Message, "ok");
+            }
+           
+            
         }
         public async void GetFactoryAccount()
         {

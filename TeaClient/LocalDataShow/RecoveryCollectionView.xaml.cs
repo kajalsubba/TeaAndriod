@@ -1,13 +1,8 @@
-﻿using Android.Telephony.Data;
-using Android.Webkit;
-using Java.Util.Streams;
-using Microsoft.Net.Http.Headers;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using SQLite;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
@@ -17,16 +12,13 @@ using TeaClient.Model;
 using TeaClient.Services;
 using TeaClient.SessionHelper;
 using TeaClient.SQLLite;
-using TeaClient.UserModule;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
-using static Android.Content.ClipData;
-using static Android.Provider.Telephony.Mms;
 
 namespace TeaClient.LocalDataShow
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class DailyCollectionView : ContentPage
+    public partial class RecoveryCollectionView : ContentPage
     {
         public SQLiteConnection conn;
         public SaveLocalCollectionModel _CollectionModel;
@@ -36,191 +28,49 @@ namespace TeaClient.LocalDataShow
         readonly AppSettings _appSetting = AppConfigService.GetConfig();
         IList<SaveLocalCollectionModel> CollectionList = new List<SaveLocalCollectionModel>();
         public IList<SaveLocalCollectionModel> collectionData { get; set; }
-
         long VehicleFrom;
-        public DailyCollectionView(string _VehicleNo, int _Trip, long _VehicleFrom)
+        DateTime CollectionDate;
+        public RecoveryCollectionView(string _VehicleNo, int _Trip, long _VehicleFrom,DateTime _CollectionDate)
         {
             InitializeComponent();
+
             collectionData = new ObservableCollection<SaveLocalCollectionModel>();
             LoginData = SessionManager.GetSessionValue<UserModel>("UserDetails");
             BindingContext = this;
             VehicleNo = _VehicleNo;
             TripId = _Trip;
             VehicleFrom = _VehicleFrom;
-
+            CollectionDate = _CollectionDate;
             NavigationPage.SetHasBackButton(this, false);
             conn = DependencyService.Get<ISqlLite>().GetConnection();
             conn.CreateTable<SaveLocalCollectionModel>();
-            HeaderName.Text = DateTime.Now.ToString("dd/MM/yyyy");
+            HeaderName.Text = _CollectionDate.ToString("dd/MM/yyyy");
             CollectionDetails();
+        }
+        private async void OnBackClicked(object sender, EventArgs e)
+        {
+            await Navigation.PushAsync(new UserModule.UserDashboardPage());
 
         }
         protected override bool OnBackButtonPressed()
         {
-            DisplayConfirmation();
             return true; // Do not continue processing the back button
         }
-        async void DisplayConfirmation()
-        {
-
-            await Navigation.PushAsync(new UserModule.CollectionPage(VehicleNo, TripId, VehicleFrom));
-
-
-        }
-
-        public async void TransferData()
-        {
-            try
-            {
-
-                string url = _appSetting.ApiUrl + "Collection/GetTransferStgData";
-
-                GetTransferDataModel dataToSend = new GetTransferDataModel
-                {
-                    CollectionDate = DateTime.Now.ToString("yyyy-MM-dd"),
-                    TripId = TripId,
-                    VehicleNo = VehicleNo,
-                    TenantId = Convert.ToInt32(LoginData.LoginDetails[0].TenantId),
-                    CreatedBy = Convert.ToInt32(LoginData.LoginDetails[0].UserId),
-                };
-                using (HttpClient client = new HttpClient())
-                {
-                    var json = JsonConvert.SerializeObject(dataToSend);
-                    var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
-                    var response = await client.PostAsync(url, content);
-                    var results = await response.Content.ReadAsStringAsync();
-                    if (response.IsSuccessStatusCode)
-                    {
-                        var valueData = JsonConvert.DeserializeObject<TransferDataList>(results);
-
-                        if (valueData.TransferData.Count > 0)
-                        {
-                            foreach (var item in valueData.TransferData)
-                            {
-                                await MergeTransferCollection(item.ClientId, item.ClientName, item.FinalWeight,
-                                      item.WetLeaf, item.LongLeaf, item.Deduction, item.FinalWeight, item.Rate,
-                                      item.GrossAmount, item.GradeId, item.GradeName, item.Remarks, item.BagList, item.TransferFrom, item.VehicleFrom);
-                            }
-                            var result = await UpdateTransferStatusInServer();
-
-                            await DisplayAlert("Success", result.Message, "OK");
-
-
-                        }
-
-                        await CollectionDetails();
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                await DisplayAlert("Error", ex.Message, "Ok");
-
-            }
-        }
-
-        private async Task<SaveReturn> UpdateTransferStatusInServer()
-        {
-            try
-            {
-                string url = _appSetting.ApiUrl + "Collection/UpdateTransferStatus";
-
-                GetTransferDataModel dataToSend = new GetTransferDataModel
-                {
-                    CollectionDate = DateTime.Now.ToString("yyyy-MM-dd"),
-                    TripId = TripId,
-                    VehicleNo = VehicleNo,
-                    TenantId = Convert.ToInt32(LoginData.LoginDetails[0].TenantId),
-                    CreatedBy = Convert.ToInt32(LoginData.LoginDetails[0].UserId),
-                };
-                using (HttpClient client = new HttpClient())
-                {
-                    var json = JsonConvert.SerializeObject(dataToSend);
-                    var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
-                    var response = await client.PostAsync(url, content);
-                    var results = await response.Content.ReadAsStringAsync();
-                    if (response.IsSuccessStatusCode)
-                    {
-                        var valueData = JsonConvert.DeserializeObject<SaveReturn>(results);
-                        return valueData;
-                    }
-                    return null;
-                }
-
-            }
-            catch (Exception ex)
-            {
-                await DisplayAlert("Error", ex.Message, "Ok");
-                return null;
-            }
-
-        }
-        private async Task MergeTransferCollection(long ClientId, string ClientName, int FirstWgt,
-            int WetLeaf, int LongLeaf, int Deduction, int FinalWgt, decimal Rate, decimal grossAmt,
-            int GradeId, string GradeName, string Remarks, string Bagslist, long TransferFrom, long VehicleFrom)
-        {
-            try
-            {
-
-                SaveLocalCollectionModel _collect = new SaveLocalCollectionModel();
-                _collect.CollectionDate = DateTime.Now.Date;
-                _collect.TripId = TripId;
-                _collect.VehicleNo = VehicleNo;
-                _collect.ClientId = ClientId;
-                _collect.ClientName = ClientName;
-                _collect.FirstWeight = FirstWgt;
-                _collect.WetLeaf = WetLeaf;
-                _collect.LongLeaf = LongLeaf;
-                _collect.Deduction = Deduction;
-                _collect.FinalWeight = FinalWgt;
-                _collect.Rate = Rate;
-                _collect.GrossAmount = grossAmt;
-                _collect.GradeId = GradeId;
-                _collect.GradeName = GradeName;
-                _collect.Remarks = Remarks ?? "";
-                _collect.TenantId = Convert.ToInt32(LoginData.LoginDetails[0].TenantId);
-                _collect.Status = "Pending";
-                _collect.DataSendToServer = false;
-                _collect.CollectionType = "Transfer";
-                _collect.BagList = Bagslist;
-                _collect.CreatedBy = Convert.ToInt32(LoginData.LoginDetails[0].UserId);
-                _collect.CollectionType = "Transfer";
-                _collect.TransferFrom = TransferFrom;
-                _collect.VehicleFrom = VehicleFrom;
-
-                conn.Insert(_collect);
-
-            }
-            catch (Exception ex)
-            {
-
-                await DisplayAlert("Error", ex.Message, "Ok");
-
-            }
-
-            finally
-            {
-
-            }
-
-        }
-     
         public async Task CollectionDetails()
         {
 
             int tenantId = Convert.ToInt32(LoginData.LoginDetails[0].TenantId);
             int userId = Convert.ToInt32(LoginData.LoginDetails[0].UserId);
-            DateTime collectionDate = DateTime.Now.Date;
+            //DateTime collectionDate = DateTime.Now.Date;
 
             //    var CollectionDetails1 = (from x in conn.Table<SaveLocalCollectionModel>() select x).ToList();
 
             CollectionList = (from x in conn.Table<SaveLocalCollectionModel>()
                               where x.TenantId == tenantId
-                               && x.CollectionDate == collectionDate
+                              // && x.CollectionDate == collectionDate
                                && x.CreatedBy == userId
                                && x.DataSendToServer == false
-                              //  && x.CollectionType=="Self"
-                              select x).ToList();
+                                select x).ToList();
 
 
             myListView.ItemsSource = CollectionList;
@@ -239,7 +89,6 @@ namespace TeaClient.LocalDataShow
             FinalTotal.Text = "Total Final: " + _finalWgtTotal;
 
         }
-
 
         private async void OnAddButtonClicked(object sender, EventArgs e)
         {
@@ -283,8 +132,6 @@ namespace TeaClient.LocalDataShow
 
             }
         }
-
-
         private async void OnPrintButtonClicked(object sender, EventArgs e)
         {
             try
@@ -297,7 +144,7 @@ namespace TeaClient.LocalDataShow
                 {
                     PrintService prt = new PrintService();
                     var deduct = item.Deduction.ToString() == "0" ? "Pending" : item.Deduction.ToString();
-                    var result = await prt.PrintParameters(item.CollectionDate.ToString("dd/MM/yyyy"),LoginData.LoginDetails[0].CompanyName.ToString().Trim(), item.ClientName, item.GradeName, item.BagList, deduct, item.FirstWeight.ToString(),
+                    var result = await prt.PrintParameters(item.CollectionDate.ToString("dd/MM/yyyy"), LoginData.LoginDetails[0].CompanyName.ToString().Trim(), item.ClientName, item.GradeName, item.BagList, deduct, item.FirstWeight.ToString(),
                         item.FinalWeight.ToString(), item.GrossAmount.ToString(), item.Remarks, LoginData.LoginDetails[0].UserFirstName + " " + LoginData.LoginDetails[0].UserLastName);
                     await DisplayAlert("Info", result, "Ok");
                 }
@@ -313,6 +160,93 @@ namespace TeaClient.LocalDataShow
         {
             TransferData();
         }
+        public async void TransferData()
+        {
+            try
+            {
+
+                string url = _appSetting.ApiUrl + "Collection/GetTransferStgData";
+
+                GetTransferDataModel dataToSend = new GetTransferDataModel
+                {
+                    CollectionDate = CollectionDate.ToString("yyyy-MM-dd"),
+                    TripId = TripId,
+                    VehicleNo = VehicleNo,
+                    TenantId = Convert.ToInt32(LoginData.LoginDetails[0].TenantId),
+                    CreatedBy = Convert.ToInt32(LoginData.LoginDetails[0].UserId),
+                };
+                using (HttpClient client = new HttpClient())
+                {
+                    var json = JsonConvert.SerializeObject(dataToSend);
+                    var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
+                    var response = await client.PostAsync(url, content);
+                    var results = await response.Content.ReadAsStringAsync();
+                    if (response.IsSuccessStatusCode)
+                    {
+                        var valueData = JsonConvert.DeserializeObject<TransferDataList>(results);
+
+                        if (valueData.TransferData.Count > 0)
+                        {
+                            foreach (var item in valueData.TransferData)
+                            {
+                                await MergeTransferCollection(item.CollectionDate,item.ClientId, item.ClientName, item.FinalWeight,
+                                      item.WetLeaf, item.LongLeaf, item.Deduction, item.FinalWeight, item.Rate,
+                                      item.GrossAmount, item.GradeId, item.GradeName, item.Remarks, item.BagList, item.TransferFrom, item.VehicleFrom);
+                            }
+                            var result = await UpdateTransferStatusInServer();
+
+                            await DisplayAlert("Success", result.Message, "OK");
+
+
+                        }
+
+                        await CollectionDetails();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                await DisplayAlert("Error", ex.Message, "Ok");
+
+            }
+        }
+        private async Task<SaveReturn> UpdateTransferStatusInServer()
+        {
+            try
+            {
+                string url = _appSetting.ApiUrl + "Collection/UpdateTransferStatus";
+
+                GetTransferDataModel dataToSend = new GetTransferDataModel
+                {
+                    CollectionDate = CollectionDate.ToString("yyyy-MM-dd"),
+                    TripId = TripId,
+                    VehicleNo = VehicleNo,
+                    TenantId = Convert.ToInt32(LoginData.LoginDetails[0].TenantId),
+                    CreatedBy = Convert.ToInt32(LoginData.LoginDetails[0].UserId),
+                };
+                using (HttpClient client = new HttpClient())
+                {
+                    var json = JsonConvert.SerializeObject(dataToSend);
+                    var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
+                    var response = await client.PostAsync(url, content);
+                    var results = await response.Content.ReadAsStringAsync();
+                    if (response.IsSuccessStatusCode)
+                    {
+                        var valueData = JsonConvert.DeserializeObject<SaveReturn>(results);
+                        return valueData;
+                    }
+                    return null;
+                }
+
+            }
+            catch (Exception ex)
+            {
+                await DisplayAlert("Error", ex.Message, "Ok");
+                return null;
+            }
+
+        }
+
         public async Task SaveSTGUsingMQ()
         {
             try
@@ -347,8 +281,8 @@ namespace TeaClient.LocalDataShow
                         CollectionType = item.CollectionType,
                         TransferFrom = item.TransferFrom,
                         VehicleFrom = item.VehicleFrom,
-                        FinishTimeInApp=item.FinishTimeInApp,
-                        UpdateTimeInApp=item.UpdateTimeInApp
+                        FinishTimeInApp = item.FinishTimeInApp,
+                        UpdateTimeInApp = item.UpdateTimeInApp
                     };
                     _stgData.Add(objStg);
                 }
@@ -405,46 +339,6 @@ namespace TeaClient.LocalDataShow
 
             }
         }
-
-        private async void OnSendToServerClicked(object sender, EventArgs e)
-        {
-            var _submit = await DisplayAlert("Save", "Do you want to send to server! ", "Yes", "No");
-            if (_submit)
-            {
-                await SaveSTGUsingMQ();
-            }
-
-        }
-        private async void OnTransferClicked(object sender, EventArgs e)
-        {
-            try
-            {
-                var transferPage = new TransferPopUpPage(VehicleNo, TripId, CollectionList)
-                {
-                    OnDismissed = async () =>
-                    {
-
-                        CollectionDetails();
-                    }
-                };
-
-                await Navigation.PushModalAsync(transferPage);
-            }
-            catch (Exception ex)
-            {
-                await DisplayAlert("Error", ex.Message, "Ok");
-            }
-
-        }
-
-
-
-        private async void OnBackClicked(object sender, EventArgs e)
-        {
-            await Navigation.PushAsync(new UserModule.CollectionPage(VehicleNo, TripId, VehicleFrom));
-
-        }
-
         void UpdateSendServerStatus(long Id)
         {
             try
@@ -459,12 +353,76 @@ namespace TeaClient.LocalDataShow
             }
 
         }
+        private async void OnSendToServerClicked(object sender, EventArgs e)
+        {
+            var _submit = await DisplayAlert("Save", "Do you want to send to server! ", "Yes", "No");
+            if (_submit)
+            {
+                await SaveSTGUsingMQ();
+            }
 
+        }
+        private async void OnTransferClicked(object sender, EventArgs e)
+        {
+           await DisplayAlert("Info", "This Facility is not provided! ", "ok");
+        }
         protected override void OnDisappearing()
         {
             base.OnDisappearing();
             // Unsubscribe to avoid memory leaks
             //  MessagingCenter.Unsubscribe<TransferPopUpPage>(this, "RefreshParentPage");
         }
+        private async Task MergeTransferCollection(DateTime _CollDate,long ClientId, string ClientName, int FirstWgt,
+          int WetLeaf, int LongLeaf, int Deduction, int FinalWgt, decimal Rate, decimal grossAmt,
+          int GradeId, string GradeName, string Remarks, string Bagslist, long TransferFrom, long VehicleFrom)
+        {
+            try
+            {
+
+                SaveLocalCollectionModel _collect = new SaveLocalCollectionModel();
+                _collect.CollectionDate = _CollDate;
+                _collect.TripId = TripId;
+                _collect.VehicleNo = VehicleNo;
+                _collect.ClientId = ClientId;
+                _collect.ClientName = ClientName;
+                _collect.FirstWeight = FirstWgt;
+                _collect.WetLeaf = WetLeaf;
+                _collect.LongLeaf = LongLeaf;
+                _collect.Deduction = Deduction;
+                _collect.FinalWeight = FinalWgt;
+                _collect.Rate = Rate;
+                _collect.GrossAmount = grossAmt;
+                _collect.GradeId = GradeId;
+                _collect.GradeName = GradeName;
+                _collect.Remarks = Remarks ?? "";
+                _collect.TenantId = Convert.ToInt32(LoginData.LoginDetails[0].TenantId);
+                _collect.Status = "Pending";
+                _collect.DataSendToServer = false;
+                _collect.CollectionType = "Transfer";
+                _collect.BagList = Bagslist;
+                _collect.CreatedBy = Convert.ToInt32(LoginData.LoginDetails[0].UserId);
+                _collect.CollectionType = "Transfer";
+                _collect.TransferFrom = TransferFrom;
+                _collect.VehicleFrom = VehicleFrom;
+
+                conn.Insert(_collect);
+
+            }
+            catch (Exception ex)
+            {
+
+                await DisplayAlert("Error", ex.Message, "Ok");
+
+            }
+
+            finally
+            {
+
+            }
+
+        }
+
+   
+
     }
 }

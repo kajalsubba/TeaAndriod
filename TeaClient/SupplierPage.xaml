@@ -66,13 +66,7 @@
                 <Label Text="Challan Weight: (Mandatory)" />
                 <Entry x:Name="ChallanWgt" Placeholder="Enter Challan Weight" Keyboard="Numeric" MaxLength="6"/>
 
-                <!-- Rate -->
-                <!--<Label Text="Rate:" />
-            <Entry x:Name="rateEntry" Placeholder="Enter Rate" Keyboard="Numeric" />-->
-
-                <!-- Trip -->
-                <!--<Label Text="Trip:" />
-            <Entry x:Name="tripEntry" Placeholder="Enter Trip" Keyboard="Numeric" />-->
+         
 
                 <!-- Remarks -->
                 <Label Text="Remarks (Optional):" />
