@@ -88,7 +88,7 @@ namespace TeaClient.Services
             sb.Append(company.Trim());
             sb.AppendLine();
             sb.AppendLine("GreenLeaf collect on " + CollectDate);
-            sb.AppendLine(ClientName);
+            sb.AppendLine("Client :"+ ClientName);
             sb.AppendLine("Grade :" + Grade);
             sb.AppendLine("Field :" + BagList + "=" + First);
             sb.AppendLine("Deduction :" + deduct);

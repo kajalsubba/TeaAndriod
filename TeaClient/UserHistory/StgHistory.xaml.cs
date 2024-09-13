@@ -253,7 +253,7 @@ namespace TeaClient.UserHistory
                     PrintService prt = new PrintService();
                     var deduct = item.Deduction.ToString() == "0" ? "Pending" : item.Deduction.ToString();
                     var result = await prt.PrintParameters(item.CollectionDate, LoginData.LoginDetails[0].CompanyName.ToString().Trim(), item.ClientName, item.GradeName, item.ViewBag, deduct, item.FirstWeight.ToString(),
-                        item.FinalWeight.ToString(), item.GrossAmount.ToString(), item.Remarks, LoginData.LoginDetails[0].UserFirstName + " " + LoginData.LoginDetails[0].UserLastName);
+                        item.FinalWeight.ToString(), item.GrossAmount.ToString(), item.Remarks,item.CreatedBy);
                     await DisplayAlert("Info", result, "Ok");
                 }
             }
