@@ -1,11 +1,12 @@
-﻿using SQLite;
+﻿using Java.Util;
+using SQLite;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using TeaClient.CommonPage;
 using TeaClient.Model;
 using TeaClient.Services;
-using TeaClient.Services.VibrationService;
 using TeaClient.SessionHelper;
 using TeaClient.SQLLite;
 using Xamarin.Essentials;
@@ -22,15 +23,17 @@ namespace TeaClient.UserModule
         public IList<ClientModel> clientData { get; set; }
         int InitialVal = 0;
         UserModel LoginData = new UserModel();
-        int ClientId;
+        long ClientId;
+        //long QClientId;
         int TripId;
         int BagCount = 0;
         long VehicleFromId;
+        //string ClientName = string.Empty;
         public IList<GradeModel> GradeList { get; set; }
         public SQLiteConnection conn;
         public LocalClientSaveModel _clientModel;
 
-        public CollectionPage(string _VehicleNo, int _TripId, long _VehicleFromId)
+        public CollectionPage(string _VehicleNo, int _TripId, long _VehicleFromId,long? QRClientId = null, string QRClientName = null)
         {
             InitializeComponent();
             NavigationPage.SetHasBackButton(this, false);
@@ -40,6 +43,8 @@ namespace TeaClient.UserModule
             VehicleFromId = _VehicleFromId;
             lblVehicle.Text = _VehicleNo;
             TripId = _TripId;
+            //QClientId = QRClientId??0;
+            //ClientName = QRClientName;
             conn = DependencyService.Get<ISqlLite>().GetConnection();
             conn.CreateTable<LocalClientSaveModel>();
             conn.CreateTable<SaveLocalCollectionModel>();
@@ -47,6 +52,48 @@ namespace TeaClient.UserModule
             GetClientFromLocalDB();
             GetTotal();
 
+            if (QRCheck.IsChecked)
+            {
+                QRButton.IsEnabled = true;
+                Client.IsReadOnly = true;
+               // PatchClientByQR(QRClientId, QRClientName);
+            }
+            else
+            {
+                QRButton.IsEnabled = false;
+                Client.IsReadOnly = false;
+            }
+
+        }
+        private void QRCheck_CheckedChanged(object sender, CheckedChangedEventArgs e)
+        {
+            if (e.Value)
+            {
+                QRButton.IsEnabled = true;
+                Client.IsReadOnly = true;
+            }
+            else
+            {
+                QRButton.IsEnabled = false;
+                Client.IsReadOnly = false;
+            }
+        }
+        void PatchClientByQR(long? _ClientId,string _ClientName)
+        {
+            if (_ClientId != 0)
+            {
+
+                Client.Text = _ClientName;
+                ClientId = _ClientId ?? 0;
+                ClientListView.IsVisible = false;
+             
+            }
+            else
+            {
+                Client.Text = "";
+                ClientId = 0;
+                ClientListView.IsVisible = false;
+            }
         }
 
         void GetTotal()
@@ -93,6 +140,25 @@ namespace TeaClient.UserModule
             }
         }
 
+        private async void OnQRClicked(object sender, EventArgs e)
+        {
+            //await Navigation.PushAsync(new QRScanner.QRScannerPage(lblVehicle.Text,TripId,VehicleFromId));
+            try
+            {
+                var QrPage = new QRScanner.QRScannerPage(lblVehicle.Text, TripId, VehicleFromId);
+                QrPage.OnDismissed += () =>
+                {
+                    PatchClientByQR(QrPage.QrClientId, QrPage.QrClientName);
+               
+                };
+
+                await Navigation.PushModalAsync(QrPage);
+            }
+            catch (Exception ex)
+            {
+                await DisplayAlert("Error", ex.Message, "Ok");
+            }
+        }
         private void OnOperatorButtonClicked(object sender, EventArgs e)
         {
             VibrationMethod();
@@ -377,16 +443,10 @@ namespace TeaClient.UserModule
         }
         protected override bool OnBackButtonPressed()
         {
-            DisplayConfirmation();
+     
             return true; // Do not continue processing the back button
         }
-        async void DisplayConfirmation()
-        {
-
-            //  await Navigation.PushAsync(new UserModule.CollectionPage(VehicleNo, TripId));
-
-
-        }
+      
 
         public async void VibrationMethod()
         {
@@ -493,7 +553,7 @@ namespace TeaClient.UserModule
                         await DisplayAlert("Info", result, "Ok");
 
                     }
-                   
+
 
                 }
                 catch (Exception ex)
@@ -504,7 +564,7 @@ namespace TeaClient.UserModule
                 }
                 finally
                 {
-                  //  await DisplayAlert("Info", "Data is added Successfully. ", "Ok");
+                    //  await DisplayAlert("Info", "Data is added Successfully. ", "Ok");
                     cleanForm();
                     Grade.SelectedItem = null;
                     GetTotal();

@@ -9,6 +9,8 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DebugType>portable</DebugType>
     <DebugSymbols>true</DebugSymbols>
+	    <AndroidEnableMultiDex>true</AndroidEnableMultiDex>
+
   </PropertyGroup>
 
   <ItemGroup>
@@ -31,9 +33,12 @@
     <PackageReference Include="sqlite-net-pcl" Version="1.9.172" />
     <PackageReference Include="System.Drawing.Common" Version="8.0.3" />
     <PackageReference Include="Xam.Plugin.Media" Version="6.0.2" />
+    <PackageReference Include="Xam.Plugin.SimpleAudioPlayer" Version="1.6.0" />
     <PackageReference Include="Xamarin.CommunityToolkit" Version="2.0.6" />
     <PackageReference Include="Xamarin.Essentials" Version="1.8.1" />
     <PackageReference Include="Xamarin.Forms" Version="5.0.0.2662" />
+    <PackageReference Include="ZXing.Net.Mobile" Version="2.4.1" />
+    <PackageReference Include="ZXing.Net.Mobile.Forms" Version="2.4.1" />
   </ItemGroup>
 
   <ItemGroup>
@@ -71,6 +76,12 @@
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="LocalDataShow\RecoveryCollectionView.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="QRScanner\QRScannerPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="QRScanner\QRScanPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="UserHistory\StgHistory.xaml">

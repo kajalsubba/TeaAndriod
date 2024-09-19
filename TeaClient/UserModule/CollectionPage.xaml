@@ -44,10 +44,21 @@
                     <StackLayout Orientation="Horizontal"
                          AbsoluteLayout.LayoutBounds="1, 0, AutoSize, AutoSize"
                          AbsoluteLayout.LayoutFlags="PositionProportional">
-                        <Image Source="QRScanner.png" 
+                        <!--<Image Source="QRScanner.png" 
                        WidthRequest="40" 
                        HeightRequest="40" 
-                       Aspect="AspectFit" />
+                       Aspect="AspectFit" />-->
+
+                        <ImageButton
+                            x:Name="QRButton"
+                        Source="QRScanner.png"
+                        WidthRequest="40" 
+                        HeightRequest="40" Aspect="AspectFit"
+                        HorizontalOptions="End"
+                        VerticalOptions="End"
+                         BackgroundColor="White"
+                                Clicked="OnQRClicked"
+                        />
                     </StackLayout>
                 </AbsoluteLayout>
 
@@ -93,8 +104,25 @@
 
                 <!-- Place the ListView and other controls after the AbsoluteLayout -->
                 <DatePicker x:Name="collectionDate" TextColor="Black" FontAttributes="Bold" IsEnabled="False" Format="dd/MM/yyyy" MaximumDate="{x:Static sys:DateTime.Now}"/>
-                <Entry  x:Name="Client" Placeholder="Select Client" TextChanged="SearchBar_OnTextChanged" BackgroundColor="#f9f9f9" TextColor="Black" FontSize="16" PlaceholderColor="#646b7a" />
+                <!--<Entry  x:Name="Client" Placeholder="Select Client" TextChanged="SearchBar_OnTextChanged" BackgroundColor="#f9f9f9" TextColor="Black" FontSize="16" PlaceholderColor="#646b7a" />-->
+                <StackLayout Orientation="Horizontal" VerticalOptions="Center">
+                    <Entry x:Name="Client" 
+           Placeholder="Select Client" 
+           TextChanged="SearchBar_OnTextChanged" 
+           BackgroundColor="#f9f9f9" 
+           TextColor="Black" 
+           FontSize="16" 
+           PlaceholderColor="#646b7a" 
+           HorizontalOptions="FillAndExpand"/>
 
+                    <CheckBox x:Name="QRCheck" 
+              IsChecked="True" 
+              VerticalOptions="Center" 
+                              
+              Margin="10,0,0,0"
+                                 CheckedChanged="QRCheck_CheckedChanged"/>
+                    <!-- Add margin as needed -->
+                </StackLayout>
                 <!-- Ensure ListView is placed before other controls -->
                 <ListView x:Name="ClientListView" IsVisible="False" CachingStrategy="RecycleElement" BackgroundColor="White" ItemTapped="ListView_OnItemTapped">
                     <ListView.ItemTemplate>

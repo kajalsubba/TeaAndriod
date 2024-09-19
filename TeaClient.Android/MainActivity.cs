@@ -22,25 +22,24 @@ namespace TeaClient.Droid
         protected override async void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
-           // SetContentView(Resource.Layout.);
-
+         
             CrossCurrentActivity.Current.Init(this, savedInstanceState);
             Stormlion.ImageCropper.Droid.Platform.Init();
             Xamarin.Essentials.Platform.Init(this, savedInstanceState);
             global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
-            int requestCode = 1;
-            // Check for permissions
+            ZXing.Net.Mobile.Forms.Android.Platform.Init();
+
             if (ContextCompat.CheckSelfPermission(this, Manifest.Permission.BluetoothConnect) != Permission.Granted)
             {
                 ActivityCompat.RequestPermissions(this, new string[] { Manifest.Permission.BluetoothConnect }, RequestBluetoothConnectId);
             }
             LoadApplication(new App());
-           // await Permissions.RequestAsync<BLEPermission>();
 
         }
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Android.Content.PM.Permission[] grantResults)
         {
             Xamarin.Essentials.Platform.OnRequestPermissionsResult(requestCode, permissions, grantResults);
+            global::ZXing.Net.Mobile.Android.PermissionsHandler.OnRequestPermissionsResult(requestCode, permissions, grantResults);
 
             base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
         }
