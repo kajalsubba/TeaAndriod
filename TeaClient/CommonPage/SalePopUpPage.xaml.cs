@@ -45,6 +45,32 @@ namespace TeaClient.CommonPage
             conn.CreateTable<SaveLocalCollectionModel>();
         }
 
+        public async Task SendSignalRNotification(bool message, int tenantId)
+        {
+            string url = $"{_appSetting.ApiUrl}SignalR/SendNotification?Message={message}&TenantId={tenantId}";
+
+           // string url = $"{apiUrl}/SendNotification?Message={message}&TenantId={tenantId}";
+
+            using (HttpClient client = new HttpClient())
+            {
+                // Send a POST request with no body
+                var response = await client.PostAsync(url, null);
+
+                // Read the response
+                var results = await response.Content.ReadAsStringAsync();
+
+                if (response.IsSuccessStatusCode)
+                {
+                    Console.WriteLine("Notification sent successfully.");
+                }
+                else
+                {
+                    Console.WriteLine($"Error: {response.StatusCode}, Content: {results}");
+                }
+            }
+
+        }
+
         public async Task SaveSTGUsingMQ()
         {
             try
@@ -138,6 +164,7 @@ namespace TeaClient.CommonPage
             {
                 btnServer.IsEnabled = false;
                 await SaveSTGUsingMQ();
+                await SendSignalRNotification(true, Convert.ToInt32(LoginData.LoginDetails[0].TenantId));
                 OnDismissed?.Invoke();
                 await Navigation.PopModalAsync();
             }

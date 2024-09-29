@@ -459,7 +459,9 @@ namespace TeaClient.LocalDataShow
                         OnDismissed = async () =>
                         {
 
-                            CollectionDetails();
+                            // CollectionDetails();
+                            await Navigation.PushAsync(new UserModule.UserDashboardPage());
+
                         }
                     };
 
