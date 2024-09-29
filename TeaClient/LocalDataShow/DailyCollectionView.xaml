@@ -294,7 +294,7 @@
                                             Clicked="OnEditButtonClicked"
                                             CommandParameter="{Binding .}" />
 
-                                                    <!--<Button Text="Add" 
+                                                    <!--<Button Text="Delete" 
                                             BackgroundColor="#008CBA"
                                             Grid.Row="2"
                                             Grid.RowSpan="2"
@@ -305,7 +305,7 @@
                                             TextColor="White"
                                             HorizontalOptions="End"
                                             VerticalOptions="End"
-                                            Clicked="OnAddButtonClicked"
+                                            Clicked="OnDeleteButtonClicked"
                                             CommandParameter="{Binding .}" />-->
                                                 </Grid>
                                             </StackLayout>
@@ -328,15 +328,15 @@
                 </Grid.ColumnDefinitions>
 
                 <!-- Label on the left -->
-                <Label
+                <!--<Label
         Grid.Column="0"
         FontAttributes="Bold"
         Text="Enter Comment"
         VerticalOptions="Center"
-        HorizontalOptions="Start" />
+        HorizontalOptions="Start" />-->
 
                 <!-- Editor on the right -->
-                <Editor
+                <!--<Editor
         x:Name="ServerComment"
         Grid.Column="1"
          BackgroundColor="#f9f9f9"
@@ -346,7 +346,7 @@
          Placeholder="Enter Comment"
         PlaceholderColor="#646b7a"
    
-        HeightRequest="80" />
+        HeightRequest="80" />-->
                 <!-- Optional: Set height if needed -->
             </Grid>
 

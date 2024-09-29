@@ -12,14 +12,14 @@ namespace TeaClient.Services
 {
     public static class AppConfigService
     {
-      
-       public static AppSettings GetConfig()
+
+        public static AppSettings GetConfig()
         {
 
-            
+
             var assembly = typeof(AppSettings).GetTypeInfo().Assembly;
-           // using (Stream stream = assembly.GetManifestResourceStream("TeaClient.Configuration.appsettings.release.json"))
-         using (Stream stream = assembly.GetManifestResourceStream("TeaClient.Configuration.appsettings.debug.json"))
+            //  using (Stream stream = assembly.GetManifestResourceStream("TeaClient.Configuration.appsettings.release.json"))
+            using (Stream stream = assembly.GetManifestResourceStream("TeaClient.Configuration.appsettings.debug.json"))
             {
                 using (StreamReader reader = new StreamReader(stream))
                 {
@@ -28,7 +28,7 @@ namespace TeaClient.Services
                     return config;
                 }
             }
-        
+
         }
 
     }

@@ -6,7 +6,7 @@ namespace TeaClient.Model
 {
     public class StgSaveModel
     {
-      
+        public int Id { get; set; }
         public DateTime CollectionDate { get; set; }
         public int TripId { get; set; }
         public long ClientId { get; set; }
@@ -30,6 +30,9 @@ namespace TeaClient.Model
         public long TenantId { get; set; }
         public long CreatedBy { get; set; }
         public string VehicleNo { get; set; }
+        public long? AccountId { get; set; }
+        public long? ChallanWeight { get; set; }
+        public long? FineLeaf { get; set; }
         public string ServerComment { get; set; }
         public string Source { get; set; } = "Mobile";
         public string Category { get; set; } = "STG";

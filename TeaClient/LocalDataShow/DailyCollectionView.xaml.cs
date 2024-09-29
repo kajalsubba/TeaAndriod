@@ -204,7 +204,7 @@ namespace TeaClient.LocalDataShow
             }
 
         }
-     
+
         public async Task CollectionDetails()
         {
 
@@ -241,7 +241,7 @@ namespace TeaClient.LocalDataShow
         }
 
 
-        private async void OnAddButtonClicked(object sender, EventArgs e)
+        private async void OnDeleteButtonClicked(object sender, EventArgs e)
         {
             try
             {
@@ -254,7 +254,7 @@ namespace TeaClient.LocalDataShow
                 // Handle the edit action (e.g., navigate to an edit page or display a form)
                 if (item != null)
                 {
-                    await Navigation.PushAsync(new UserModule.LateralCollectionEntryPage(item));
+                    //await Navigation.PushAsync(new UserModule.LateralCollectionEntryPage(item));
                 }
             }
             catch (Exception ex)
@@ -297,7 +297,7 @@ namespace TeaClient.LocalDataShow
                 {
                     PrintService prt = new PrintService();
                     var deduct = item.Deduction.ToString() == "0" ? "Pending" : item.Deduction.ToString();
-                    var result = await prt.PrintParameters(item.CollectionDate.ToString("dd/MM/yyyy"),LoginData.LoginDetails[0].CompanyName.ToString().Trim(), item.ClientName, item.GradeName, item.BagList, deduct, item.FirstWeight.ToString(),
+                    var result = await prt.PrintParameters(item.CollectionDate.ToString("dd/MM/yyyy"), LoginData.LoginDetails[0].CompanyName.ToString().Trim(), item.ClientName, item.GradeName, item.BagList, deduct, item.FirstWeight.ToString(),
                         item.FinalWeight.ToString(), item.GrossAmount.ToString(), item.Remarks, LoginData.LoginDetails[0].UserFirstName + " " + LoginData.LoginDetails[0].UserLastName);
                     await DisplayAlert("Info", result, "Ok");
                 }
@@ -313,6 +313,39 @@ namespace TeaClient.LocalDataShow
         {
             TransferData();
         }
+
+        private List<StgSaveModel> ArrangeSendToServerData()
+        {
+
+            List<StgSaveModel> _stgData = new List<StgSaveModel>();
+
+            foreach (SaveLocalCollectionModel item in myListView.ItemsSource)
+            {
+                var objStg = new StgSaveModel
+                {
+                    Id = item.Id,
+                    CollectionDate = item.CollectionDate,
+                    TripId = item.TripId,
+                    ClientId = item.ClientId,
+                    FirstWeight = item.FirstWeight,
+                    WetLeaf = item.WetLeaf,
+                    LongLeaf = item.LongLeaf,
+                    Deduction = item.Deduction,
+                    FinalWeight = item.FinalWeight,
+                    Rate = item.Rate,
+                    GradeId = item.GradeId,
+                    Remarks = item.Remarks,
+                    BagList = item.BagList,
+                    CollectionType = item.CollectionType,
+                    TransferFrom = item.TransferFrom,
+                    VehicleFrom = item.VehicleFrom,
+                    FinishTimeInApp = item.FinishTimeInApp,
+                    UpdateTimeInApp = item.UpdateTimeInApp
+                };
+                _stgData.Add(objStg);
+            }
+            return _stgData;
+        }
         public async Task SaveSTGUsingMQ()
         {
             try
@@ -320,7 +353,7 @@ namespace TeaClient.LocalDataShow
                 var loadingPage = new LoadingPage();
                 await Navigation.PushModalAsync(loadingPage);
 
-                string _comment = ServerComment.Text;
+                string _comment = "";
                 if (string.IsNullOrWhiteSpace(_comment))
                 {
                     await DisplayAlert("Validation", "Please Enter Comment Before sending to Server!", "OK");
@@ -347,8 +380,8 @@ namespace TeaClient.LocalDataShow
                         CollectionType = item.CollectionType,
                         TransferFrom = item.TransferFrom,
                         VehicleFrom = item.VehicleFrom,
-                        FinishTimeInApp=item.FinishTimeInApp,
-                        UpdateTimeInApp=item.UpdateTimeInApp
+                        FinishTimeInApp = item.FinishTimeInApp,
+                        UpdateTimeInApp = item.UpdateTimeInApp
                     };
                     _stgData.Add(objStg);
                 }
@@ -359,7 +392,7 @@ namespace TeaClient.LocalDataShow
                 {
                     Source = "Mobile",
                     Category = "STG",
-                    ServerComment = ServerComment.Text,
+                    ServerComment = "",
                     VehicleNo = VehicleNo,
                     TenantId = Convert.ToInt32(LoginData.LoginDetails[0].TenantId),
                     CreatedBy = Convert.ToInt32(LoginData.LoginDetails[0].UserId),
@@ -383,7 +416,7 @@ namespace TeaClient.LocalDataShow
                             }
 
                             await DisplayAlert("Success", "Data is send to server successfully!", "OK");
-                            ServerComment.Text = string.Empty;
+                            //  ServerComment.Text = string.Empty;
                             CollectionDetails();
                         }
                         else
@@ -401,6 +434,7 @@ namespace TeaClient.LocalDataShow
             }
             finally
             {
+                BtnTransfer.IsEnabled = true;
                 await Navigation.PopModalAsync();
 
             }
@@ -408,10 +442,33 @@ namespace TeaClient.LocalDataShow
 
         private async void OnSendToServerClicked(object sender, EventArgs e)
         {
-            var _submit = await DisplayAlert("Save", "Do you want to send to server! ", "Yes", "No");
-            if (_submit)
+            //var _submit = await DisplayAlert("Save", "Do you want to send to server! ", "Yes", "No");
+            //if (_submit)
+            //{
+            //    BtnTransfer.IsEnabled = false;
+            //    await SaveSTGUsingMQ();
+            //}
+
+            var saveData = ArrangeSendToServerData();
+            if (saveData.Count > 0)
             {
-                await SaveSTGUsingMQ();
+                try
+                {
+                    var SalePage = new SalePopUpPage(saveData, VehicleNo)
+                    {
+                        OnDismissed = async () =>
+                        {
+
+                            CollectionDetails();
+                        }
+                    };
+
+                    await Navigation.PushModalAsync(SalePage);
+                }
+                catch (Exception ex)
+                {
+                    await DisplayAlert("Error", ex.Message, "Ok");
+                }
             }
 
         }

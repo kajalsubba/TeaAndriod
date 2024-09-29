@@ -9,9 +9,7 @@
              BackgroundColor="White"
              Padding="40">
          
-            <!--<Label Text="Loading, please wait..."
-           VerticalOptions="CenterAndExpand"
-           HorizontalOptions="CenterAndExpand" />-->
+         
             <Frame BorderColor="LightBlue"  BackgroundColor="#F8F8FF" CornerRadius="10" Padding="8" HasShadow="True" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
                 <ScrollView >
                     <ListView x:Name="VehicleListView" HasUnevenRows="True">

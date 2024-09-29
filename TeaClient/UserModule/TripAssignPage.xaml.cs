@@ -41,7 +41,7 @@ namespace TeaClient.UserModule
         public TripAssignPage()
         {
             InitializeComponent();
-             VehicleList = new ObservableCollection<VehicleLockModel>();
+            VehicleList = new ObservableCollection<VehicleLockModel>();
             LoginData = SessionManager.GetSessionValue<UserModel>("UserDetails");
             GetVehicle();
             var dbPath = Path.Combine(FileSystem.AppDataDirectory, "TeaCollection.db3");
@@ -49,15 +49,15 @@ namespace TeaClient.UserModule
             conn.CreateTable<LocalClientSaveModel>();
             conn.CreateTable<LocalGradeSaveModel>();
             conn.CreateTable<SaveLocalCollectionModel>();
-            
-           DropAndRecreateTable();
+
+            DropAndRecreateTable();
             GetClient();
             GetGrade();
             CheckLockVehicle();
-           
+
         }
 
-     
+
         private async void OnLogoutTapped(object sender, EventArgs e)
 
         {
@@ -68,7 +68,7 @@ namespace TeaClient.UserModule
 
                 switch (sourcePath)
                 {
-                        case "File: logout.png":
+                    case "File: logout.png":
                         SessionManager.ClearSession();
                         await Navigation.PushAsync(new UserModule.UserLoginPage());
                         break;
@@ -125,9 +125,9 @@ namespace TeaClient.UserModule
 
                 ((ListView)sender).SelectedItem = null;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-               // await DisplayAlert("Error", ex.Message, "OK");
+                // await DisplayAlert("Error", ex.Message, "OK");
 
             }
         }
@@ -138,7 +138,7 @@ namespace TeaClient.UserModule
 
             try
             {
-              
+
                 var dataEmpty = vehicleData.Where(i => i.VehicleNo.ToLower().Contains(e.NewTextValue.ToLower())).ToList();
 
                 if (string.IsNullOrWhiteSpace(e.NewTextValue) || dataEmpty.Count == 0)
@@ -172,11 +172,11 @@ namespace TeaClient.UserModule
                 await DisplayAlert("Validation", "Please Enter Vehicle", "OK");
                 return;
             }
-            bool _lock = await DisplayAlert("Lock", "This vehicle is locked for "+ DateTime.Today.ToString("dd/MM/yyyy"), "Yes", "No");
+            bool _lock = await DisplayAlert("Lock", "This vehicle is locked for " + DateTime.Today.ToString("dd/MM/yyyy"), "Yes", "No");
             if (_lock)
             {
                 var selectedTrip = (TripModel)Trip.SelectedItem;
-                var result= await SaveVehicleLockGlobally(selectedTrip.TripId);
+                var result = await SaveVehicleLockGlobally(selectedTrip.TripId);
                 if (result.Id != 0)
                 {
                     await DisplayAlert("Success", result.Message, "OK");
@@ -185,7 +185,7 @@ namespace TeaClient.UserModule
                 else
                 {
                     await DisplayAlert("Info", result.Message, "OK");
-                    
+
                 }
             }
         }
@@ -229,7 +229,7 @@ namespace TeaClient.UserModule
 
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 await DisplayAlert("Error", ex.Message, "Ok");
                 return null;
@@ -267,7 +267,7 @@ namespace TeaClient.UserModule
                 }
 
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 await DisplayAlert("Error", ex.Message, "Ok");
 
@@ -355,7 +355,7 @@ namespace TeaClient.UserModule
                         foreach (var _grade in data.GradeDetails)
                         {
                             SaveGradeLocally(_grade.GradeId, _grade.GradeName);
-                           // GradeList.Add(new GradeModel { GradeId = _grade.GradeId, GradeName = _grade.GradeName });
+                            // GradeList.Add(new GradeModel { GradeId = _grade.GradeId, GradeName = _grade.GradeName });
                         }
 
                     }
@@ -382,10 +382,10 @@ namespace TeaClient.UserModule
 
                 var dataToSend = new
                 {
-                    VehicleNo= "",
-                    TripId= 0,
-                    LockDate= DateTime.Now.ToString("yyyy-MM-dd"),
-                    CreatedBy= Convert.ToInt32(LoginData.LoginDetails[0].UserId),
+                    VehicleNo = "",
+                    TripId = 0,
+                    LockDate = DateTime.Now.ToString("yyyy-MM-dd"),
+                    CreatedBy = Convert.ToInt32(LoginData.LoginDetails[0].UserId),
                     TenantId = Convert.ToInt32(LoginData.LoginDetails[0].TenantId)
                 };
 
@@ -400,8 +400,8 @@ namespace TeaClient.UserModule
                         var data = JsonConvert.DeserializeObject<VehicleLockList>(results);
                         foreach (var _vehicle in data.LockDetails)
                         {
-          
-                            VehicleList.Add(new VehicleLockModel { VehicleNo = _vehicle.VehicleNo, TripName = _vehicle.TripName,TripId=_vehicle.TripId });
+
+                            VehicleList.Add(new VehicleLockModel { VehicleNo = _vehicle.VehicleNo, TripName = _vehicle.TripName, TripId = _vehicle.TripId });
                         }
 
                     }
@@ -424,5 +424,5 @@ namespace TeaClient.UserModule
 
             }
         }
-        }
+    }
 }

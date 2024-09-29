@@ -12,6 +12,7 @@ using TeaClient.SQLLite;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
+using static Java.Lang.Character;
 
 
 namespace TeaClient.UserModule
@@ -24,16 +25,14 @@ namespace TeaClient.UserModule
         int InitialVal = 0;
         UserModel LoginData = new UserModel();
         long ClientId;
-        //long QClientId;
         int TripId;
         int BagCount = 0;
         long VehicleFromId;
-        //string ClientName = string.Empty;
         public IList<GradeModel> GradeList { get; set; }
         public SQLiteConnection conn;
         public LocalClientSaveModel _clientModel;
 
-        public CollectionPage(string _VehicleNo, int _TripId, long _VehicleFromId,long? QRClientId = null, string QRClientName = null)
+        public CollectionPage(string _VehicleNo, int _TripId, long _VehicleFromId, long? QRClientId = null, string QRClientName = null)
         {
             InitializeComponent();
             NavigationPage.SetHasBackButton(this, false);
@@ -43,8 +42,6 @@ namespace TeaClient.UserModule
             VehicleFromId = _VehicleFromId;
             lblVehicle.Text = _VehicleNo;
             TripId = _TripId;
-            //QClientId = QRClientId??0;
-            //ClientName = QRClientName;
             conn = DependencyService.Get<ISqlLite>().GetConnection();
             conn.CreateTable<LocalClientSaveModel>();
             conn.CreateTable<SaveLocalCollectionModel>();
@@ -56,7 +53,6 @@ namespace TeaClient.UserModule
             {
                 QRButton.IsEnabled = true;
                 Client.IsReadOnly = true;
-               // PatchClientByQR(QRClientId, QRClientName);
             }
             else
             {
@@ -78,7 +74,7 @@ namespace TeaClient.UserModule
                 Client.IsReadOnly = false;
             }
         }
-        void PatchClientByQR(long? _ClientId,string _ClientName)
+        void PatchClientByQR(long? _ClientId, string _ClientName)
         {
             if (_ClientId != 0)
             {
@@ -86,7 +82,7 @@ namespace TeaClient.UserModule
                 Client.Text = _ClientName;
                 ClientId = _ClientId ?? 0;
                 ClientListView.IsVisible = false;
-             
+
             }
             else
             {
@@ -111,7 +107,7 @@ namespace TeaClient.UserModule
                                      select x).ToList();
 
             var _recordTotal = CollectionDetails.Count();
-            TotalRecord.Text = "Total Record:" + _recordTotal;
+            TotalRecord.Text = "Record:" + _recordTotal;
 
             var _firstWgtTotal = CollectionDetails.Sum(x => x.FirstWeight);
             TotalFirstWgt.Text = "Total Field:" + _firstWgtTotal;
@@ -149,7 +145,7 @@ namespace TeaClient.UserModule
                 QrPage.OnDismissed += () =>
                 {
                     PatchClientByQR(QrPage.QrClientId, QrPage.QrClientName);
-               
+
                 };
 
                 await Navigation.PushModalAsync(QrPage);
@@ -443,10 +439,25 @@ namespace TeaClient.UserModule
         }
         protected override bool OnBackButtonPressed()
         {
-     
+
             return true; // Do not continue processing the back button
         }
-      
+
+        private int DuplicateDataValidation()
+        {
+            int FinalValue = string.IsNullOrWhiteSpace(FinalWeight.Text) ? 0 : int.Parse(FinalWeight.Text);
+
+            var selectedGrade = (GradeModel)Grade.SelectedItem;
+
+            var CollectionList = (from x in conn.Table<SaveLocalCollectionModel>()
+                                  where x.ClientId == ClientId
+                                  && x.CollectionDate == DateTime.Now.Date
+                                   && x.FinalWeight == FinalValue
+                                   && x.GradeId == selectedGrade.GradeId
+                                  select x).ToList();
+
+            return CollectionList.Count;
+        }
 
         public async void VibrationMethod()
         {
@@ -473,6 +484,7 @@ namespace TeaClient.UserModule
         {
             try
             {
+                Submitbtn.IsEnabled = false;
                 string _FldWeight = TotalFieldWeight.Text;
                 string _ClientName = Client.Text;
                 if (string.IsNullOrWhiteSpace(_FldWeight))
@@ -541,17 +553,21 @@ namespace TeaClient.UserModule
 
                 try
                 {
-                    conn.Insert(_collect);
-                    bool _submit = await DisplayAlert("Save", "Data is saved successfully.Do you want to Print!", "Yes", "No");
-                    if (_submit)
+                    var dataVal = DuplicateDataValidation();
+                    if (dataVal == 0)
                     {
-                        PrintService prt = new PrintService();
-                        var deduct = DeductValue.ToString() == "0" ? "Pending" : DeductValue.ToString();
-                        var result = await prt.PrintParameters(_collect.CollectionDate.ToString("dd/MM/yyyy"), LoginData.LoginDetails[0].CompanyName.ToString().Trim(), _collect.ClientName, _collect.GradeName, _collect.BagList, deduct, _collect.FirstWeight.ToString(),
-                       _collect.FinalWeight.ToString(), _collect.GrossAmount.ToString(), _collect.Remarks, LoginData.LoginDetails[0].UserFirstName + " " + LoginData.LoginDetails[0].UserLastName);
+                        conn.Insert(_collect);
+                        bool _submit = await DisplayAlert("Save", "Data is saved successfully.Do you want to Print!", "Yes", "No");
+                        if (_submit)
+                        {
+                            PrintService prt = new PrintService();
+                            var deduct = DeductValue.ToString() == "0" ? "Pending" : DeductValue.ToString();
+                            var result = await prt.PrintParameters(_collect.CollectionDate.ToString("dd/MM/yyyy"), LoginData.LoginDetails[0].CompanyName.ToString().Trim(), _collect.ClientName, _collect.GradeName, _collect.BagList, deduct, _collect.FirstWeight.ToString(),
+                           _collect.FinalWeight.ToString(), _collect.GrossAmount.ToString(), _collect.Remarks, LoginData.LoginDetails[0].UserFirstName + " " + LoginData.LoginDetails[0].UserLastName);
 
-                        await DisplayAlert("Info", result, "Ok");
+                            await DisplayAlert("Info", result, "Ok");
 
+                        }
                     }
 
 
@@ -571,6 +587,7 @@ namespace TeaClient.UserModule
                     FieldEntryLaout.IsVisible = false;
                     BtnFinish.IsVisible = true;
                     CalculateView.IsVisible = true;
+                    Submitbtn.IsEnabled = true;
                 }
             }
             catch (Exception ex)
