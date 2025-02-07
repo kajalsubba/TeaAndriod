@@ -65,38 +65,47 @@ namespace TeaClient
         private async void OnImageTapped(object sender, EventArgs e)
 
         {
-            if (sender is Image image)
+            try
             {
-
-                string sourcePath = image.Source.ToString();
-
-                switch (sourcePath)
+                if (sender is Image image)
                 {
-                    case "File: Supplier.png":
-                        await Navigation.PushAsync(new SupplierPage());
-                        break;
-                    case "File: leaf.png":
-                        await Navigation.PushAsync(new SupplierHistory());
-                        break;
 
-                    case "File: smart.png":
-                        await Navigation.PushAsync(new SmartHistoryPage());
-                        break;
-                    case "File: bill.png":
-                        await Navigation.PushAsync(new BillHistoryPage());
-                        break;
-                 
-                    case "File: password.png":
-                        await Navigation.PushAsync(new PasswordChangePage());
-                        break;
-                    case "File: logout.png":
-                        SessionManager.ClearSession();
-                        await Navigation.PushAsync(new MainPage());
-                        break;
-                    default:
-                        return;
+                    string sourcePath = image.Source.ToString();
+
+                    switch (sourcePath)
+                    {
+                        case "File: Supplier.png":
+                            await Navigation.PushAsync(new SupplierPage());
+                            break;
+                        case "File: leaf.png":
+                            await Navigation.PushAsync(new SupplierHistory());
+                            break;
+
+                        case "File: smart.png":
+                            await Navigation.PushAsync(new SmartHistoryPage());
+                            break;
+                        case "File: bill.png":
+                            await Navigation.PushAsync(new BillHistoryPage());
+                            break;
+
+                        case "File: password.png":
+                            await Navigation.PushAsync(new PasswordChangePage());
+                            break;
+                        case "File: logout.png":
+                            SessionManager.ClearSession();
+                            await Navigation.PushAsync(new MainPage());
+                            break;
+                        default:
+                            return;
+                    }
                 }
             }
+            catch (Exception ex)
+            {
+                await DisplayAlert("Error", ex.Message, "Ok");
+
+            }
+
         }
 
 

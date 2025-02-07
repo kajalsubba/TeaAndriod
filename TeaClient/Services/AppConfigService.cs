@@ -15,21 +15,27 @@ namespace TeaClient.Services
 
         public static AppSettings GetConfig()
         {
+            try {
 
-
-            var assembly = typeof(AppSettings).GetTypeInfo().Assembly;
-              using (Stream stream = assembly.GetManifestResourceStream("TeaClient.Configuration.appsettings.release.json"))
-           // using (Stream stream = assembly.GetManifestResourceStream("TeaClient.Configuration.appsettings.debug.json"))
-            {
-                using (StreamReader reader = new StreamReader(stream))
+                var assembly = typeof(AppSettings).GetTypeInfo().Assembly;
+                //  using (Stream stream = assembly.GetManifestResourceStream("TeaClient.Configuration.appsettings.release.json"))
+                using (Stream stream = assembly.GetManifestResourceStream("TeaClient.Configuration.appsettings.debug.json"))
                 {
-                    string json = reader.ReadToEnd();
-                    AppSettings config = JsonConvert.DeserializeObject<AppSettings>(json);
-                    return config;
+                    using (StreamReader reader = new StreamReader(stream))
+                    {
+                        string json = reader.ReadToEnd();
+                        AppSettings config = JsonConvert.DeserializeObject<AppSettings>(json);
+                        return config;
+                    }
                 }
-            }
 
-        }
+            }
+            catch ( Exception ex)
+            {
+                return null;
+            }
+         }
+        
 
     }
 }

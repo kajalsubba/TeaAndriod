@@ -164,7 +164,7 @@ namespace TeaClient.CommonPage
             {
                 btnServer.IsEnabled = false;
                 await SaveSTGUsingMQ();
-                await SendSignalRNotification(true, Convert.ToInt32(LoginData.LoginDetails[0].TenantId));
+             //   await SendSignalRNotification(true, Convert.ToInt32(LoginData.LoginDetails[0].TenantId));
                 OnDismissed?.Invoke();
                 await Navigation.PopModalAsync();
             }

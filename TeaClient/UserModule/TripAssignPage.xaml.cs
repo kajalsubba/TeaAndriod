@@ -40,20 +40,27 @@ namespace TeaClient.UserModule
         public LocalClientSaveModel _clientModel;
         public TripAssignPage()
         {
-            InitializeComponent();
-            VehicleList = new ObservableCollection<VehicleLockModel>();
-            LoginData = SessionManager.GetSessionValue<UserModel>("UserDetails");
-            GetVehicle();
-            var dbPath = Path.Combine(FileSystem.AppDataDirectory, "TeaCollection.db3");
-            conn = DependencyService.Get<ISqlLite>().GetConnection();
-            conn.CreateTable<LocalClientSaveModel>();
-            conn.CreateTable<LocalGradeSaveModel>();
-            conn.CreateTable<SaveLocalCollectionModel>();
+            try
+            {
+                InitializeComponent();
+                VehicleList = new ObservableCollection<VehicleLockModel>();
+                LoginData = SessionManager.GetSessionValue<UserModel>("UserDetails");
+                GetVehicle();
+                var dbPath = Path.Combine(FileSystem.AppDataDirectory, "TeaCollection.db3");
+                conn = DependencyService.Get<ISqlLite>().GetConnection();
+                conn.CreateTable<LocalClientSaveModel>();
+                conn.CreateTable<LocalGradeSaveModel>();
+                conn.CreateTable<SaveLocalCollectionModel>();
 
-            DropAndRecreateTable();
-            GetClient();
-            GetGrade();
-            CheckLockVehicle();
+                DropAndRecreateTable();
+                GetClient();
+                GetGrade();
+                CheckLockVehicle();
+            }
+            catch(Exception ex)
+            {
+                DisplayAlert("Error", ex.Message, "OK");
+            }
 
         }
 

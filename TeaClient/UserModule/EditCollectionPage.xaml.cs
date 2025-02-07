@@ -32,7 +32,7 @@ namespace TeaClient.UserModule
 
         void PatchCollection()
         {
-            int FirstValue = string.IsNullOrWhiteSpace(collect.FinalWeight.ToString()) ? 0 : int.Parse(collect.FinalWeight.ToString());
+            int FirstValue = string.IsNullOrWhiteSpace(collect.FirstWeight.ToString()) ? 0 : int.Parse(collect.FirstWeight.ToString());
             int RainValue = string.IsNullOrWhiteSpace(collect.WetLeaf.ToString()) ? 0 : int.Parse(collect.WetLeaf.ToString());
             int LongValue = string.IsNullOrWhiteSpace(collect.LongLeaf.ToString()) ? 0 : int.Parse(collect.LongLeaf.ToString());
             int DeductValue = string.IsNullOrWhiteSpace(collect.Deduction.ToString()) ? 0 : int.Parse(collect.Deduction.ToString());
