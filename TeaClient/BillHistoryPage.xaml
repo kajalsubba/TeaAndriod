@@ -1,0 +1,159 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+               xmlns:sys="clr-namespace:System;assembly=mscorlib"
+             x:Class="TeaClient.BillHistoryPage"
+              BackgroundColor="#F8F8FF">
+    <ContentPage.Content>
+        <StackLayout Padding="10" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
+            <Label x:Name="HeaderName" Text="Bill History" FontSize="24" HorizontalOptions="Center" />
+            <Label Text="From Date: (Mandatory)" />
+            <DatePicker x:Name="FromDate" Format="dd/MM/yyyy" MaximumDate="{x:Static sys:DateTime.Now}"/>
+            <Label Text="To Date: (Mandatory)" />
+            <DatePicker x:Name="ToDate" Format="dd/MM/yyyy" MaximumDate="{x:Static sys:DateTime.Now}"/>
+
+            <Button VerticalOptions="Center" Text="Search" TextColor="White" 
+            BackgroundColor="#008CBA"
+            BorderColor="Gray"
+            BorderWidth="1.5"
+            CornerRadius="10" Clicked="OnSearchClicked" />
+
+            <Frame BorderColor="LightBlue" BackgroundColor="#F8F8FF" CornerRadius="10" Padding="8" HasShadow="True" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
+
+                <ScrollView Orientation="Horizontal">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+
+                        </Grid.RowDefinitions>
+
+                        <!--Column Headers-->
+                        <Grid Grid.Row="0" BackgroundColor="#018353" Padding="5" HorizontalOptions="FillAndExpand">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            
+                            </Grid.ColumnDefinitions>
+                            <!--<Label Grid.Column="0" Text="Bill Id" FontAttributes="Bold" />-->
+                            <Label Grid.Column="0" Text="Date" FontAttributes="Bold" TextColor="White"/>
+                            <Label Grid.Column="1" Text="Bill Period" FontAttributes="Bold" TextColor="White"/>
+                            <Label Grid.Column="2" Text="Created By" FontAttributes="Bold" TextColor="White"/>
+                            <!--<Label Grid.Column="3" Text="Client" FontAttributes="Bold" HorizontalOptions="Center"/>
+                            <Label Grid.Column="4" Text="Avg Rate" FontAttributes="Bold" HorizontalOptions="Center"/>
+                            <Label Grid.Column="5" Text="Final Weight" FontAttributes="Bold" HorizontalOptions="Center"/>
+                            <Label Grid.Column="6" Text="Total Amount" FontAttributes="Bold" HorizontalOptions="Center"/>
+                            <Label Grid.Column="7" Text="Total Reciept" FontAttributes="Bold" HorizontalOptions="Center"/>
+                            <Label Grid.Column="8" Text="Comm. Amount" FontAttributes="Bold" />
+                            <Label Grid.Column="9" Text="Cess. Amount" FontAttributes="Bold" />
+                            <Label Grid.Column="10" Text="Less Season Adv" FontAttributes="Bold" />
+                            <Label Grid.Column="11" Text="Bill Amount Receipt." FontAttributes="Bold" />-->
+                            <Label Grid.Column="3" Text="Preview" FontAttributes="Bold" TextColor="White"/>
+                        </Grid>
+
+                        <!--CollectionView with Data-->
+                        <CollectionView Grid.Row="1" ItemsSource="{Binding dataItems}">
+                            <CollectionView.ItemsLayout>
+                                <GridItemsLayout Orientation="Vertical" Span="1" />
+                            </CollectionView.ItemsLayout>
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid Margin="0,0,0,10" >
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
+                                            <!--<ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />-->
+                                        </Grid.ColumnDefinitions>
+
+                                        <!--<Label  Grid.Column="0" Text="{Binding BillId}" />-->
+                                        <Label  Grid.Column="0" Text="{Binding BillDate}" />
+                                        <Label  Grid.Column="1" Text="{Binding BillPeriod}" />
+                                        <Label  Grid.Column="2" Text="{Binding CreatedBy}" />
+                                        <!--<Label  Grid.Column="3" Text="{Binding ClientName}" HorizontalOptions="Center"/>
+                                        <Label  Grid.Column="4" Text="{Binding AvgRate}" HorizontalOptions="Center"/>
+                                        <Label  Grid.Column="5" Text="{Binding FinalWeight}" HorizontalOptions="Center"/>
+                                        <Label  Grid.Column="6" Text="{Binding TotalStgAmount}" HorizontalOptions="Center"/>
+                                        <Label  Grid.Column="7" Text="{Binding TotalStgPayment}" HorizontalOptions="Center"/>
+                                        <Label  Grid.Column="8" Text="{Binding CommAmount}" HorizontalOptions="Center"/>
+                                        <Label  Grid.Column="9" Text="{Binding CessAmount}" HorizontalOptions="Center"/>
+                                        <Label  Grid.Column="10" Text="{Binding LessSeasonAdv}" HorizontalOptions="Center"/>
+                                        <Label  Grid.Column="11" Text="{Binding AmountToPay}" HorizontalOptions="Center"/>-->
+                                        <Button Grid.Column="3" Text="View" HorizontalOptions="Start"
+                                        Clicked="OnPrintButtonClicked"  
+                                        TextColor="White" 
+                                        BackgroundColor="#008CBA"
+                                        BorderColor="Gray"
+                                        BorderWidth="1"
+                                            
+                                        CornerRadius="5" CommandParameter="{Binding BillId}"/>
+
+                                        <!--Row Separator-->
+                                        <BoxView Grid.ColumnSpan="4" HeightRequest="1" BackgroundColor="LightGray" VerticalOptions="End" />
+
+
+                                    </Grid>
+
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+
+                    </Grid>
+                </ScrollView>
+            </Frame>
+
+            <!--<Frame BorderColor="LightBlue" BackgroundColor="AliceBlue" CornerRadius="10" Padding="8" HasShadow="True" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
+                <ScrollView Orientation="Horizontal">
+                    <Grid  BackgroundColor="LightBlue" Padding="5" HorizontalOptions="FillAndExpand">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+
+                        </Grid.RowDefinitions>
+
+
+                        <Grid Grid.Row="0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Column="0" Text="{Binding TotalChallanWeight, StringFormat='Total Challan Wgt.: {0} kg'}" FontAttributes="Bold" />
+                            <Label Grid.Column="1" Text="{Binding TotalLeafAmount, StringFormat='Total Leaf Amt.: {0:F2}'}" FontAttributes="Bold" />
+                            <Label Grid.Column="2" Text="{Binding TotalReceiptAmount, StringFormat='Total Receipt Amt.: {0:F2}'}" FontAttributes="Bold" />
+                            <Label Grid.Column="3" Text="{Binding TotalBillReceiptAmount, StringFormat='Total Bill Amt.: {0:F2}'}" FontAttributes="Bold" />
+                            <Label Grid.Column="4" Text="" FontAttributes="Bold" />
+                            <Label Grid.Column="5" Text="" FontAttributes="Bold" />
+                            <Label Grid.Column="6" Text="" FontAttributes="Bold" />
+                            <Label Grid.Column="7" Text="" FontAttributes="Bold" />
+
+
+                        </Grid>
+                    </Grid>
+                </ScrollView>
+            </Frame>-->
+      
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

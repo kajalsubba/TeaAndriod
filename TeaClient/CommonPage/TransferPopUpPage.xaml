@@ -1,0 +1,65 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
+             x:Class="TeaClient.CommonPage.TransferPopUpPage"
+              BackgroundColor="#80000000" >
+    <ContentPage.Content>
+        <StackLayout HorizontalOptions="CenterAndExpand"
+             VerticalOptions="CenterAndExpand"
+             BackgroundColor="White"
+             Padding="40">
+         
+         
+            <Frame BorderColor="LightBlue"  BackgroundColor="#F8F8FF" CornerRadius="10" Padding="8" HasShadow="True" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
+                <ScrollView >
+                    <ListView x:Name="VehicleListView" HasUnevenRows="True">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <ViewCell>
+                                    <Frame HasShadow="True" 
+           Padding="10" 
+           Margin="3" 
+           BorderColor="#006a55" 
+           CornerRadius="5">
+                                        <StackLayout Orientation="Horizontal" Padding="10">
+                                            <!-- Client Name and Details -->
+                                            <StackLayout Orientation="Vertical" HorizontalOptions="FillAndExpand">
+                                                <Label Text="{Binding VehicleNo}" FontSize="16" FontAttributes="Bold" TextColor="Black" />
+                                                <Label Text="{Binding TripName,StringFormat='Trip : {0}'}" TextColor="#006a55"  FontSize="14" FontAttributes="Bold" >
+                                                </Label>
+                                                 <Label Text="{Binding LoginUserName,StringFormat='User: {0}'}" TextColor="#006a55" FontSize="14" FontAttributes="Bold">
+                                            
+                                                </Label>
+                                            </StackLayout>
+
+                                            <!-- Edit Button -->
+                                            <Button Text="Transfer" 
+                VerticalOptions="Center"   
+                               BackgroundColor="#008CBA"
+                                BorderColor="Gray" 
+                                BorderWidth="1.5" 
+                                CornerRadius="10" 
+                                TextColor="White"
+                                        Clicked="OnTransferButtonClicked" 
+                CommandParameter="{Binding .}"/>
+                                        </StackLayout>
+                                    </Frame>
+                                    
+                                </ViewCell>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </ScrollView>
+            </Frame>
+            <Button Text="Close" 
+            VerticalOptions="Center"   
+               BackgroundColor="#008CBA"
+                BorderColor="Gray" 
+                BorderWidth="1.5" 
+                CornerRadius="10" 
+                TextColor="White"
+                        Clicked="OnCloseButtonClicked" />
+
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

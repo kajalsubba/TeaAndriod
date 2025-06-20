@@ -1,0 +1,101 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
+             xmlns:sys="clr-namespace:System;assembly=mscorlib" xmlns:local="clr-namespace:TeaClient.ViewModel"
+             x:Class="TeaClient.SupplierPage"
+             BackgroundColor="#F8F8FF">
+    <ContentPage.BindingContext>
+        <local:FactoryViewModel></local:FactoryViewModel>
+    </ContentPage.BindingContext>
+    <ContentPage.Content>
+        <ScrollView>
+            
+            <StackLayout Padding="10" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand" >
+
+               
+                
+                <Label x:Name="HeaderName" Text="Supplier Entry" FontSize="24" HorizontalOptions="Center" />
+               
+                <!-- Collection Date -->
+                <Label Text="Collection Date: (Mandatory)" />
+                <DatePicker x:Name="collectionDate" Format="dd/MM/yyyy" MaximumDate="{x:Static sys:DateTime.Now}"/>
+
+                <!-- Client Name -->
+                <!--<Label Text="Client Name:" />
+            <Entry x:Name="clientNameEntry" Placeholder="Enter Client Name" />-->
+
+                <!-- Vehicle No -->
+                <Label Text="Vehicle No:(Mandatory)" />
+                <!--<AbsoluteLayout>-->
+                    <Entry TextChanged="SearchBar_OnTextChanged" BackgroundColor="#f9f9f9" TextColor="#FF464859" FontSize="16" PlaceholderColor="#646b7a" x:Name="VehicleNo" Placeholder="Type here..." AbsoluteLayout.LayoutBounds="0,0,285,38"  AbsoluteLayout.LayoutFlags="None"/>
+                   
+                    <!--<Entry TextChanged="SearchBar_OnTextChanged" x:Name="searchBar" Placeholder="Enter Client Name" />-->
+
+                    <ListView x:Name="VehicleListView" IsVisible="False"   CachingStrategy="RecycleElement" BackgroundColor="White" ItemTapped="ListView_OnItemTapped"  AbsoluteLayout.LayoutFlags="None">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <ViewCell>
+                                    <Frame>
+                                        <StackLayout BackgroundColor="White">
+                                            <Label Text="{Binding .}" FontSize="16" TextColor="#FF464859"/>
+                                        </StackLayout>
+                                    </Frame>
+                                </ViewCell>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                <!--</AbsoluteLayout>-->
+             
+                <!-- Factory Name -->
+                <Label Text="Factory Name:" />
+                <!--<Entry x:Name="factoryNameEntry" Placeholder="Enter Factory Name" />-->
+                <Picker ItemDisplayBinding="{Binding FactoryName}" x:Name="FactoryName" Title="Select Factory" ItemsSource="{Binding Factorylists}"  SelectedIndexChanged="OnFactotyIndexChanged"/>
+
+
+                <!-- Account Name -->
+                <Label Text="Account Name: (Mandatory)" />
+                <!--<Entry x:Name="AccountName" Placeholder="Enter Account Name" />-->
+                <!--<Picker ItemDisplayBinding="{Binding AccountName}" x:Name="AccountName" Title="Select Account" ItemsSource="{Binding Accountlists}" />-->
+                <Picker x:Name="AccountName"     Title="Select Account"   >
+                </Picker>
+                <!-- Fine Leaf -->
+                <Label Text="Fine Leaf (Optional):" />
+                <Entry x:Name="FineLeaf" Placeholder="Enter Fine Leaf" Keyboard="Numeric" MaxLength="2"/>
+
+                <!-- Challan Weight -->
+                <Label Text="Challan Weight: (Mandatory)" />
+                <Entry x:Name="ChallanWgt" Placeholder="Enter Challan Weight" Keyboard="Numeric" MaxLength="6"/>
+
+         
+
+                <!-- Remarks -->
+                <Label Text="Remarks (Optional):" />
+            <Editor x:Name="remarksEditor" HeightRequest="100" Placeholder="Enter Remarks"></Editor>
+
+                <!--Image Capture-->
+                <Button Text="Upload Challan " Clicked="OnCaptureClicked"  WidthRequest="100"
+        HeightRequest="60"
+        VerticalOptions="CenterAndExpand"
+        HorizontalOptions="CenterAndExpand" TextColor="White" 
+                    BackgroundColor="#008CBA"
+                    BorderColor="Gray"
+            BorderWidth="1.5"
+            CornerRadius="10"  />
+                <Button VerticalOptions="Center" Text="Save" TextColor="White" 
+                    BackgroundColor="#008CBA"
+                    BorderColor="Gray"
+            BorderWidth="1.5"
+            CornerRadius="10" Clicked="OnSubmitClicked" />
+              
+                <!--<Image x:Name="ChallanImage" HeightRequest="300" WidthRequest="300">
+
+                </Image>-->
+                <Frame BorderColor="Black" BackgroundColor="#006a55" CornerRadius="5" HasShadow="False" Padding="0" Margin="5">
+                    <Image x:Name="ChallanImage" HeightRequest="300" WidthRequest="300" Aspect="AspectFill" />
+                </Frame>
+
+            </StackLayout>
+      
+        </ScrollView>
+    </ContentPage.Content>
+</ContentPage>

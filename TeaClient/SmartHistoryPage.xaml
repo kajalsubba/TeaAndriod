@@ -1,0 +1,327 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
+             xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
+             x:Class="TeaClient.SmartHistoryPage"
+              BackgroundColor="#F8F8FF">
+    <ContentPage.Content>
+        <!--<ScrollView>-->
+        <StackLayout Padding="10" >
+            <Label x:Name="HeaderName" Text="Smart History" FontSize="24" HorizontalOptions="Center" />
+            <Label Text="From Date: (Mandatory)" />
+            <DatePicker x:Name="FromDate" Format="dd/MM/yyyy" MaximumDate="{x:Static sys:DateTime.Now}"/>
+            <Label Text="To Date: (Mandatory)" />
+            <DatePicker x:Name="ToDate" Format="dd/MM/yyyy" MaximumDate="{x:Static sys:DateTime.Now}"/>
+
+            <Button VerticalOptions="Center" Text="Search" TextColor="White" 
+        BackgroundColor="#008CBA"
+        BorderColor="Gray"
+BorderWidth="1.5"
+CornerRadius="10" Clicked="OnSearchClicked" />
+
+
+            <xct:TabView
+               TabStripPlacement="Top"
+                    TabStripBackgroundColor="#b8f2f5"
+                    TabStripHeight="60"
+                    TabIndicatorColor="#f53b66"
+                    TabIndicatorHeight="2"
+                    TabContentBackgroundColor="White"
+                   IsSwipeEnabled="False" >
+
+                <xct:TabViewItem Text="Collection" FontSizeSelected="15" BackgroundColor="#17a2b8"
+                                 TextColor="White" FontAttributesSelected="bold">
+                    <xct:TabViewItem.Content>
+
+                        <StackLayout  HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+                            <!--<Grid
+                      BackgroundColor="Gray">-->
+                            <!--<Label
+                          HorizontalOptions="Center"
+                          VerticalOptions="Center"
+                          Text="TabContent1" />-->
+                            <Frame BorderColor="LightBlue" BackgroundColor="#F8F8FF" CornerRadius="10" Padding="10" HasShadow="True" VerticalOptions="FillAndExpand"   HorizontalOptions="FillAndExpand">
+
+                                <ScrollView Orientation="Horizontal">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="*" />
+
+                                        </Grid.RowDefinitions>
+
+                                        <!--Column Headers-->
+                                        <Grid Grid.Row="0" BackgroundColor="#018353" Padding="5" HorizontalOptions="FillAndExpand">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="*" />
+                                            </Grid.ColumnDefinitions>
+                                            <Label Grid.Column="0" Text="Date" FontAttributes="Bold" TextColor="White"/>
+                                            <Label Grid.Column="1" Text="Final Wgt" FontAttributes="Bold" HorizontalOptions="Center" TextColor="White"/>
+                                            <Label Grid.Column="2" Text="Rate" FontAttributes="Bold" HorizontalOptions="Center" TextColor="White"/>
+                                            <Label Grid.Column="3" Text="Rate Status" FontAttributes="Bold" HorizontalOptions="Center" TextColor="White"/>
+
+                                            <Label Grid.Column="4" Text="Amount" FontAttributes="Bold" HorizontalOptions="End" TextColor="White"/>
+                                            <Label Grid.Column="5" Text="Status" FontAttributes="Bold" HorizontalOptions="Center" TextColor="White"/>
+
+                                        </Grid>
+
+                                        <!--CollectionView with Data-->
+                                        <CollectionView Grid.Row="1" ItemsSource="{Binding dataItems}">
+                                            <CollectionView.ItemsLayout>
+                                                <GridItemsLayout Orientation="Vertical" Span="1" />
+                                            </CollectionView.ItemsLayout>
+                                            <CollectionView.ItemTemplate>
+                                                <DataTemplate>
+                                                    <Grid Margin="0,0,0,10" >
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="*" />
+                                                            <ColumnDefinition Width="*" />
+                                                            <ColumnDefinition Width="*" />
+                                                            <ColumnDefinition Width="*" />
+                                                            <ColumnDefinition Width="*" />
+                                                            <ColumnDefinition Width="*" />
+                                                        </Grid.ColumnDefinitions>
+
+                                                        <Label   Grid.Column="0" Text="{Binding CollectionDate}"  />
+                                                        <Label  Grid.Column="1" Text="{Binding FinalWeight, StringFormat='{0}'}" HorizontalOptions="Center"/>
+                                                        <Label   Grid.Column="2" Text="{Binding Rate}" HorizontalOptions="Center"/>
+                                                        <Label   Grid.Column="3" Text="{Binding RateStatus}" HorizontalOptions="Center">
+                                                            <Label.Style>
+                                                                <Style TargetType="Label" >
+                                                                    <Setter Property="TextColor" Value="Black" />
+                                                                    <Style.Triggers>
+                                                                        <DataTrigger TargetType="Label" Binding="{Binding RateStatus}" Value="Not Confirm">
+                                                                            <Setter Property="TextColor" Value="Red" />
+                                                                        </DataTrigger>
+                                                                        <DataTrigger TargetType="Label" Binding="{Binding RateStatus}" Value="Confirm">
+                                                                            <Setter Property="TextColor" Value="Green" />
+                                                                        </DataTrigger>
+                                                                    </Style.Triggers>
+                                                                </Style>
+                                                            </Label.Style>
+                                                        </Label>
+
+                                                        <Label  Grid.Column="4" Text="{Binding Amount}" HorizontalOptions="End"/>
+                                                        <Label   Grid.Column="5" Text="{Binding Status}" HorizontalOptions="Center" >
+                                                            <Label.Style>
+                                                                <Style TargetType="Label" >
+                                                                    <Setter Property="TextColor" Value="Black" />
+                                                                    <!--Default color-->
+                                                                    <Style.Triggers>
+                                                                        <DataTrigger TargetType="Label" Binding="{Binding Status}" Value="Rejected">
+                                                                            <Setter Property="TextColor" Value="Red" />
+                                                                        </DataTrigger>
+                                                                        <DataTrigger  TargetType="Label" Binding="{Binding Status}" Value="Pending">
+                                                                            <Setter Property="TextColor" Value="#018353" />
+                                                                            <!--<Setter Property="FontAttributes" Value="Bold" />-->
+
+                                                                        </DataTrigger>
+                                                                        <!--Add more DataTriggers for other status conditions if needed-->
+                                                                    </Style.Triggers>
+                                                                </Style>
+                                                            </Label.Style>
+                                                        </Label>
+
+                                                        <!--Row Separator-->
+                                                        <BoxView Grid.ColumnSpan="6" HeightRequest="1" BackgroundColor="LightGray" VerticalOptions="End" />
+
+
+                                                    </Grid>
+
+                                                </DataTemplate>
+                                            </CollectionView.ItemTemplate>
+                                        </CollectionView>
+
+                                    </Grid>
+                                </ScrollView>
+                            </Frame>
+                            <Frame BorderColor="LightBlue" BackgroundColor="AliceBlue" CornerRadius="10" Padding="8" HasShadow="True" VerticalOptions="FillAndExpand"   HorizontalOptions="FillAndExpand">
+                                <ScrollView Orientation="Horizontal">
+                                    <Grid  BackgroundColor="#018353" Padding="5" HorizontalOptions="FillAndExpand">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto" />
+
+                                        </Grid.RowDefinitions>
+
+
+                                        <Grid Grid.Row="0">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="*" />
+
+                                            </Grid.ColumnDefinitions>
+                                            <Label Grid.Column="0" Text="{Binding TotalDays, StringFormat='Total: {0} Days'}" FontAttributes="Bold" TextColor="White" />
+                                            <Label Grid.Column="1" Text="{Binding TotalFinalWeight, StringFormat='Total Weight: {0} kg'}" FontAttributes="Bold" TextColor="White"/>
+                                            <Label Grid.Column="2" Text="{Binding AvgRate, StringFormat='Avg Rate: {0:F2}'}" FontAttributes="Bold" TextColor="White"/>
+                                            <Label Grid.Column="3" Text="{Binding TotalGrossAmount, StringFormat='Total Amount: {0:F2}'}" FontAttributes="Bold" TextColor="White"/>
+                                            <Label Grid.Column="4" Text="" FontAttributes="Bold" />
+
+                                        </Grid>
+                                    </Grid>
+                                </ScrollView>
+                            </Frame>
+
+                            <!--</Grid>-->
+                        </StackLayout>
+                    </xct:TabViewItem.Content>
+                </xct:TabViewItem>
+
+                <xct:TabViewItem Text="Payment" FontSizeSelected="15"  BackgroundColor="#17a2b8" TextColor="White" FontAttributesSelected="bold">
+                    <xct:TabViewItem.Content>
+
+                        <StackLayout  HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+                            <!--<Grid>-->
+
+                            <Frame BorderColor="LightBlue"  BackgroundColor="#F8F8FF" CornerRadius="10" Padding="8" HasShadow="True" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
+
+                                <ScrollView Orientation="Horizontal">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="*" />
+
+                                        </Grid.RowDefinitions>
+
+                                        <!-- Column Headers -->
+                                        <Grid Grid.Row="0" BackgroundColor="#018353" Padding="5" HorizontalOptions="FillAndExpand">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="*" />
+                                            </Grid.ColumnDefinitions>
+                                            <Label Grid.Column="0" Text="Date" FontAttributes="Bold" TextColor="White" />
+                                            <Label Grid.Column="1" Text="Narration" FontAttributes="Bold" HorizontalOptions="Start" TextColor="White"/>
+                                            <Label Grid.Column="2" Text="Amount" FontAttributes="Bold" HorizontalOptions="End" TextColor="White"/>
+
+                                        </Grid>
+
+                                        <!-- CollectionView with Data -->
+                                        <CollectionView Grid.Row="1" ItemsSource="{Binding paymentItems}">
+                                            <CollectionView.ItemsLayout>
+                                                <GridItemsLayout Orientation="Vertical" Span="1" />
+                                            </CollectionView.ItemsLayout>
+                                            <CollectionView.ItemTemplate>
+                                                <DataTemplate>
+                                                    <Grid Margin="0,0,0,10" >
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="*" />
+                                                            <ColumnDefinition Width="*" />
+                                                            <ColumnDefinition Width="*" />
+
+
+                                                        </Grid.ColumnDefinitions>
+
+                                                        <Label  Grid.Column="0" Text="{Binding PaymentDate}"  />
+                                                        <Label  Grid.Column="1" Text="{Binding Narration}" HorizontalOptions="Start"/>
+                                                        <Label  Grid.Column="2" Text="{Binding Amount}" HorizontalOptions="End"/>
+
+                                                        <!-- Row Separator -->
+                                                        <BoxView Grid.ColumnSpan="3" HeightRequest="1" BackgroundColor="LightGray" VerticalOptions="End" />
+
+
+                                                    </Grid>
+
+                                                </DataTemplate>
+                                            </CollectionView.ItemTemplate>
+                                        </CollectionView>
+
+                                    </Grid>
+                                </ScrollView>
+                            </Frame>
+                            <Frame BorderColor="LightBlue" BackgroundColor="AliceBlue" CornerRadius="10" Padding="8" HasShadow="True" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
+                                <ScrollView Orientation="Horizontal">
+                                    <Grid  BackgroundColor="#018353" Padding="5" HorizontalOptions="FillAndExpand">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto" />
+
+                                        </Grid.RowDefinitions>
+
+
+                                        <Grid Grid.Row="0">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" />
+
+
+                                            </Grid.ColumnDefinitions>
+                                            <Label Grid.Column="0" Text="{Binding TotalPaymentAmount, StringFormat='Total Amount: {0:F2}'}" FontAttributes="Bold" TextColor="White" />
+
+
+
+                                        </Grid>
+                                    </Grid>
+                                </ScrollView>
+                            </Frame>
+
+                            <!--</Grid>-->
+                        </StackLayout>
+                    </xct:TabViewItem.Content>
+
+                </xct:TabViewItem>
+
+                <xct:TabViewItem Text="OutStanding" FontSizeSelected="15"  BackgroundColor="#17a2b8" TextColor="White" FontAttributesSelected="bold">
+                    <xct:TabViewItem.Content>
+
+
+                        <StackLayout BackgroundColor="#F8F8FF"  HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+
+                            <!--<Grid Background="Gray">-->
+
+                            <!--<Frame BorderColor="LightBlue" BackgroundColor="AliceBlue" CornerRadius="10" Padding="8" HasShadow="True" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
+                                <ScrollView Orientation="Horizontal">
+                                    <Grid  BackgroundColor="LightBlue" Padding="5" HorizontalOptions="FillAndExpand">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto" />
+
+                                        </Grid.RowDefinitions>
+
+
+                                        <Grid Grid.Row="0">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="*" />
+
+                                            </Grid.ColumnDefinitions>
+                                            <Label Grid.Column="0" Text="{Binding PreviousBalance, StringFormat='Previous Balance: {0:F2}'}" FontAttributes="Bold" />
+                                            <Label Grid.Column="1" Text="{Binding TotalSeasonAdvance, StringFormat='Standing Season Adv.: {0:F2}'}" FontAttributes="Bold" />
+
+
+
+
+                                        </Grid>
+                                    </Grid>
+                                </ScrollView>
+                            </Frame>-->
+                            <Label Text="" />
+                            <Label Text="" />
+
+                            <Label x:Name="PreviousBalance" Text="Previous Balance :" FontSize="20" HorizontalOptions="Start" />
+                            <Entry x:Name="txtPreviousBalance" Placeholder="Previous Balance" FontAttributes="Bold" TextColor="Black" PlaceholderColor="#3aa602" IsReadOnly="True"></Entry>
+                            <Label x:Name="StandingSeasonAdv" Text="Standing Season Advance :" FontSize="20" HorizontalOptions="Start" />
+                            <Entry x:Name="txtStandingSeasonAdv" Placeholder="Standing Season Advance" FontAttributes="Bold" TextColor="Black" PlaceholderColor="#3aa602" IsReadOnly="True"></Entry>
+
+                            <!--</Grid>-->
+                        </StackLayout>
+                    </xct:TabViewItem.Content>
+                </xct:TabViewItem>
+            </xct:TabView>
+            <!--</Grid>-->
+
+
+            <!-- Header -->
+
+
+
+
+        </StackLayout>
+        <!--</ScrollView>-->
+    </ContentPage.Content>
+</ContentPage>

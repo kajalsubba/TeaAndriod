@@ -1,0 +1,60 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                 NavigationPage.HasNavigationBar="False"
+             x:Class="TeaClient.UserModule.LokVehicleListViewPage">
+    <ContentPage.Content>
+        
+        <StackLayout>
+            <Label x:Name="HeaderName"
+   Grid.Column="1"
+   FontSize="18"
+                
+               TextColor="Black"
+   FontAttributes="Bold"
+   HorizontalOptions="Center"
+   VerticalOptions="Center" />
+            <Frame BorderColor="LightBlue" Margin="0,5,0,0" BackgroundColor="#F8F8FF" CornerRadius="10" Padding="8" HasShadow="True" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
+                <ScrollView >
+                    <ListView x:Name="LockVehicleListView" HasUnevenRows="True">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <ViewCell>
+                                    <Frame HasShadow="True" 
+                                        Padding="5" 
+                                        Margin="3" 
+                                        BorderColor="#006a55" 
+                                        CornerRadius="5">           
+                                        <StackLayout Orientation="Horizontal" Padding="10">
+                                            <!-- Client Name and Details -->
+                                            <StackLayout Orientation="Vertical" HorizontalOptions="FillAndExpand">
+                                                <Label Text="{Binding VehicleNo}" FontSize="16" FontAttributes="Bold" TextColor="Black" />
+                                                <Label Text="{Binding TripName}" TextColor="#006a55"  FontSize="14" FontAttributes="Bold" >
+                                                  
+                                                </Label>
+                                            
+                                            </StackLayout>
+                                            <!-- Edit Button -->
+                                            <Button Text="Select" 
+                                                VerticalOptions="Center"   
+                                                BackgroundColor="#008CBA"
+                                                BorderColor="Gray" 
+                                                BorderWidth="1.5" 
+                                                CornerRadius="10" 
+                                                TextColor="White"
+                                                    Clicked="OnSelectButtonClicked" 
+                                                CommandParameter="{Binding .}"/>
+                                        </StackLayout>
+                                    </Frame>
+                                </ViewCell>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </ScrollView>
+            </Frame>
+
+
+
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

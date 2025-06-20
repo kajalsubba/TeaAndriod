@@ -1,0 +1,90 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="TeaClient.CommonPage.SalePopUpPage"
+             BackgroundColor="#80000000" >
+
+
+    <ContentPage.Content>
+
+        <AbsoluteLayout 
+    HorizontalOptions="CenterAndExpand" 
+    VerticalOptions="CenterAndExpand"
+    WidthRequest="300" 
+   >
+
+            <!-- Shadow effect using BoxView -->
+            <BoxView 
+        Color="#000000" 
+        Opacity="0.3" 
+        CornerRadius="15" 
+        WidthRequest="300" 
+       
+        AbsoluteLayout.LayoutBounds="0, 0, 1, 1" 
+        AbsoluteLayout.LayoutFlags="All" 
+        Margin="5" />
+            <!-- Adjust margin for shadow spread -->
+
+            <Frame 
+        BorderColor="#007ACC" 
+        BackgroundColor="#FFFFFF" 
+        CornerRadius="15" 
+        Padding="12" 
+        HasShadow="False" 
+        AbsoluteLayout.LayoutBounds="0, 0, 1, 1" 
+        AbsoluteLayout.LayoutFlags="All">
+
+                <StackLayout 
+            HorizontalOptions="CenterAndExpand"
+            VerticalOptions="CenterAndExpand">
+
+                    <Frame Padding="0" HasShadow="False" BorderColor="Transparent" BackgroundColor="Transparent">
+                        <Label Text="Factory Name: (Mandatory)" FontSize="Medium" TextColor="#333333" />
+                    </Frame>
+
+                    <Frame Padding="0" HasShadow="False" BorderColor="Transparent" BackgroundColor="Transparent">
+                        <Picker ItemDisplayBinding="{Binding FactoryName}" x:Name="FactoryName" Title="Select Factory" SelectedIndexChanged="OnFactotyIndexChanged" />
+                    </Frame>
+
+                    <Frame Padding="0" HasShadow="False" BorderColor="Transparent" BackgroundColor="Transparent">
+                        <Label Text="Account Name: (Mandatory)" FontSize="Medium" TextColor="#333333" />
+                    </Frame>
+
+                    <Frame Padding="0" HasShadow="False" BorderColor="Transparent" BackgroundColor="Transparent">
+                        <Picker x:Name="AccountName" Title="Select Account" />
+                    </Frame>
+
+                    <Frame Padding="0" HasShadow="False" BorderColor="Transparent" BackgroundColor="Transparent">
+                        <Label Text="Fine Leaf (Optional):" FontSize="Medium" TextColor="#333333" />
+                    </Frame>
+
+                    <Frame Padding="0" HasShadow="False" BorderColor="Transparent" BackgroundColor="Transparent">
+                        <Entry x:Name="FineLeaf" Placeholder="Enter Fine Leaf" Keyboard="Numeric" MaxLength="2" FontSize="Medium" />
+                    </Frame>
+
+                    <Frame Padding="0" HasShadow="False" BorderColor="Transparent" BackgroundColor="Transparent">
+                        <Label Text="Challan Weight: (Mandatory)" FontSize="Medium" TextColor="#333333" />
+                    </Frame>
+
+                    <Frame Padding="0" HasShadow="False" BorderColor="Transparent" BackgroundColor="Transparent">
+                        <Entry x:Name="ChallanWgt" Placeholder="Enter Challan Weight" Keyboard="Numeric" MaxLength="6" FontSize="Medium" />
+                    </Frame>
+
+                    <Frame Padding="0" HasShadow="False" BorderColor="Transparent" BackgroundColor="Transparent">
+                        <Label Text="Remarks (Optional):" FontSize="Medium" TextColor="#333333" />
+                    </Frame>
+
+                    <Frame Padding="0" HasShadow="False" BorderColor="Transparent" BackgroundColor="Transparent">
+                        <Entry x:Name="remarksEditor" Placeholder="Enter Remarks" FontSize="Medium" />
+                    </Frame>
+
+                    <Button Text="Send" x:Name="btnServer" VerticalOptions="Center" BackgroundColor="#007ACC" BorderColor="Gray" BorderWidth="1.5" CornerRadius="10" TextColor="White" FontSize="Medium" Clicked="OnSendToServerClicked" />
+
+                    <Button Text="Close" VerticalOptions="Center" BackgroundColor="#FF6347" BorderColor="Gray" BorderWidth="1.5" CornerRadius="10" TextColor="White" FontSize="Medium" Clicked="OnCloseButtonClicked" />
+                </StackLayout>
+            </Frame>
+        </AbsoluteLayout>
+
+
+    </ContentPage.Content>
+</ContentPage>

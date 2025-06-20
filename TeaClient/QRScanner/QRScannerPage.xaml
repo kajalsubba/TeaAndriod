@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:zxing="clr-namespace:ZXing.Net.Mobile.Forms;assembly=ZXing.Net.Mobile.Forms"
+
+             x:Class="TeaClient.QRScanner.QRScannerPage">
+    <AbsoluteLayout>
+        <zxing:ZXingScannerView x:Name="xing" 
+                             IsScanning="True" 
+                             WidthRequest="300" 
+                             HeightRequest="300" 
+                             AbsoluteLayout.LayoutBounds="0.5, 0.5, AutoSize, AutoSize" 
+                             AbsoluteLayout.LayoutFlags="PositionProportional" />
+
+        <!-- Scanning line overlay, centered in the scanner view -->
+        <BoxView x:Name="scanningLine" 
+             Color="Red" 
+             HeightRequest="2" 
+             WidthRequest="300"
+             AbsoluteLayout.LayoutBounds="0.5, 0.5, AutoSize, AutoSize" 
+             AbsoluteLayout.LayoutFlags="PositionProportional" 
+             VerticalOptions="Center" 
+             HorizontalOptions="Center"/>
+
+        <!-- Button positioned at the bottom center -->
+        <Button x:Name="BtnFinish" 
+            Text="Close" 
+            TextColor="White" 
+            BackgroundColor="#008CBA"
+            BorderColor="Gray"
+            BorderWidth="1.5"
+            CornerRadius="10" 
+            VerticalOptions="End" 
+            AbsoluteLayout.LayoutBounds="0.5, 1, AutoSize, AutoSize" 
+            AbsoluteLayout.LayoutFlags="PositionProportional"  Clicked="OnBtnCloseClicked"/>
+    </AbsoluteLayout>
+
+
+</ContentPage>

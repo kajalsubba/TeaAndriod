@@ -1,0 +1,110 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
+             xmlns:local="clr-namespace:TeaClient.ViewModel"
+             x:Class="TeaClient.DeviceSettings.DevicesSettingsPage">
+
+    <!--<ContentPage.BindingContext>
+        <local:DeviceViewModel></local:DeviceViewModel>
+    </ContentPage.BindingContext>-->
+    
+    <ContentPage.Content>
+        <StackLayout Padding="40" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
+            <Label x:Name="HeaderName" Text="Add Device" FontSize="24" HorizontalOptions="Center" />
+
+            <Frame Padding="0" HasShadow="False" BorderColor="Transparent" BackgroundColor="Transparent">
+                <Picker ItemDisplayBinding="{Binding DeviceName}" 
+             x:Name="Devices" 
+             TitleColor="#6c757d" 
+             Title="Select Device" 
+              
+             TextColor="Black" />
+            </Frame>
+            <Editor x:Name="DeviceDesc"  
+                    
+                    BackgroundColor="#f9f9f9" TextColor="Black" FontSize="16" PlaceholderColor="#646b7a"  Placeholder="Description" AbsoluteLayout.LayoutBounds="0,0,285,38"  AbsoluteLayout.LayoutFlags="None"/>
+
+            <Button VerticalOptions="Center" Text="Save Device " TextColor="White" 
+                                BackgroundColor="#008CBA"
+                                BorderColor="Gray"
+                                BorderWidth="1.5"
+                                CornerRadius="10" Clicked="OnSaveDeviceClicked"/>
+            <!--<Button VerticalOptions="Center" Text="Print " TextColor="White" 
+                      BackgroundColor="#008CBA"
+                      BorderColor="Gray"
+                      BorderWidth="1.5"
+                      CornerRadius="10" Clicked="OnPrintClicked"/>-->
+            <StackLayout Orientation="Horizontal">
+                <ListView x:Name="DeviceListView" HasUnevenRows="True">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <ViewCell>
+                                <Frame HasShadow="True" 
+       Padding="5" 
+       Margin="3" 
+       BorderColor="#006a55" 
+       CornerRadius="5">
+                                    <StackLayout Orientation="Horizontal" Padding="10">
+                                        <StackLayout Orientation="Vertical" HorizontalOptions="FillAndExpand">
+                                         
+                                            <Grid Padding="10">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="auto" />
+                                                    <ColumnDefinition Width="auto" />
+                                                    <ColumnDefinition Width="*" />
+                                                </Grid.ColumnDefinitions>
+
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="auto" />
+                                                    <RowDefinition Height="auto" />
+                                                    <RowDefinition Height="auto" />
+                                                    <RowDefinition Height="auto"/>
+                                                    <RowDefinition Height="auto"/>
+
+                                                </Grid.RowDefinitions>
+
+                                                <Label
+                    Text="{Binding DeviceName, StringFormat='Bags: {0}'}"
+                    Grid.Row="0"
+                    Grid.Column="0"
+                    TextColor="#006a55"
+                    FontSize="14"
+                    FontAttributes="Bold"
+                    VerticalOptions="CenterAndExpand"
+                    LineBreakMode="WordWrap"
+                    HorizontalOptions="Start"
+                    WidthRequest="150">
+                                                
+                                                </Label>
+
+                                   
+                                            
+                                                <Button Text="Delete" 
+                        BackgroundColor="#008CBA"
+                        Grid.Row="0"
+                        Grid.RowSpan="2"
+                        Grid.Column="2"
+                        BorderColor="Gray"
+                        BorderWidth="1.5"
+                        CornerRadius="10"
+                        TextColor="White"
+                        HorizontalOptions="End"
+                        VerticalOptions="End"
+                        Clicked="OnDeleteButtonClicked"
+                        CommandParameter="{Binding .}" />
+
+                     
+                                            </Grid>
+                                        </StackLayout>
+                                    </StackLayout>
+                                </Frame>
+                            </ViewCell>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+
+            </StackLayout>
+        </StackLayout>
+   
+    </ContentPage.Content>
+</ContentPage>

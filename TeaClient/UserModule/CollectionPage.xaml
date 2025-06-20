@@ -1,0 +1,329 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib" 
+             xmlns:local="clr-namespace:TeaClient.ViewModel"
+             NavigationPage.HasNavigationBar="False"
+             x:Class="TeaClient.UserModule.CollectionPage">
+    <ContentPage.BindingContext>
+        <local:GradeViewModel></local:GradeViewModel>
+    </ContentPage.BindingContext>
+    <ContentPage.Content>
+        <ScrollView>
+            <StackLayout Padding="10" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
+
+                <!-- Place the AbsoluteLayout for the images first -->
+                <AbsoluteLayout>
+                    <!-- Top Left Image with Label -->
+                    <StackLayout Orientation="Horizontal"
+                         AbsoluteLayout.LayoutBounds="0, 0, AutoSize, AutoSize"
+                         AbsoluteLayout.LayoutFlags="PositionProportional">
+                        <Image Source="lorry.png" 
+                       WidthRequest="40" 
+                       HeightRequest="40" 
+                       Aspect="AspectFit" />
+                        <Label x:Name="lblVehicle" 
+                       VerticalOptions="Center" 
+                       FontAttributes="Bold"          
+                       TextColor="Black" 
+                       Margin="5,0,0,0"/>
+                    </StackLayout>
+
+                    <!-- Middle Label -->
+                    <Label x:Name="TotalRecord"
+                  
+                        VerticalOptions="Center"
+                               FontAttributes="Bold"
+                        HorizontalOptions="Center"
+                                 Margin="5,10,0,0"
+                               TextColor="#006a55" 
+                        AbsoluteLayout.LayoutBounds="0.5, 0, AutoSize, AutoSize"
+                        AbsoluteLayout.LayoutFlags="PositionProportional" />
+
+                    <!-- Top Right Image with Label -->
+                    <StackLayout Orientation="Horizontal"
+                         AbsoluteLayout.LayoutBounds="1, 0, AutoSize, AutoSize"
+                         AbsoluteLayout.LayoutFlags="PositionProportional">
+                        <!--<Image Source="QRScanner.png" 
+                       WidthRequest="40" 
+                       HeightRequest="40" 
+                       Aspect="AspectFit" />-->
+
+                        <ImageButton
+                            x:Name="QRButton"
+                        Source="QRScanner.png"
+                        WidthRequest="40" 
+                        HeightRequest="40" Aspect="AspectFit"
+                        HorizontalOptions="End"
+                        VerticalOptions="End"
+                         BackgroundColor="White"
+                                Clicked="OnQRClicked"
+                        />
+                    </StackLayout>
+                </AbsoluteLayout>
+
+                <!--<Label x:Name="GrossTotalWgt" FontSize="16" TextColor="#006a55" HorizontalOptions="Center" FontAttributes="Bold"  />-->
+                <Grid Margin="0,5,10,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <!-- Left column -->
+                        <ColumnDefinition Width="Auto" />
+                        <!-- Center column -->
+                        <ColumnDefinition Width="*" />
+                        <!-- Right column -->
+                    </Grid.ColumnDefinitions>
+
+                    <Label x:Name="TotalFirstWgt"
+           
+           FontSize="14"
+           TextColor="#006a55"
+           FontAttributes="Bold"
+           HorizontalOptions="Start"
+           VerticalOptions="Center"
+           Grid.Column="0" />
+
+                    <Label x:Name="TotalDeducttion"
+          
+           FontSize="14"
+           TextColor="#006a55"
+           FontAttributes="Bold"
+           HorizontalOptions="Center"
+           VerticalOptions="Center"
+           Grid.Column="1" />
+
+                    <Label x:Name="GrossTotalWgt"
+      
+           FontSize="14"
+           TextColor="#006a55"
+           FontAttributes="Bold"
+           HorizontalOptions="End"
+           VerticalOptions="Center"
+           Grid.Column="2" />
+                </Grid>
+
+
+                <!-- Place the ListView and other controls after the AbsoluteLayout -->
+                <DatePicker x:Name="collectionDate" TextColor="Black" FontAttributes="Bold" IsEnabled="False" Format="dd/MM/yyyy" MaximumDate="{x:Static sys:DateTime.Now}"/>
+                <!--<Entry  x:Name="Client" Placeholder="Select Client" TextChanged="SearchBar_OnTextChanged" BackgroundColor="#f9f9f9" TextColor="Black" FontSize="16" PlaceholderColor="#646b7a" />-->
+                <StackLayout Orientation="Horizontal" VerticalOptions="Center">
+                    <Entry x:Name="Client" 
+           Placeholder="Select Client" 
+           TextChanged="SearchBar_OnTextChanged" 
+           BackgroundColor="#f9f9f9" 
+           TextColor="Black" 
+           FontSize="16" 
+           PlaceholderColor="#646b7a" 
+           HorizontalOptions="FillAndExpand"/>
+
+                    <CheckBox x:Name="QRCheck" 
+              IsChecked="True" 
+              VerticalOptions="Center" 
+                              
+              Margin="10,0,0,0"
+                                 CheckedChanged="QRCheck_CheckedChanged"/>
+                    <!-- Add margin as needed -->
+                </StackLayout>
+                <!-- Ensure ListView is placed before other controls -->
+                <ListView x:Name="ClientListView" IsVisible="False" CachingStrategy="RecycleElement" BackgroundColor="White" ItemTapped="ListView_OnItemTapped">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <ViewCell>
+                                <Frame>
+                                    <StackLayout BackgroundColor="White">
+                                        <Label Text="{Binding ClientName}" FontSize="16" TextColor="#FF464859"/>
+                                    </StackLayout>
+                                </Frame>
+                            </ViewCell>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+                <StackLayout Padding="10">
+
+                    <!-- Rest of the controls -->
+                    <Editor x:Name="EntryFieldWeight" Placeholder="Enter Weight" IsReadOnly="True"
+                         HorizontalOptions="FillAndExpand"  AutoSize="TextChanges" />
+                    <Grid >
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="0.3*" />
+                            <ColumnDefinition Width="0.7*" />
+                        </Grid.ColumnDefinitions>
+
+                        <!-- Label on the left -->
+                        <Label Grid.Column="0" FontAttributes="Bold" Text="Total Collection" VerticalOptions="Center" />
+
+                        <!-- Entry on the right -->
+                        <Entry Grid.Column="1" x:Name="TotalFieldWeight" FontAttributes="Bold" Placeholder="Total" IsReadOnly="True" HorizontalOptions="FillAndExpand" />
+                    </Grid>
+                    <Label 
+                    x:Name="txtBagCount"
+                Grid.Column="1"
+                VerticalOptions="Center"
+                HorizontalOptions="Center"
+                 TextColor="Black" 
+                FontAttributes="Bold"
+                FontSize="Medium" />
+                    <!-- Calculator Buttons Grid -->
+                    <Grid x:Name="CalculateView">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+
+                        <!-- Number Buttons -->
+                        <Button Text="7" Grid.Row="0" Grid.Column="0"  Clicked="OnNumberButtonClicked" />
+                        <Button Text="8" Grid.Row="0" Grid.Column="1" Clicked="OnNumberButtonClicked" />
+                        <Button Text="9" Grid.Row="0" Grid.Column="2" Clicked="OnNumberButtonClicked" />
+                        <Button Text="+" Grid.Row="0" Grid.RowSpan="3" Grid.Column="3" Clicked="OnOperatorButtonClicked" />
+
+                        <Button Text="4" Grid.Row="1" Grid.Column="0" Clicked="OnNumberButtonClicked" />
+                        <Button Text="5" Grid.Row="1" Grid.Column="1" Clicked="OnNumberButtonClicked" />
+                        <Button Text="6" Grid.Row="1" Grid.Column="2" Clicked="OnNumberButtonClicked" />
+                        <!--<Button Text="+" Grid.Row="1" Grid.RowSpan="2" Grid.Column="3" Clicked="OnOperatorButtonClicked" />-->
+
+                        <Button Text="1" Grid.Row="2" Grid.Column="0" Clicked="OnNumberButtonClicked" />
+                        <Button Text="2" Grid.Row="2" Grid.Column="1" Clicked="OnNumberButtonClicked" />
+                        <Button Text="3" Grid.Row="2" Grid.Column="2" Clicked="OnNumberButtonClicked" />
+                        <!--<Button Text="+" Grid.Row="2" Grid.RowSpan="1" Grid.Column="3" Clicked="OnOperatorButtonClicked" />-->
+
+
+                        <Button Text="0" Grid.Row="3" Grid.Column="0"  Clicked="OnNumberButtonClicked" />
+                        <Button Text="C" Grid.Row="3" Grid.Column="1"  Clicked="OnStepCleanButtonClicked" />
+
+                        <!--<Button Text="AC" Grid.Row="3" Grid.Column="2" Clicked="OnClearButtonClicked" />-->
+                        <Button Text="=" Grid.Row="3" Grid.Column="2" Grid.ColumnSpan="2" Clicked="OnEqualsButtonClicked" />
+                    </Grid>
+
+                </StackLayout>
+
+                <Button x:Name="BtnFinish" Grid.Column="2" VerticalOptions="Center" IsVisible="true" Text="Finish" TextColor="White" 
+                    BackgroundColor="#008CBA"
+                    BorderColor="Gray"
+                          
+                    BorderWidth="1.5"
+                    CornerRadius="10" Clicked="OnBtnFinishClicked" />
+
+                <StackLayout Padding="4" x:Name="FieldEntryLaout" IsVisible="false" >
+                    <!-- Grade -->
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="0.3*" />
+                            <ColumnDefinition Width="0.7*" />
+                        </Grid.ColumnDefinitions>
+
+                        <Label Text="Grade" FontAttributes="Bold" VerticalOptions="Center" Grid.Column="0" />
+                        <Picker ItemDisplayBinding="{Binding GradeName}" x:Name="Grade" TitleColor="#6c757d" Title="Select Grade" ItemsSource="{Binding GradeList}" TextColor="Black" Grid.Column="1" />
+                    </Grid>
+
+                    <!-- Rain (%) -->
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="0.3*" />
+                            <ColumnDefinition Width="0.7*" />
+                        </Grid.ColumnDefinitions>
+
+                        <Label Text="Rain (%)" FontAttributes="Bold" VerticalOptions="Center" Grid.Column="0" />
+                        <Entry x:Name="RainLeaf" Placeholder="Rain (%)" Keyboard="Numeric" TextChanged="RainLeaf_TextChanged" Grid.Column="1" />
+                    </Grid>
+
+                    <!-- Long Leaf (%) -->
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="0.3*" />
+                            <ColumnDefinition Width="0.7*" />
+                        </Grid.ColumnDefinitions>
+
+                        <Label Text="Long Leaf (%)" FontAttributes="Bold" VerticalOptions="Center" Grid.Column="0" />
+                        <Entry x:Name="LongLeaf" Placeholder="Long Leaf (%)" Keyboard="Numeric" TextChanged="LongLeaf_TextChanged" Grid.Column="1" />
+                    </Grid>
+
+                    <!-- Deduction (KG) -->
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="0.3*" />
+                            <ColumnDefinition Width="0.7*" />
+                        </Grid.ColumnDefinitions>
+
+                        <Label Text="Deduction (KG)" FontAttributes="Bold" VerticalOptions="Center" Grid.Column="0" />
+                        <Entry x:Name="Deduction" FontAttributes="Bold" Placeholder="Deduction (KG)" IsReadOnly="True" Grid.Column="1" />
+                    </Grid>
+
+                    <!-- Final Weight (KG) -->
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="0.3*" />
+                            <ColumnDefinition Width="0.7*" />
+                        </Grid.ColumnDefinitions>
+
+                        <Label Text="Final Weight (KG)" FontAttributes="Bold" VerticalOptions="Center" Grid.Column="0" />
+                        <Entry x:Name="FinalWeight" FontAttributes="Bold" Placeholder="Final Weight (KG)" IsReadOnly="True" Grid.Column="1" />
+                    </Grid>
+
+                    <!-- Rate -->
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="0.3*" />
+                            <ColumnDefinition Width="0.7*" />
+                        </Grid.ColumnDefinitions>
+
+                        <Label Text="Rate" FontAttributes="Bold" VerticalOptions="Center" Grid.Column="0" />
+                        <Entry x:Name="Rate" Placeholder="Rate" Keyboard="Numeric" TextChanged="Rate_TextChanged" Grid.Column="1" />
+                    </Grid>
+
+                    <!-- Final Amount -->
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="0.3*" />
+                            <ColumnDefinition Width="0.7*" />
+                        </Grid.ColumnDefinitions>
+
+                        <Label Text="Final Amount" FontAttributes="Bold" VerticalOptions="Center" Grid.Column="0" />
+                        <Entry x:Name="FinalAmount" Placeholder="Final Amount" IsReadOnly="True" Grid.Column="1" />
+                    </Grid>
+
+
+
+                    <!-- Remarks -->
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="0.3*" />
+                            <ColumnDefinition Width="0.7*" />
+                        </Grid.ColumnDefinitions>
+
+                        <Label Text="Remarks" FontAttributes="Bold" VerticalOptions="Center" Grid.Column="0" />
+                        <Editor x:Name="Remarks" Placeholder="Remarks" Grid.Column="1" />
+                    </Grid>
+
+                    <Button Grid.Column="2" x:Name="Submitbtn" VerticalOptions="Center" Text="Submit" TextColor="White" 
+                BackgroundColor="#008CBA"
+                BorderColor="Gray"
+                BorderWidth="1.5"
+                CornerRadius="10" 
+                Clicked="OnSubmitClicked"/>
+                </StackLayout>
+
+
+                <Button Grid.Column="0" VerticalOptions="Center" Text="View Collection" TextColor="White" 
+                    BackgroundColor="#008CBA"
+                    BorderColor="Gray"
+                    BorderWidth="1.5"
+                    CornerRadius="10" Clicked="OnViewCollectionClicked"/>
+
+                <Button Grid.Column="0" VerticalOptions="Center" Text="Home" TextColor="White" 
+      BackgroundColor="#008CBA"
+      BorderColor="Gray"
+      BorderWidth="1.5"
+      CornerRadius="10" Clicked="OnHomeClicked"/>
+            </StackLayout>
+        </ScrollView>
+    </ContentPage.Content>
+
+</ContentPage>

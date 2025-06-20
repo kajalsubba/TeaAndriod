@@ -1,0 +1,131 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="TeaClient.UserModule.EditCollectionPage">
+    <ContentPage.Content>
+        <StackLayout Padding="10" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
+            <Label x:Name="HeaderName" Text="Edit Collection" FontSize="24" HorizontalOptions="Center" />
+
+            <StackLayout Padding="4">
+                <!-- Grade -->
+                <!--<Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="0.3*" />
+                        <ColumnDefinition Width="0.7*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Label Text="Grade" FontAttributes="Bold" VerticalOptions="Center" Grid.Column="0" />
+                    <Picker ItemDisplayBinding="{Binding GradeName}" x:Name="Grade" TitleColor="#6c757d" Title="Select Grade" ItemsSource="{Binding GradeList}" TextColor="Black" Grid.Column="1" />
+                </Grid>-->
+                <Grid >
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="0.3*" />
+                        <ColumnDefinition Width="0.7*" />
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Label on the left -->
+                    <Label Grid.Column="0" FontAttributes="Bold" Text="Client Name" VerticalOptions="Center" />
+
+                    <!-- Entry on the right -->
+                    <Entry Grid.Column="1" x:Name="Client" FontAttributes="Bold"  IsReadOnly="True" HorizontalOptions="FillAndExpand" />
+                </Grid>
+                <Grid >
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="0.3*" />
+                        <ColumnDefinition Width="0.7*" />
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Label on the left -->
+                    <Label Grid.Column="0" FontAttributes="Bold" Text="Total Collection" VerticalOptions="Center" />
+
+                    <!-- Entry on the right -->
+                    <Entry Grid.Column="1" x:Name="TotalFieldWeight" FontAttributes="Bold"  IsReadOnly="True" HorizontalOptions="FillAndExpand" />
+                </Grid>
+                <!-- Rain (%) -->
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="0.3*" />
+                        <ColumnDefinition Width="0.7*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Label Text="Rain (%)" FontAttributes="Bold" VerticalOptions="Center" Grid.Column="0" />
+                    <Entry x:Name="RainLeaf" Placeholder="Rain (%)" Keyboard="Numeric" TextChanged="RainLeaf_TextChanged" Grid.Column="1" />
+                </Grid>
+
+                <!-- Long Leaf (%) -->
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="0.3*" />
+                        <ColumnDefinition Width="0.7*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Label Text="Long Leaf (%)" FontAttributes="Bold" VerticalOptions="Center" Grid.Column="0" />
+                    <Entry x:Name="LongLeaf" Placeholder="Long Leaf (%)" Keyboard="Numeric" TextChanged="LongLeaf_TextChanged" Grid.Column="1" />
+                </Grid>
+
+                <!-- Deduction (KG) -->
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="0.3*" />
+                        <ColumnDefinition Width="0.7*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Label Text="Deduction (KG)" FontAttributes="Bold" VerticalOptions="Center" Grid.Column="0" />
+                    <Entry x:Name="Deduction" FontAttributes="Bold" Placeholder="Deduction (KG)" IsReadOnly="True" Grid.Column="1" />
+                </Grid>
+
+                <!-- Final Weight (KG) -->
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="0.3*" />
+                        <ColumnDefinition Width="0.7*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Label Text="Final Weight (KG)" FontAttributes="Bold" VerticalOptions="Center" Grid.Column="0" />
+                    <Entry x:Name="FinalWeight" FontAttributes="Bold" Placeholder="Final Weight (KG)" IsReadOnly="True" Grid.Column="1" />
+                </Grid>
+
+                <!-- Rate -->
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="0.3*" />
+                        <ColumnDefinition Width="0.7*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Label Text="Rate" FontAttributes="Bold" VerticalOptions="Center" Grid.Column="0" />
+                    <Entry x:Name="Rate" Placeholder="Rate" Keyboard="Numeric" TextChanged="Rate_TextChanged" Grid.Column="1" />
+                </Grid>
+
+                <!-- Final Amount -->
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="0.3*" />
+                        <ColumnDefinition Width="0.7*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Label Text="Final Amount" FontAttributes="Bold" VerticalOptions="Center" Grid.Column="0" />
+                    <Entry x:Name="FinalAmount" Placeholder="Final Amount" IsReadOnly="True" Grid.Column="1" />
+                </Grid>
+
+                <!-- Remarks -->
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="0.3*" />
+                        <ColumnDefinition Width="0.7*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Label Text="Remarks" FontAttributes="Bold" VerticalOptions="Center" Grid.Column="0" />
+                    <Editor x:Name="Remarks" Placeholder="Remarks" Grid.Column="1" />
+                </Grid>
+              
+                <Button Grid.Column="2" VerticalOptions="Center" Text="Update" TextColor="White" 
+BackgroundColor="#008CBA"
+BorderColor="Gray"
+BorderWidth="1.5"
+CornerRadius="10" 
+  Clicked="OnUpdateClicked" />
+            </StackLayout>
+
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

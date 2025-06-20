@@ -1,0 +1,70 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
+             xmlns:local="clr-namespace:TeaClient.ViewModel"
+             x:Class="TeaClient.UserModule.TripAssignPage"
+             NavigationPage.HasNavigationBar="True"
+             BackgroundColor="#006a55">
+
+    <ContentPage.BindingContext>
+        <local:TripViewModel></local:TripViewModel>
+    </ContentPage.BindingContext>
+    <ContentPage.Content>
+        <Grid>
+            <!-- Main Content -->
+            <StackLayout Padding="40" VerticalOptions="Center" HorizontalOptions="FillAndExpand">
+
+                <Frame BorderColor="LightBlue" BackgroundColor="#F8F8FF" CornerRadius="10"  Padding="20"  HasShadow="True" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
+
+                    <StackLayout>
+
+                        <Frame Padding="0" HasShadow="False" BorderColor="Transparent" BackgroundColor="Transparent">
+                            <Entry TextChanged="SearchBar_OnTextChanged" BackgroundColor="#f9f9f9" TextColor="Black" FontSize="16" PlaceholderColor="#646b7a" x:Name="VehicleNo" Placeholder="Select Vehicle" AbsoluteLayout.LayoutBounds="0,0,285,38"  AbsoluteLayout.LayoutFlags="None"/>
+                        </Frame>
+
+                        <ListView x:Name="VehicleListView" IsVisible="False" CachingStrategy="RecycleElement" BackgroundColor="White" ItemTapped="ListView_OnItemTapped" AbsoluteLayout.LayoutFlags="None">
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <ViewCell>
+                                        <Frame>
+                                            <StackLayout BackgroundColor="White">
+                                                <Label Text="{Binding VehicleNo}" FontSize="16" TextColor="#FF464859"/>
+                                            </StackLayout>
+                                        </Frame>
+                                    </ViewCell>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+
+                        <Frame Padding="0" HasShadow="False" BorderColor="Transparent" BackgroundColor="Transparent">
+                            <Picker ItemDisplayBinding="{Binding TripName}" 
+                                    x:Name="Trip" 
+                                    TitleColor="#6c757d" 
+                                    Title="Select Trip" 
+                                    ItemsSource="{Binding Triplists}" 
+                                    TextColor="Black" />
+                        </Frame>
+
+                        <Button VerticalOptions="Center" Text="Lock " TextColor="White" 
+                                BackgroundColor="#008CBA"
+                                BorderColor="Gray"
+                                BorderWidth="1.5"
+                                CornerRadius="10" Clicked="OnLockClicked"/>
+                    </StackLayout>
+                </Frame>
+            </StackLayout>
+
+            <!-- Logout Image at the top right corner -->
+            <!--<Image Source="logout.png" 
+                   VerticalOptions="Start" 
+                   HorizontalOptions="End" 
+                   HeightRequest="30"
+                   WidthRequest="30"
+                   Margin="20">
+                <Image.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnLogoutTapped" />
+                </Image.GestureRecognizers>
+            </Image>-->
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

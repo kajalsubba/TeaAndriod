@@ -1,0 +1,151 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
+
+             x:Class="TeaClient.TabXaml">
+    <ContentPage.Content>
+        <StackLayout Padding="10" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
+            <Label x:Name="HeaderName" Text="Smart History" FontSize="24" HorizontalOptions="Center" />
+            <Label Text="From Date: (Mandatory)" />
+            <DatePicker x:Name="FromDate" Format="dd/MM/yyyy" />
+            <Label Text="To Date: (Mandatory)" />
+            <DatePicker x:Name="ToDate" Format="dd/MM/yyyy"/>
+
+            <Button VerticalOptions="Center" Text="Search" TextColor="White" 
+        BackgroundColor="#3aa602"
+        BorderColor="Gray"
+BorderWidth="1.5"
+CornerRadius="50"  />
+        </StackLayout>
+    </ContentPage.Content>
+    <Grid>
+        <xct:TabView
+                TabStripPlacement="Top"
+                TabStripBackgroundColor="Blue"
+                TabStripHeight="60"
+                TabIndicatorColor="Yellow"
+                TabContentBackgroundColor="Yellow">
+
+            <xct:TabViewItem
+                    Icon="triangle.png"
+                    Text="Tab 1"
+                    TextColor="White"
+                    TextColorSelected="Yellow"
+                    FontSize="12">
+                <Grid 
+                        BackgroundColor="Gray">
+                    <Label
+                            HorizontalOptions="Center"
+                            VerticalOptions="Center"
+                            Text="TabContent1" />
+                </Grid>
+            </xct:TabViewItem>
+
+            <xct:TabViewItem
+                    Icon="circle.png"
+                    Text="Tab 2"
+                    TextColor="White"
+                    TextColorSelected="Yellow"
+                    FontSize="12">
+                <Grid>
+                    <!--<Label    
+                            HorizontalOptions="Center"
+                            VerticalOptions="Center"
+                            Text="TabContent2" />-->
+
+                    <Frame BorderColor="LightBlue"  BackgroundColor="AliceBlue" CornerRadius="10" Padding="8" HasShadow="True" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
+
+                        <ScrollView Orientation="Horizontal">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="*" />
+
+                                </Grid.RowDefinitions>
+
+
+                                <!--Column Headers-->
+
+                                <Grid Grid.Row="0" BackgroundColor="LightBlue" Padding="5" HorizontalOptions="FillAndExpand">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <Label Grid.Column="0" Text="Payment Date" FontAttributes="Bold" />
+                                    <Label Grid.Column="1" Text="Narration" FontAttributes="Bold" HorizontalOptions="Center"/>
+                                    <Label Grid.Column="2" Text="Amount" FontAttributes="Bold" HorizontalOptions="Center"/>
+
+                                </Grid>
+
+
+                                <!--CollectionView with Data-->
+
+                                <CollectionView Grid.Row="1" >
+                                    <CollectionView.ItemsLayout>
+                                        <GridItemsLayout Orientation="Vertical" Span="1" />
+                                    </CollectionView.ItemsLayout>
+                                    <CollectionView.ItemTemplate>
+                                        <DataTemplate>
+                                            <Grid Margin="0,0,0,10" >
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="*" />
+
+
+                                                </Grid.ColumnDefinitions>
+
+                                                <Label  Grid.Column="0" Text="1"  />
+                                                <Label  Grid.Column="1" Text="2" HorizontalOptions="Center"/>
+                                                <Label  Grid.Column="2" Text="3" HorizontalOptions="Center"/>
+
+
+                                                <!--Row Separator-->
+
+                                                <BoxView Grid.ColumnSpan="3" HeightRequest="1" BackgroundColor="LightGray" VerticalOptions="End" />
+
+
+                                            </Grid>
+
+                                        </DataTemplate>
+                                    </CollectionView.ItemTemplate>
+                                </CollectionView>
+
+                            </Grid>
+                        </ScrollView>
+                    </Frame>
+                    <Frame BorderColor="LightBlue" BackgroundColor="AliceBlue" CornerRadius="10" Padding="8" HasShadow="True" VerticalOptions="FillAndExpand"   HorizontalOptions="FillAndExpand">
+                        <ScrollView Orientation="Horizontal">
+                            <Grid  BackgroundColor="LightBlue" Padding="5" HorizontalOptions="FillAndExpand">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+
+                                </Grid.RowDefinitions>
+
+
+                                <Grid Grid.Row="0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="*" />
+
+                                    </Grid.ColumnDefinitions>
+                                    <Label Grid.Column="0" Text="" FontAttributes="Bold" />
+                                    <Label Grid.Column="1" Text="" FontAttributes="Bold" />
+                                    <Label Grid.Column="2" Text="" FontAttributes="Bold" />
+                                    <Label Grid.Column="3" Text="" FontAttributes="Bold" />
+                                    <Label Grid.Column="4" Text="" FontAttributes="Bold" />
+
+                                </Grid>
+                            </Grid>
+                        </ScrollView>
+                    </Frame>
+                </Grid>
+            </xct:TabViewItem>
+        </xct:TabView>
+    </Grid>
+</ContentPage>

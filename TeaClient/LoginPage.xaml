@@ -1,0 +1,68 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
+             xmlns:local="clr-namespace:TeaClient.ViewModel"
+             x:Class="TeaClient.LoginPage"
+             BackgroundColor="#006a55">
+    <ContentPage.BindingContext>
+        <local:TenantViewModel></local:TenantViewModel>
+    </ContentPage.BindingContext>
+    <ContentPage.Content>
+        
+        <StackLayout Padding="40" VerticalOptions="Center" HorizontalOptions="FillAndExpand">
+            <!--<Image Source="notify.jpg" WidthRequest="50" HeightRequest="50" x:Name="Notification" VerticalOptions="Start" HorizontalOptions="Center" >
+                <Image.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="Notification_Tapped"/>
+                </Image.GestureRecognizers>
+            </Image>-->
+           
+            <RelativeLayout>
+                <!-- Your content here -->
+
+                <!--<Image Source="notify.png" RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=0}" RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=0}" WidthRequest="50" HeightRequest="50" Margin="10" />-->
+              
+            
+            </RelativeLayout>
+
+
+            <!--<Label Text="Welcome to Tea Client Tea Portal"
+                VerticalOptions="CenterAndExpand" TextColor="White" FontSize="20"
+                HorizontalOptions="CenterAndExpand" FontAttributes="Bold" />-->
+            <Frame BackgroundColor="#006a55" CornerRadius="5" HasShadow="False" Padding="0" Margin="5">
+                <Image Source="download.jpg" WidthRequest="180" HeightRequest="180" Aspect="AspectFit" />
+            </Frame>
+            <!--<BoxView HeightRequest="2" Color="#3aa602" HorizontalOptions="FillAndExpand" Margin="0,10" />-->
+            <Frame BorderColor="LightBlue" BackgroundColor="#F8F8FF" CornerRadius="10"  Padding="20"  HasShadow="True" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
+
+                <StackLayout>
+                <!--<Picker ItemDisplayBinding="{Binding TenantName}" x:Name="Tenant" TitleColor="Black" Title="Select Company" ItemsSource="{Binding TenantList}" TextColor="White" />-->
+                    <Frame Padding="0" HasShadow="False" BorderColor="Transparent" BackgroundColor="Transparent">
+                        <Picker ItemDisplayBinding="{Binding TenantName}" 
+                        x:Name="Tenant" 
+                        TitleColor="#6c757d" 
+                        Title="Select Company" 
+                        ItemsSource="{Binding TenantList}" 
+                        TextColor="Black" />
+                    </Frame>
+                    <Frame Padding="0" HasShadow="False" BorderColor="Transparent" BackgroundColor="Transparent">
+                        <Entry x:Name="txtUserName"  Placeholder="Enter Username" TextColor="Black" PlaceholderColor="#6c757d" Keyboard="Numeric" ></Entry>
+                    </Frame>
+                    <Frame Padding="0" HasShadow="False" BorderColor="Transparent" BackgroundColor="Transparent">
+                        <Entry x:Name="txtPassword" Placeholder="Enter password" IsPassword="True" TextColor="Black" PlaceholderColor="#6c757d" ></Entry>
+                    </Frame>
+                    <Button VerticalOptions="Center" Text="Login" TextColor="White" 
+                    BackgroundColor="#008CBA"
+                    BorderColor="Gray"
+            BorderWidth="1.5"
+            CornerRadius="10" Clicked="Button_Clicked">
+                
+            </Button>
+                    <Label Text="Version 2.0.0" FontAttributes="Bold" TextColor="#008CBA" HorizontalOptions="Center" />
+                </StackLayout>
+           </Frame>
+          
+
+        </StackLayout>
+        
+    </ContentPage.Content>
+</ContentPage>
